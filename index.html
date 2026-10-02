@@ -1,0 +1,1810 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Project-ExyROMs | Official</title>
+
+  <!-- Google Fonts: Inter & JetBrains Mono for the Premium OS Look -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      
+      --bg: #000000;
+      --bg-panel: rgba(10, 12, 18, 0.85);
+
+      --bg-card: transparent;
+      --bg-card-hover: rgba(255, 255, 255, 0.03);
+      --bg-inset: rgba(255, 255, 255, 0.05);
+     
+      --accent-primary: #38bdf8;
+      --accent-secondary: #818cf8;
+      
+      --border-subtle: rgba(255, 255, 255, 0.15);
+      --border-hover: rgba(255, 255, 255, 0.4);
+      
+      --text-100: #ffffff;
+      --text-200: #cbd5e1;
+      --text-300: #94a3b8;
+
+      --radius-sm: 8px;
+      --radius-md: 18px;
+      --radius-lg: 24px;
+      --radius-full: 9999px;
+
+      --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-out: cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    html, body {
+      background-color: var(--bg);
+      color: var(--text-100);
+      min-height: 100vh;
+      width: 100%;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0 1rem 6rem 1rem;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    @media (min-width: 768px) {
+      body {
+        padding: 0 1.5rem 8rem 1.5rem;
+      }
+    }
+
+    .ambient-stage {
+      position: fixed;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 0;
+      background: var(--bg);
+      contain: strict;
+      transform: translateZ(0);
+    }
+
+    .ambient-top-glow {
+      position: fixed;
+      top: -20vh;
+      left: 50%;
+      transform: translateX(-50%) translateZ(0);
+      width: 120vw;
+      height: 70vh;
+      background: radial-gradient(ellipse at top, rgba(56, 189, 248, 0.15) 0%, rgba(129, 140, 248, 0.08) 45%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .interactive-orb-wrapper {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 0;
+      height: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .interactive-orb-inner {
+      position: absolute;
+      width: 48vw;
+      height: 48vw;
+      min-width: 380px;
+      min-height: 380px;
+      left: -24vw; 
+      top: -24vw; 
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(56, 189, 248, 0.25) 0%, rgba(139, 92, 246, 0.15) 40%, transparent 70%);
+      filter: blur(80px);
+      animation: orbSpin 16s linear infinite;
+    }
+
+    @media (max-width: 768px) {
+       .interactive-orb-inner {
+          width: 80vw; height: 80vw;
+          left: -40vw; top: -40vw;
+          filter: blur(60px);
+       }
+    }
+
+    @keyframes orbSpin {
+      0% { transform: rotate(0deg) scale(1); }
+      50% { transform: rotate(180deg) scale(1.18); }
+      100% { transform: rotate(360deg) scale(1); }
+    }
+
+    #pointsCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 1;
+      opacity: 1;
+      transform: translateZ(0);
+    }
+
+    .ambient-glass-shield {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.4);
+      pointer-events: none;
+      z-index: 2;
+      transform: translateZ(0);
+    }
+
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--accent-primary); }
+
+    .layout-grid {
+      width: 100%;
+      max-width: 960px;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      position: relative;
+      z-index: 3;
+      margin-top: calc(max(2rem, env(safe-area-inset-top)));
+    }
+
+    .hero {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 0.5rem;
+      width: 100%;
+    }
+
+    .mesh-title {
+      font-size: clamp(3.5rem, 11vw, 7rem);
+      font-weight: 900;
+      line-height: 1.05;
+      letter-spacing: -0.05em;
+      text-transform: uppercase;
+      background: linear-gradient(135deg, #ffffff 40%, #94a3b8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin: 0;
+    }
+
+    .hero-desc {
+      font-size: 1.1rem;
+      color: var(--text-200);
+      max-width: 600px;
+      line-height: 1.6;
+      font-weight: 400;
+      margin-bottom: 1rem;
+    }
+
+    .hero-devices-img {
+      width: 100%;
+      max-width: 750px;
+      height: auto;
+      object-fit: contain;
+      filter: drop-shadow(0 25px 40px rgba(0, 0, 0, 0.8));
+      user-select: none;
+      pointer-events: none;
+      margin: 1rem 0;
+    }
+
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem 1.25rem;
+      background: var(--bg-panel);
+      backdrop-filter: blur(24px) saturate(180%);
+      -webkit-backdrop-filter: blur(24px) saturate(180%);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-full);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      transform: translateZ(0);
+      z-index: 50;
+    }
+
+    .logo {
+      font-weight: 800;
+      font-size: 1.15rem;
+      letter-spacing: -0.03em;
+      color: #ffffff;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+    }
+
+    .logo {
+      background: linear-gradient(135deg, #38bdf8, #818cf8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .nav-actions {
+      display: flex;
+      gap: 0.6rem;
+      align-items: center;
+    }
+
+    .nav-cta {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      text-decoration: none;
+      color: #000000;
+      background: #ffffff;
+      border: 1px solid #ffffff;
+      padding: 0.45rem 1.15rem;
+      border-radius: var(--radius-full);
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .nav-cta:hover {
+      background: transparent;
+      color: #ffffff;
+      transform: scale(0.97);
+    }
+
+    .nav-cta.secondary {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-200);
+      border-color: var(--border-subtle);
+    }
+
+    .nav-cta.secondary:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: #ffffff;
+      border-color: var(--border-hover);
+    }
+
+    .builds-container {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      width: 100%;
+    }
+
+    .reveal-element {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.6s var(--ease-out), transform 0.6s var(--ease-spring);
+      will-change: opacity, transform;
+    }
+
+    .reveal-element.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .section-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--text-300);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 0.5rem;
+      margin-top: 1.5rem;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .rom-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 1.5rem;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      transition: border-color 0.2s ease, background 0.2s ease;
+    }
+
+    @media (min-width: 768px) {
+      .rom-card { padding: 2rem; }
+    }
+
+    .rom-card:hover {
+      background: var(--bg-card-hover);
+      border-color: var(--border-hover);
+    }
+
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 1.25rem;
+      gap: 0.75rem;
+    }
+
+    .card-title-group { display: flex; flex-direction: column; gap: 0.35rem; }
+
+    .build-name {
+      font-size: 1.45rem;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+      line-height: 1.2;
+    }
+
+    .build-meta {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--text-300);
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .build-meta span { color: var(--text-200); }
+
+    .badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      padding: 0.3rem 0.7rem;
+      border-radius: var(--radius-full);
+      text-transform: uppercase;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border-subtle);
+      color: var(--silver);
+    }
+
+    .badge-rom { color: #38bdf8; border-color: rgba(56, 189, 248, 0.3); background: rgba(56, 189, 248, 0.06); }
+    .badge-kernel { color: #34d399; border-color: rgba(52, 211, 153, 0.3); background: rgba(52, 211, 153, 0.06); }
+    .badge-gapps { color: #fbbf24; border-color: rgba(251, 191, 36, 0.3); background: rgba(251, 191, 36, 0.06); }
+    .badge-recovery { color: #a78bfa; border-color: rgba(167, 139, 250, 0.3); background: rgba(167, 139, 250, 0.06); }
+
+    .flavor-pill {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      font-weight: 600;
+      padding: 0.25rem 0.6rem;
+      border-radius: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      display: inline-flex;
+      align-items: center;
+      background: var(--bg-inset);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-200);
+    }
+    
+    .flavor-gapps { color: #38bdf8; border-color: rgba(56, 189, 248, 0.25); }
+    .flavor-eol { color: #f87171; border-color: rgba(239, 68, 68, 0.25); }
+
+    .card-middle {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+    
+    .card-middle.full-width { grid-template-columns: 1fr; }
+
+    @media (max-width: 768px) { .card-middle { grid-template-columns: 1fr; gap: 1.5rem; } }
+
+    .data-block { display: flex; flex-direction: column; gap: 0.35rem; }
+
+    .data-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--text-300);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-weight: 600;
+    }
+
+    .data-value { font-size: 0.88rem; color: var(--text-100); line-height: 1.5; font-weight: 500; }
+
+    .changelog-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.25rem;
+    }
+
+    .copy-btn {
+      background: transparent;
+      border: 1px solid var(--border-subtle);
+      color: var(--text-300);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      padding: 0.25rem 0.6rem;
+      border-radius: 6px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      transition: all 0.15s ease;
+    }
+
+    .copy-btn:hover {
+      color: var(--text-100);
+      border-color: var(--border-hover);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .changelog-box {
+      background: var(--bg-inset);
+      border: 1px solid var(--border-subtle);
+      padding: 0.85rem 1rem;
+      border-radius: 8px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.76rem;
+      font-weight: 400;
+      color: var(--text-200);
+      white-space: pre-line;
+      max-height: 180px;
+      overflow-y: auto;
+      line-height: 1.6;
+    }
+
+    .changelog-box b {
+      color: #ffffff;
+      font-weight: 600;
+    }
+
+    .notice-box {
+      background: rgba(245, 158, 11, 0.05);
+      color: #fde68a;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.76rem;
+      border-left: 2px solid #f59e0b;
+      padding: 0.75rem 1rem;
+      border-radius: 0 8px 8px 0;
+      margin: 0.25rem 0;
+      line-height: 1.6;
+    }
+
+    .gallery-container { 
+      width: 100%; 
+      position: relative; 
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .gallery-track {
+      display: flex;
+      gap: 0.75rem;
+      overflow-x: auto;
+      padding-bottom: 0.5rem;
+      scrollbar-width: none;
+      max-width: 100%;
+    }
+    .gallery-track::-webkit-scrollbar { display: none; }
+
+    .img-thumb {
+      height: 160px !important;
+      width: auto !important;
+      max-height: 160px !important;
+      border-radius: 8px;
+      cursor: pointer;
+      border: 1px solid var(--border-light);
+      object-fit: contain;
+      flex-shrink: 0;
+      transition: border-color 0.2s ease, filter 0.2s ease;
+      background: var(--bg-inset);
+    }
+
+    .img-thumb:hover {
+      border-color: var(--border-focus);
+      filter: brightness(1.1);
+    }
+
+    .card-footer {
+      display: flex;
+      justify-content: flex-end;
+      padding-top: 1.25rem;
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .download-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: #ffffff;
+      color: #000000;
+      font-family: 'Inter', sans-serif;
+      font-weight: 700;
+      font-size: 0.85rem;
+      padding: 0.65rem 1.75rem;
+      border-radius: var(--radius-full);
+      text-decoration: none;
+      transition: transform 0.15s ease, opacity 0.15s ease;
+    }
+
+    .download-btn:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      z-index: 2000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+      padding: 1rem;
+    }
+
+    .overlay.active { opacity: 1; pointer-events: all; }
+
+    .modal-content {
+      background: rgba(14, 18, 30, 0.95);
+      border: 1px solid var(--border-subtle);
+      padding: 2.5rem;
+      border-radius: var(--radius-md);
+      max-width: 540px;
+      width: 100%;
+      position: relative;
+      transform: scale(0.96) translateY(10px);
+      transition: transform 0.3s var(--ease-spring);
+      box-shadow: 0 24px 50px rgba(0,0,0,0.8);
+    }
+
+    .overlay.active .modal-content {
+      transform: scale(1) translateY(0);
+    }
+
+    .modal-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 1.25rem;
+      border-bottom: 1px solid var(--border-light);
+      padding-bottom: 0.75rem;
+      color: var(--text-100);
+    }
+
+    .guide-step-title {
+      color: var(--text-200);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      margin-top: 1.25rem;
+    }
+
+    .guide-list {
+      list-style-type: decimal;
+      padding-left: 1.25rem;
+      color: var(--text-200);
+      line-height: 1.8;
+      font-size: 0.9rem;
+    }
+
+    .lightbox-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.9);
+      z-index: 99999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 0.25s ease, visibility 0s linear 0.25s;
+    }
+
+    .lightbox-overlay.active {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: all;
+      transition: opacity 0.25s ease, visibility 0s;
+    }
+
+    .lightbox-img-wrap {
+      max-width: 90vw;
+      max-height: 75vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: -2rem;
+      touch-action: pan-y;
+    }
+
+    .lightbox-img {
+      max-width: 88vw;
+      max-height: 72vh;
+      width: auto;
+      height: auto;
+      border-radius: 12px;
+      border: 1px solid var(--border-subtle);
+      object-fit: contain;
+      user-select: none;
+      box-shadow: 0 30px 90px rgba(0, 0, 0, 0.95);
+      opacity: 0;
+      transform: scale3d(0.95, 0.95, 1);
+      transition: transform 0.3s var(--ease-spring), opacity 0.2s ease;
+      will-change: transform, opacity;
+    }
+
+    .lightbox-overlay.active .lightbox-img {
+      opacity: 1;
+      transform: scale3d(1, 1, 1);
+    }
+
+    .lb-close {
+      position: fixed;
+      top: max(1.25rem, calc(env(safe-area-inset-top) + 0.5rem));
+      right: max(1.25rem, calc(env(safe-area-inset-right) + 0.5rem));
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid var(--border-light);
+      color: var(--text-100);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 100000;
+      opacity: 0;
+      transform: scale(0.8);
+      transition: transform 0.3s var(--ease-spring), opacity 0.2s ease, background 0.2s;
+    }
+
+    .lightbox-overlay.active .lb-close {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .lb-close:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .lb-close svg {
+      width: 20px;
+      height: 20px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      pointer-events: none;
+    }
+
+    .lb-toolbar {
+      position: fixed;
+      bottom: max(1.5rem, calc(env(safe-area-inset-bottom) + 1rem));
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(20, 20, 25, 0.9);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--border-light);
+      padding: 0.4rem 0.75rem;
+      border-radius: var(--radius-full);
+      z-index: 100000;
+      opacity: 0;
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.85);
+      transition: transform 0.3s var(--ease-spring), opacity 0.2s ease;
+    }
+
+    .lightbox-overlay.active .lb-toolbar {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .lb-nav-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: transparent;
+      border: none;
+      color: var(--text-200);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: color 0.15s ease;
+    }
+
+    .lb-nav-btn:hover {
+      color: var(--text-100);
+    }
+
+    .lb-nav-btn svg {
+      width: 22px;
+      height: 22px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      pointer-events: none;
+    }
+
+    .lb-counter {
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--text-200);
+      font-size: 0.85rem;
+      font-weight: 600;
+      padding: 0 0.5rem;
+      user-select: none;
+      min-width: 65px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="ambient-top-glow"></div>
+  <div class="ambient-stage">
+    <div id="interactiveOrb" class="interactive-orb-wrapper">
+      <div class="interactive-orb-inner"></div>
+    </div>
+  </div>
+
+  <canvas id="pointsCanvas"></canvas>
+
+  <div class="ambient-glass-shield"></div>
+
+  <div class="layout-grid">
+
+    <section class="hero">
+      <h1 class="mesh-title" id="meshTitle">EXYNOS 9611</h1>
+      <p class="hero-desc"><b>THE ROMS WHICH GIVE YOUR PHONE A ANOTHER LEVEL OF OPTIMISATION AND PERFORMANCE</b> welcome to project exyroms</p>
+
+      <img src="devices.png" alt="Devices" class="hero-devices-img" loading="eager" decoding="async" onerror="this.style.display='none'">
+    </section>
+
+    <nav>
+      <a href="#" class="logo">EXYROMS</a>
+      <div class="nav-actions">
+        <button onclick="toggleGuideModal()" class="nav-cta secondary">GUIDE</button>
+        <a href="https://t.me/ExyROMs" target="_blank" class="nav-cta">TELEGRAM</a>
+      </div>
+    </nav>
+
+    <main class="builds-container" id="buildsList"></main>
+
+  </div>
+
+  <div class="overlay" id="guideModal">
+    <div class="modal-content">
+      <button class="lb-close" style="position: absolute; top: 1.25rem; right: 1.25rem; width: 40px; height: 40px; opacity: 1; transform: scale(1);" onclick="toggleGuideModal()" aria-label="Close">
+        <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </button>
+      <h2 class="modal-title">Deployment Protocol</h2>
+      
+      <div class="guide-step-title">// CLEAN FLASH (NEW INSTALL)</div>
+      <ol class="guide-list">
+        <li>Boot device into <b>TWRP Recovery</b>.</li>
+        <li>Navigate: <b>Wipe &gt; Advanced Wipe</b>.</li>
+        <li>Format: <b>Dalvik/ART, Cache, Metadata, Data</b>.</li>
+        <li>Install target <b>ROM.zip</b> package.</li>
+        <li>(Optional) Inject <b>GApps</b> and <b>Everline Kernel</b>.</li>
+        <li>Reboot system.</li>
+      </ol>
+
+      <div class="guide-step-title">// DIRTY FLASH (UPDATE)</div>
+      <ol class="guide-list">
+        <li>Boot into <b>TWRP Recovery</b>.</li>
+        <li>Wipe: <b>Dalvik/ART Cache</b> and <b>Cache</b> only.</li>
+        <li>Install updated <b>ROM.zip</b>.</li>
+        <li>(Optional) Reflash Custom Kernel.</li>
+        <li>Reboot system.</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="lightbox-overlay" id="lightboxModal" onclick="handleLightboxBackdropClick(event)">
+    <button class="lb-close" onclick="event.stopPropagation(); closeLightbox();" aria-label="Close Lightbox">
+      <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+    </button>
+
+    <div class="lightbox-img-wrap" id="lightboxImgWrap">
+      <img class="lightbox-img" id="lightboxImg" src="" alt="Preview" decoding="async">
+    </div>
+
+    <div class="lb-toolbar" id="lbToolbar">
+      <button id="lbPrevBtn" class="lb-nav-btn" aria-label="Previous Image">
+        <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg>
+      </button>
+      <div class="lb-counter" id="lightboxCounter">1 / 1</div>
+      <button id="lbNextBtn" class="lb-nav-btn" aria-label="Next Image">
+        <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>
+      </button>
+    </div>
+  </div>
+
+  <script>
+    const buildsData = [
+      {
+        title: "Everline kernel",
+        category: "kernel",
+        device: "Samsung Galaxy A51, F41, M31, M31s, M21",
+        android: "Android 13 to 16",
+        date: "26 July 2026",
+        maintainer: "PARBINDAR7",
+        flavor: ["BALANCED"],
+        changelog: "1. <b>sched/uclamp:</b> Move tunables to cpuctl\n2. <b>sched/uclamp:</b> Expose latency_sensitive and uclamp.boosted",
+        Notice: "1. Only support builds 25.07.2026 or newer\n2. crDroid not compatible",
+        downloadUrl: "https://sourceforge.net/projects/parbindar7-builds/files/Everline%2025-07-2026/"
+      },
+      {
+        title: "Everline Kernel",
+        category: "kernel",
+        device: "Samsung Galaxy A51, F41, M31, M31s, M21",
+        android: "Android 13 to 17",
+        date: "24 August 2026",
+        maintainer: "PARBINDAR7",
+        flavor: ["BALANCED"],
+        changelog: "1. Add AutoFDO support\n2. <b>cpufreq_schedutil:</b> Add sugov_cpu_is_busy\n3. <b>cpufreq_schedutil:</b> Add ignore_dl_rate_limit\n4. <b>cpufreq_schedutil:</b> Add rt_rq_is_runnable\n5. <b>ems:</b> Uclamp ontime_load_avg boost\n6. <b>ems:</b> Add ontime_en and ontime_prefer_perf\n7. Built with Clang 22.1.8",
+        Notice: "1. crDroid latest compatible\n2. Only support builds 26.07.2026 or newer",
+        downloadUrl: "https://sourceforge.net/projects/parbindar7-builds/files/Everline%2024-08-2026/"
+      },
+      {
+        title: "Everline kernel",
+        category: "kernel",
+        device: "Samsung Galaxy A51, F41, M31, M31s, M21",
+        android: "Android 13 to 16",
+        date: "18 May 2026",
+        maintainer: "PARBINDAR7",
+        flavor: ["BALANCED"],
+        changelog: "1. <b>sched:</b> fix uclamp_boosted()\n2. <b>BACKPORT:</b> Add min_task_util_for_boost and min_task_util_for_uclamp\n3. <b>sched/cpufreq_schedutil:</b> use UCLAMP_MIN in sugov_need_slack_timer()\n4. <b>Fixup:</b> sched/uclamp: sched: Fix cpuset_cgrp_id in uclamp_latency_sensitive\n5. <b>sched:</b> Replace schedtune with uclamp\n6. <b>BACKPORT:</b> sched/cpufreq_schedutil: Make iowait boost uclamp-aware\n7. <b>BACKPORT:</b> sched/fair: Make cpu_overutilized() uclamp-aware\n8. <b>BACKPORT:</b> sched/uclamp: Simplify uclamp_tg_restrict() using clamp()\n9. <b>sched/cpufreq_schedutil:</b> Fix undefined uclamp_rq_util_with()\n10. <b>Fixup:</b> sched/cpufreq: remove rq-level uclamp_min floor",
+        downloadUrl: "https://sourceforge.net/projects/parbindar7-builds/files/Everline%2018-05-2026/"
+      },
+      {
+        title: "Project Matrixx OS v12.3",
+        category: "rom",
+        device: "Samsung Galaxy A51, F41, M31, M31s, M21",
+        android: "Android 16",
+        date: "May 2026",
+        maintainer: "PARBINDAR7",
+        flavor: ["INACTIVE"],
+        Notice: "Project Matrixx OS has been officially discontinued as per the announcement of Matrixx OS Developers.",
+        changelog: "1. Contains all previous commits",
+        screenshots: [
+          "./screenshots/voltageos/matrixos12.3/v1.jpg",
+          "./screenshots/voltageos/matrixos12.3/v2.jpg",
+          "./screenshots/voltageos/matrixos12.3/v3.jpg",
+          "./screenshots/voltageos/matrixos12.3/v4.jpg",
+          "./screenshots/voltageos/matrixos12.3/v5.jpg",
+          "./screenshots/voltageos/matrixos12.3/v6.jpg",
+          "./screenshots/voltageos/matrixos12.3/v7.jpg",
+          "./screenshots/voltageos/matrixos12.3/v8.jpg",
+          "./screenshots/voltageos/matrixos12.3/v9.jpg"
+        ],
+        downloadUrl: "https://sourceforge.net/projects/projectmatrixx/files/Android-16/"
+      },
+      {
+        title: "InfinityX v3.10",
+        category: "rom",
+        device: "Samsung Galaxy A51, F41, M31, M31s, M21",
+        android: "Android 16",
+        date: "05 May 2026",
+        maintainer: "PARBINDAR7",
+        flavor: ["GAPPS INCLUDED"],
+        changelog: "1. Contains all previous commits\n2. OTA push",
+        screenshots: [
+          "./screenshots/voltageos/infinity/v1.jpg",
+          "./screenshots/voltageos/infinity/v2.jpg",
+          "./screenshots/voltageos/infinity/v3.jpg",
+          "./screenshots/voltageos/infinity/v4.jpg",
+          "./screenshots/voltageos/infinity/v5.jpg",
+          "./screenshots/voltageos/infinity/v6.jpg",
+          "./screenshots/voltageos/infinity/v7.jpg",
+          "./screenshots/voltageos/infinity/v8.jpg",
+          "./screenshots/voltageos/infinity/v9.jpg"
+        ],
+        downloadUrl: "https://github.com/Parbindar7/OTA/releases/tag/InfinityX_06-05-2026"
+      },
+      {
+        title: "Afterlife OS v8.4",
+        category: "rom",
+        device: "Samsung Galaxy A51, F41, M31, M31s, M21",
+        android: "Android 16",
+        date: "23 April 2026",
+        maintainer: "PARBINDAR7",
+        flavor: ["INACTIVE"],
+        changelog: "1. Enable frame pacing\n2. Define <b>screenRecorderAVCProfileLevel</b>\n3. Decrease launch boost to 3sec\n4. Tune schedutil rate limits\n5. HWC Adapted from exynos9630 T BSP\n6. Adapted struct decon_win_config_data to exynos9610\n7. Fix missing dmabuf_trace_free call on buffer release path\n8. Free exporter name on buffer release\n9. CONFIG_HZ to 300",
+        screenshots: [
+          "./screenshots/voltageos/afterlife/v1.jpg",
+          "./screenshots/voltageos/afterlife/v2.jpg",
+          "./screenshots/voltageos/afterlife/v3.jpg",
+          "./screenshots/voltageos/afterlife/v4.jpg",
+          "./screenshots/voltageos/afterlife/v5.jpg",
+          "./screenshots/voltageos/afterlife/v6.jpg",
+          "./screenshots/voltageos/afterlife/v7.jpg",
+          "./screenshots/voltageos/afterlife/v8.jpg",
+          "./screenshots/voltageos/afterlife/v9.jpg",
+          "./screenshots/voltageos/afterlife/v10.jpg",
+          "./screenshots/voltageos/afterlife/v11.jpg",
+          "./screenshots/voltageos/afterlife/v12.jpg",
+          "./screenshots/voltageos/afterlife/v13.jpg",
+          "./screenshots/voltageos/afterlife/v14.jpg",
+          "./screenshots/voltageos/afterlife/v15.jpg",
+          "./screenshots/voltageos/afterlife/v16.jpg",
+          "./screenshots/voltageos/afterlife/v17.jpg",
+          "./screenshots/voltageos/afterlife/v18.jpg",
+          "./screenshots/voltageos/afterlife/v18.jpg",
+          "./screenshots/voltageos/afterlife/v19.jpg",
+          "./screenshots/voltageos/afterlife/v20.jpg",
+          "./screenshots/voltageos/afterlife/v21.jpg",
+          "./screenshots/voltageos/afterlife/v22.jpg",
+          "./screenshots/voltageos/afterlife/v23.jpg"
+        ],
+        downloadUrl: "https://afterlifeos.com/download"
+      },
+      {
+        title: "Lineage OS v23.2",
+        category: "rom",
+        device: "Samsung Galaxy A51, F41, M31, M31s, M21",
+        android: "Android 16",
+        date: "26 Jun 2026",
+        maintainer: "PARBINDAR7",
+        flavor: ["VANILLA"],
+        changelog: "1. Refactor Powerhint.json\n2. Tune up/down frequency rate limits\n3. Cleanup task_profiles_30.json",
+        downloadUrl: "https://drive.google.com/drive/folders/1sUjnPe88Q6sRX2-8nxYO37ac-MDAmhyj?usp=sharing"
+      },
+      {
+        title: "Lineage OS v23.2",
+        category: "rom",
+        device: "Samsung Galaxy A51, F41, M31, M31s, M21",
+        android: "Android 16",
+        date: "01 Jun 2026",
+        maintainer: "PARBINDAR7",
+        flavor: ["VANILLA"],
+        changelog: "1. Refactor Powerhint.json\n2. Add software c2 av1/dav1d decoder\n3. Move media codecs configurations on tree",
+        downloadUrl: "https://drive.google.com/drive/folders/1OvkxJulj3QWW-0S4u0Kq8DKxLjsmJs_Y?usp=sharing"
+      },
+      {
+        title: "Lineage OS v23.2",
+        category: "rom",
+        device: "Samsung Galaxy A51, F41, M31, M31s, M21",
+        android: "Android 16",
+        date: "02 May 2026",
+        maintainer: "PARBINDAR7",
+        flavor: ["VANILLA"],
+        changelog: "1. Powerhint: Re-tune for efficiency\n2. Powerhint: Cleanup\n3. Powerhint: Add UclampTAMin & UclampTALatency\n4. Powerhint: Add UclampTAMin to LAUNCH\n5. Powerhint: Refactor powerhint.json\n6. Update cpuset parameters\n7. Migrate from Schedtune to Uclamp\n8. Drop schedtune\n9. Refactor task_profiles for to reflect Uclamp changes",
+        downloadUrl: "https://drive.google.com/drive/folders/1quhVFJwp1_wL0WKlpM4YqvpQs_oq9yvM?usp=sharing"
+      },
+      {
+        title: "Voltage OS v5.8",
+        category: "rom",
+        device: "Samsung Galaxy A51, F41, M31, M31s, M21",
+        android: "Android 16",
+        date: "25 April 2026",
+        maintainer: "PARBINDAR7",
+        flavor: ["VANILLA"],
+        changelog: "1. Re-tune POWERHINT for efficiency\n2. Boost CPU on EXPENSIVE_RENDERING\n3. Set TARGET_CPU_VARIANT to cortex-a73",
+        downloadUrl: "https://drive.google.com/drive/folders/16UW_O8Megsh4MpqPprNJgv4JV1j4taP5?usp=sharing"
+      },
+      {
+        title: "Lineage OS v23.2",
+        category: "rom",
+        device: "Samsung Galaxy A51, F41, M31, M31s, M21",
+        android: "Android 16",
+        date: "20 April 2026",
+        maintainer: "PARBINDAR7",
+        flavor: ["VANILLA"],
+        changelog: "1. Blur Disabled\n2. Enable frame pacing\n3. Define screenRecorderAVCProfileLevel\n4. Decrease launch boost to 3sec\n5. Tune schedutil rate limits\n6. HWC Adapt from exynos9630 T BSP\n7. adapt struct decon_win_config_data to exynos9610\n8. fix missing dmabuf_trace_free call on buffer release path\n9. free exporter name on buffer release\n10. CONFIG_HZ to 300",
+        downloadUrl: "https://drive.google.com/drive/folders/1coT6KSsNsyvF5VHY57uvHnj7pNAfHQo_?usp=drive_link"
+      },
+      {
+        title: "Matrixx OS v12.2",
+        category: "rom",
+        device: "Samsung Galaxy A51, F41, M31, M31s, M21",
+        android: "Android 16",
+        date: "13 April 2026",
+        maintainer: "PARBINDAR7",
+        flavor: ["INACTIVE"],
+        Notice: "Matrixx OS has been officially discontinued as per the announcement of Matrixx OS Developers.",
+        changelog: "1. Blur Disabled\n2. Decrease launch boost to 3sec\n3. Tune schedutil rate limits\n4. HWC Adapt from exynos9630 T BSP\n5. adapt struct decon_win_config_data to exynos9610\n6. fix missing dmabuf_trace_free call on buffer release path\n7. free exporter name on buffer release",
+        screenshots: [
+          "./screenshots/voltageos/matrixos12.2/v1.jpg",
+          "./screenshots/voltageos/matrixos12.2/v2.jpg",
+          "./screenshots/voltageos/matrixos12.3/v3.jpg",
+          "./screenshots/voltageos/matrixos12.2/v4.jpg",
+          "./screenshots/voltageos/matrixos12.2/v5.jpg",
+          "./screenshots/voltageos/matrixos12.2/v6.jpg",
+          "./screenshots/voltageos/matrixos12.2/v7.jpg",
+          "./screenshots/voltageos/matrixos12.2/v8.jpg",
+          "./screenshots/voltageos/matrixos12.2/v9.jpg"
+        ],
+        downloadUrl: "https://drive.google.com/drive/folders/1b_54tfSj5k1Ypmu07LL8pKS-JnuF9eXm?usp=sharing"
+      },
+      {
+        title: "LunarisAOSP v3.12 ",
+        category: "rom",
+        device: "Samsung Galaxy A51, F41, M31, M31s, M21",
+        android: "Android 16",
+        date: "01 July 2026",
+        maintainer: "PARBINDAR7",
+        flavor: ["VANILLA"],
+        changelog: "1. Remove unused /dev/freezer\n2. Tune up/down frequency transition rate limits\n3. Switch to AOSP task profiles",
+        screenshots: [
+          "./screenshots/voltageos/lunaris/v1.jpg",
+          "./screenshots/voltageos/lunaris/v2.jpg",
+          "./screenshots/voltageos/lunaris/v3.jpg",
+          "./screenshots/voltageos/lunaris/v4.jpg",
+          "./screenshots/voltageos/lunaris/v5.jpg",
+          "./screenshots/voltageos/lunaris/v6.jpg",
+          "./screenshots/voltageos/lunaris/v7.jpg",
+          "./screenshots/voltageos/lunaris/v8.jpg",
+          "./screenshots/voltageos/lunaris/v9.jpg"
+        ],
+        downloadUrl: "https://drive.google.com/drive/folders/1_RG0oDENhUGLcEh5kDkDNwOtc5VT5s3t"
+      },
+      {
+        title: "LunarisAOSP v3.12 EOL",
+        category: "rom",
+        device: "Samsung Galaxy A51, F41, M31, M31s, M21",
+        android: "Android 16",
+        date: "13 August 2026",
+        maintainer: "PARBINDAR7",
+        flavor: ["VANILLA", "EOL"],
+        changelog: "1. Re-configure cpuset\n2. Remove cpuidle off node",
+        Notice: "1. EOL A16. Next update based on Android 17\n2. Mostly source side changes in this build\n3. No Kernel changes",
+        screenshots: [
+          "./screenshots/voltageos/lunaris12.3/v1.jpg",
+          "./screenshots/voltageos/lunaris12.3/v2.jpg",
+          "./screenshots/voltageos/lunaris12.3/v3.jpg",
+          "./screenshots/voltageos/lunaris12.3/v4.jpg",
+          "./screenshots/voltageos/lunaris12.3/v5.jpg",
+          "./screenshots/voltageos/lunaris12.3/v6.jpg",
+          "./screenshots/voltageos/lunaris12.3/v7.jpg",
+          "./screenshots/voltageos/lunaris12.3/v8.jpg",
+          "./screenshots/voltageos/lunaris12.3/v9.jpg"
+        ],
+        downloadUrl: "https://drive.google.com/drive/folders/1ZYYzDbaUuHe5nAPtg2ryV5afHvq6LACQ?usp=sharing"
+      },
+      {
+        title: "InfinityX 12.3",
+        category: "rom",
+        device: "Samsung Galaxy A51, F41, M31, M31s, M21",
+        android: "Android 16",
+        date: "16 August 2026",
+        maintainer: "PARBINDAR7",
+        flavor: ["GAPPS", "EOL"],
+        changelog: "1. Re-configure cpuset\n2. Remove cpuidle off node",
+        Notice: "1. OTA Pushed\n2. EOL A16. Next update based on Android 17\n3. No Kernel changes",
+        screenshots: [
+          "./screenshots/voltageos/infinityx/v1.jpg",
+          "./screenshots/voltageos/infinityx/v2.jpg",
+          "./screenshots/voltageos/infinityx/v3.jpg",
+          "./screenshots/voltageos/infinityx/v4.jpg",
+          "./screenshots/voltageos/infinityx/v5.jpg",
+          "./screenshots/voltageos/infinityx/v6.jpg"
+        ],
+        featureScreenshots: [
+          "./features/voltageos/infinity/f1.jpg",
+          "./features/voltageos/infinity/f2.jpg",
+          "./features/voltageos/infinity/f3.jpg",
+          "./features/voltageos/infinity/f4.jpg",
+          "./features/voltageos/infinity/f5.jpg",
+          "./features/voltageos/infinity/f6.jpg",
+          "./features/voltageos/infinity/f7.jpg",
+          "./features/voltageos/infinity/f8.jpg",
+          "./features/voltageos/infinity/f9.jpg",
+          "./features/voltageos/infinity/f10.jpg",
+          "./features/voltageos/infinity/f11.jpg"
+        ],
+        downloadUrl: "https://github.com/Parbindar7/OTA/releases"
+      },
+      {
+        title: "Lineage OS v23.2",
+        category: "rom",
+        device: "Samsung Galaxy A51, F41, M31, M31s, M21",
+        android: "Android 16",
+        date: "09 August 2026",
+        maintainer: "PARBINDAR7",
+        flavor: ["VANILLA"],
+        changelog: "1. Tune Powerhint.json\n2. Tune up/down frequency rate limits\n3. Switch to AOSP task profiles\n4. Remove unused /dev/freezer",
+        screenshots: [
+          "./screenshots/voltageos/lineageos23.2/v1.jpg",
+          "./screenshots/voltageos/lineageos23.2/v2.jpg",
+          "./screenshots/voltageos/lineageos23.2/v3.jpg",
+          "./screenshots/voltageos/lineageos23.2/v4.jpg",
+          "./screenshots/voltageos/lineageos23.2/v5.jpg",
+          "./screenshots/voltageos/lineageos23.2/v6.jpg",
+          "./screenshots/voltageos/lineageos23.2/v7.jpg",
+          "./screenshots/voltageos/lineageos23.2/v8.jpg",
+          "./screenshots/voltageos/lineageos23.2/v9.jpg"
+        ],
+        downloadUrl: "https://drive.google.com/drive/folders/1-M5lUH2KREBlKlmYeRi5mXcA1sdh48e4?usp=sharing"
+      },
+      {
+        title: "VoltageOS 5.11 EOL",
+        category: "rom",
+        device: "Samsung Galaxy A51, F41, M31, M31s, M21",
+        android: "Android 16",
+        date: "10 August 2026",
+        maintainer: "PARBINDAR7",
+        flavor: ["VANILLA", "EOL"],
+        changelog: "1. Tune Powerhint\n2. Tune up/down frequency rate limits\n3. Switch to AOSP task profiles\n4. Remove unused /dev/freezer",
+        Notice: "1. Blur disabled",
+        screenshots: [
+          "./screenshots/voltageos/voltageos5.11/v1.jpg",
+          "./screenshots/voltageos/voltageos5.11/v2.jpg",
+          "./screenshots/voltageos/voltageos5.11/v3.jpg",
+          "./screenshots/voltageos/voltageos5.11/v4.jpg",
+          "./screenshots/voltageos/voltageos5.11/v5.jpg",
+          "./screenshots/voltageos/voltageos5.11/v6.jpg",
+          "./screenshots/voltageos/voltageos5.11/v7.jpg",
+          "./screenshots/voltageos/voltageos5.11/v8.jpg",
+          "./screenshots/voltageos/voltageos5.11/v9.jpg"
+        ],
+        downloadUrl: "https://drive.google.com/drive/folders/19QBt1_8HF0gyskg9fnHgojGY8s5MsnFm?usp=sharing"
+      },
+      {
+        title: "LineageOS EXT",
+        category: "rom",
+        device: "Samsung Galaxy A51, F41, M31, M31s, M21",
+        android: "Android 17",
+        date: "10 August 2026",
+        maintainer: "PARBINDAR7",
+        flavor: ["VANILLA"],
+        changelog: "1. Update included soong namespaces\n2. Set legacy gralloc flag\n3. Remove apk_verity_prop from flags_health_check.te\n4. Remove duplicate sysfs_block\n5. Remove duplicate clean_scratch_files\n6. Use legacy libion implementation\n7. Disable app launch blur",
+        Notice: "1. Initial A17 release\n2. Report bugs with proper log please",
+        screenshots: [
+          "./screenshots/voltageos/lineageos/v1.jpg",
+          "./screenshots/voltageos/lineageos/v2.jpg",
+          "./screenshots/voltageos/lineageos/v3.jpg",
+          "./screenshots/voltageos/lineageos/v4.jpg",
+          "./screenshots/voltageos/lineageos/v5.jpg",
+          "./screenshots/voltageos/lineageos/v6.jpg",
+          "./screenshots/voltageos/lineageos/v7.jpg",
+          "./screenshots/voltageos/lineageos/v8.jpg",
+          "./screenshots/voltageos/lineageos/v9.jpg"
+        ],
+        downloadUrl: "https://drive.google.com/drive/folders/11VAKKkzQEnQ-hCucJFv6She-AtUQNiDo?usp=sharing"
+      },
+      {
+        title: "Everline Kernel",
+        category: "kernel",
+        device: "Samsung Galaxy A51, F41, M31, M31s, M21",
+        android: "A13-A17 Supported",
+        date: "10 August 2026",
+        maintainer: "PARBINDAR7",
+        flavor: ["BALANCED"],
+        changelog: "1. <b>sched/cpufreq_schedutil:</b> Add sugov_iowait_reset\n2. <b>sched/uclamp:</b> Use uclamp_rq_is_idle in task_fits_cpu\n3. <b>sched/uclamp:</b> Add util_fits_cpu and task_fits_cpu\n4. <b>sched/uclamp:</b> Add uclamp_rq_get, uclamp_rq_set and uclamp_rq_is_idle\n5. Removed old unnecessary uclamp commits and backports\n6. Merge 5.10 BPF from phoenix\n7. Add cgroup v2 freezer",
+        Notice: "1. crDroid not compatible\n2. Only support builds 26.07.2026 or newer",
+        downloadUrl: "https://sourceforge.net/projects/parbindar7-builds/files/Everline%2010-08-2026/"
+      },
+      {
+        title: "VoltageOS v6.0",
+        category: "rom",
+        device: "Samsung Galaxy A51, F41, M31, M31s, M21",
+        android: "Android 17",
+        date: "11 August 2026",
+        maintainer: "PARBINDAR7",
+        flavor: ["VANILLA", "UNOFFICIAL"],
+        changelog: "1. Update included soong namespaces\n2. Set legacy gralloc flag\n3. Remove apk_verity_prop from flags_health_check.te\n4. Remove duplicate sysfs_block\n5. Remove duplicate clean_scratch_files\n6. Use legacy libion implementation\n7. Disable app launch blur",
+        Notice: "1. Initial Android 17 release\n2. Blur Disabled\n3. Report bugs with proper log please",
+        screenshots: [
+          "./screenshots/voltageos/v1.jpg",
+          "./screenshots/voltageos/v2.jpg",
+          "./screenshots/voltageos/v3.jpg",
+          "./screenshots/voltageos/v4.jpg",
+          "./screenshots/voltageos/v5.jpg",
+          "./screenshots/voltageos/v6.jpg",
+          "./screenshots/voltageos/v7.jpg"
+        ],
+        featureScreenshots: [
+          "./features/voltageos/f1.jpg",
+          "./features/voltageos/f2.jpg",
+          "./features/voltageos/f3.jpg",
+          "./features/voltageos/f4.jpg",
+          "./features/voltageos/f5.jpg",
+          "./features/voltageos/f6.jpg",
+          "./features/voltageos/f7.jpg",
+          "./features/voltageos/f8.jpg",
+          "./features/voltageos/f9.jpg",
+          "./features/voltageos/f10.jpg",
+          "./features/voltageos/f11.jpg",
+          "./features/voltageos/f12.jpg",
+          "./features/voltageos/f13.jpg",
+          "./features/voltageos/f14.jpg",
+          "./features/voltageos/f15.jpg",
+          "./features/voltageos/f16.jpg",
+          "./features/voltageos/f17.jpg",
+          "./features/voltageos/f18.jpg",
+          "./features/voltageos/f19.jpg",
+          "./features/voltageos/f20.jpg",
+          "./features/voltageos/f21.jpg",
+          "./features/voltageos/f22.jpg",
+          "./features/voltageos/f23.jpg",
+          "./features/voltageos/f24.jpg",
+          "./features/voltageos/f25.jpg",
+          "./features/voltageos/f26.jpg"
+        ],
+        downloadUrl: "https://drive.google.com/drive/folders/1D-w32e6LOOtJuwNrJ_0rTNRPlI34Y6IA"
+      },
+      {
+        title: "PixelOS v16.2",
+        category: "rom",
+        device: "Samsung Galaxy A51, F41, M31, M31s, M21",
+        android: "Android 16",
+        date: "17 August 2026",
+        maintainer: "PARBINDAR7",
+        flavor: ["GAPPS"],
+        changelog: "1. GPU Frequency set to 949mhz\n2. Blur disabled",
+        Notice: "1. June Security Patch\n2. Only supported by Everline 25.07.2026 and newer\n4. ROM takes time to get stable",
+        screenshots: [
+          "./screenshots/voltageos/pixelos/v1.jpg",
+          "./screenshots/voltageos/pixelos/v2.jpg",
+          "./screenshots/voltageos/pixelos/v3.jpg",
+          "./screenshots/voltageos/pixelos/v4.jpg",
+          "./screenshots/voltageos/pixelos/v5.jpg",
+          "./screenshots/voltageos/pixelos/v6.jpg",
+          "./screenshots/voltageos/pixelos/v7.jpg",
+          "./screenshots/voltageos/pixelos/v8.jpg",
+          "./screenshots/voltageos/pixelos/v9.jpg"
+        ],
+        downloadUrl: "https://drive.google.com/drive/folders/1y9wpS1P07NaXY9XiLxwQLYonk-ucRgDv"
+      },
+      {
+        title: "LineageOS v23.2",
+        category: "rom",
+        device: "Samsung Galaxy A51, F41, M31, M31s, M21",
+        android: "Android 16",
+        date: "24 August 2026",
+        maintainer: "PARBINDAR7",
+        flavor: ["VANILLA"],
+        changelog: "1. AIDL Widevine from A14\n2. Drop config_sustainedPerformanceModeSupported\n3. Boost on EXPENSIVE_RENDERING\n4. Remove cpuidle off node\n5.Re-configure cpuset\n6. GPU Frequency upto 949mhz",
+        Notice: "1. August Security Patch\n2. Only supported by Everline 25.07.2026 and newer\n3. ROM takes time to get stable",
+        downloadUrl: "https://drive.google.com/drive/folders/1p3QDf6tItfNd5HCWECp0zGKtK74zj4Ji?usp=sharing"
+      },
+      {
+        title: "VoltageOS v6.1",
+        category: "rom",
+        device: "Samsung Galaxy A51, F41, M31, M31s, M21",
+        android: "Android 17",
+        date: "04 Sep 2026",
+        maintainer: "PARBINDAR7",
+        flavor: ["VANILLA"],
+        changelog: "1. Same as Lineage 24.08.2026 Build",
+        Notice: "1. VoLTE Working\n2. VoWiFi (Voice over Wi-Fi) Broken\n3. Tested on JIO, Airtel so far\n4. Keep data enabled when call\n5. Blur Disabled\n6. Report bugs with proper log please",
+        screenshots: [
+          "./screenshots/voltageos/voltageOs/v1.jpg",
+          "./screenshots/voltageos/voltageOs/v2.jpg",
+          "./screenshots/voltageos/voltageOs/v3.jpg",
+          "./screenshots/voltageos/voltageOs/v4.jpg",
+          "./screenshots/voltageos/voltageOs/v5.jpg",
+          "./screenshots/voltageos/voltageOs/v6.jpg",
+          "./screenshots/voltageos/voltageOs/v7.jpg",
+          "./screenshots/voltageos/voltageOs/v8.jpg"
+        ],
+      downloadUrl: "https://drive.google.com/drive/folders/1fFEDXhGoLg-_KhCJjnBarxl8PBqGfwgq?usp=sharing"
+      },
+      {
+        title: "Everline Kernel",
+        category: "kernel",
+        device: "Samsung Galaxy A51, F41, M31, M31s, M21",
+        android: "A13-A17 Supported",
+        date: "04 sep 2026",
+        maintainer: "PARBINDAR7",
+        flavor: ["BALANCED"],
+        changelog: "1. Upstream to 4.14.357\n2. Rebase and merge linux-4.14.y branch from OpenELA\n3. Merge android-4.14-phoenix branch from PhoenixKernel with 5.10 BPF patches\n4. Built with Clang 20.0.0",
+        Notice: "1. crDroid latest compatible\n2. Only support builds 26.07.2026 or newer\n3. Everline-AOSP Supports Magisk & Apatch\n4. Everline-KSUN Supports KSU-Next",
+        downloadUrl: "https://sourceforge.net/projects/parbindar7-builds/files/Everline%2004-09-2026/"
+      },
+      {
+        title: "LineageOS 23.2",
+        category: "rom",
+        device: "Samsung Galaxy A51, F41, M31, M31s, M21",
+        android: "Android 16",
+        date: "13 Sep 2026",
+        maintainer: "PARBINDAR7",
+        flavor: ["VANILLA"],
+        changelog: "1. Same as Lineage 24.08.2026 Build",
+        Notice: "1. Supported: VoLTE and VoWiFi\n2.Fixed dialer freeze on hang up\n3. September Security Patch\n4. Only supported by Everline 25.07.2026 and newer",
+        downloadUrl: "https://drive.google.com/drive/folders/1DZqSk6s6YPhJtNOtjODjjOWmJhVp2RGo?usp=sharing",
+      },
+      {
+        title: "LunarisAOSP v3.12",
+        category: "rom",
+        device: "Samsung Galaxy A51, F41, M31, M31s, M21",
+        android: "Android 16",
+        date: "14 Sep 2026",
+        maintainer: "PARBINDAR7",
+        flavor: ["VANILLA"],
+        changelog: "1. Audio Increased on Calls , Media , Ringtone",
+        Notice: "1. Audio Increased on Calls , Media , Ringtone\n2. September Security Patch\n3. Only supported by Everline 25.07.2026 and newer",
+        screenshots: [
+          "./screenshots/voltageos/lunaris12.3 EOL/v1.jpg",
+          "./screenshots/voltageos/lunaris12.3 EOL/v2.jpg",
+          "./screenshots/voltageos/lunaris12.3 EOL/v3.jpg",
+          "./screenshots/voltageos/lunaris12.3 EOL/v4.jpg",
+          "./screenshots/voltageos/lunaris12.3 EOL/v5.jpg",
+          "./screenshots/voltageos/lunaris12.3 EOL/v6.jpg",
+          "./screenshots/voltageos/lunaris12.3 EOL/v7.jpg",
+          "./screenshots/voltageos/lunaris12.3 EOL/v8.jpg"
+        ],
+        downloadUrl: "https://drive.google.com/drive/folders/1Lgm6q2KtUfKZsyJ3RixYRUMYAgooykHf?usp=sharing"
+      },
+      {
+        title: "Project Infinity-X v3.12",
+        category: "rom",
+        device: "Samsung Galaxy A51, F41, M31, M31s, M21",
+        android: "Android 16",
+        date: "17 Sep 2026",
+        flavor: ["VANILLA"],
+        changelog: "1. Same as Lineage 24.08.2026 Build",
+        Ntoice: "1. Supported: VoLTE and VoWiFi\n2. September Security Patch\n3. Only supported by Everline 25.07.2026 and newer",
+        screenshots: [
+          "./screenshots/voltageos/infinity12.3/v1.jpg",
+          "./screenshots/voltageos/infinity12.3/v2.jpg",
+          "./screenshots/voltageos/infinity12.3/v3.jpg",
+          "./screenshots/voltageos/infinity12.3/v4.jpg",
+          "./screenshots/voltageos/infinity12.3/v5.jpg",
+          "./screenshots/voltageos/infinity12.3/v6.jpg",
+          "./screenshots/voltageos/infinity12.3/v7.jpg",
+          "./screenshots/voltageos/infinity12.3/v81.jpg",
+          "./screenshots/voltageos/infinity12.3/v9.jpg",
+        ],
+        downloadUrl: "https://github.com/Parbindar7/OTA/releases/tag/InfinityX_17-09-2026"
+      },
+      {
+        title: "TWRP Recovery v3.7.1",
+        category: "recovery",
+        device: "All Supported Devices",
+        android: "Android 13 to 17",
+        date: "2026",
+        flavor: ["FLASHABLE ZIP/TAR"],
+        changelog: "1. Fully compatible with Android 16 & 17 custom ROMs",
+        Notice: "1. Flash via Odin (.tar) or existing recovery (.img)",
+        downloadUrl: "https://twrp.me/Devices/"
+      },
+      {
+        title: "LiteGapps",
+        category: "gapps",
+        device: "ARM64 Devices",
+        android: "Android 17",
+        date: "2026",
+        flavor: ["GOOGLE APPS PACKAGE"],
+        changelog: "1. Official litegapps release packages for custom rom Android 17",
+        Notice: "1. Only compatible for Android 17",
+        downloadUrl: "https://sourceforge.net/projects/litegapps/files/litegapps/arm64/37/core/2026-05-13/"
+      },
+      {
+        title: "NikGApps — Official Builds",
+        category: "gapps",
+        device: "ARM64 Devices",
+        android: "Android 16",
+        date: "2026",
+        flavor: ["GOOGLE APPS PACKAGE"],
+        changelog: "1. Official NikGApps release packages (Core, Basic, Omni, Full) for Custom ROMs.",
+        downloadUrl: "https://nikgapps.com/downloads"
+      }
+    ];
+
+    let activeScreenshots = [];
+    let currentImageIndex = 0;
+    let isNavigating = false;
+
+    const orbWrapper = document.getElementById('interactiveOrb');
+    let orbX = window.innerWidth / 2;
+    let orbY = window.innerHeight / 2;
+    let mouseX = orbX;
+    let mouseY = orbY;
+
+    window.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+    }, {passive: true});
+
+    window.addEventListener('touchmove', (e) => {
+      if (e.touches.length > 0) {
+        mouseX = e.touches[0].clientX;
+        mouseY = e.touches[0].clientY;
+      }
+    }, {passive: true});
+
+    function animateOrb() {
+      orbX += (mouseX - orbX) * 0.05; 
+      orbY += (mouseY - orbY) * 0.05;
+      
+      if(orbWrapper) {
+        orbWrapper.style.transform = `translate3d(${orbX}px, ${orbY}px, 0)`;
+      }
+      requestAnimationFrame(animateOrb);
+    }
+    animateOrb();
+
+    const canvas = document.getElementById('pointsCanvas');
+    const ctx = canvas.getContext('2d', { alpha: true, desynchronized: true });
+
+    let width = 0, height = 0;
+    let particles = [];
+    let animRAF = null;
+    let isAppHidden = false;
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    const POINT_COLORS = ['#c5a07e', '#dfc7b0', '#e2e8f0', '#38bdf8'];
+    
+    function initPoints() {
+      const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+      width = window.innerWidth;
+      height = window.innerHeight;
+
+      canvas.width = Math.floor(width * dpr);
+      canvas.height = Math.floor(height * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+      particles = [];
+      const particleCount = Math.min(Math.floor((width * height) / 32000) + 10, 35);
+
+      for (let i = 0; i < particleCount; i++) {
+        particles.push({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          vx: (Math.random() - 0.5) * 0.3,
+          vy: (Math.random() - 0.5) * 0.3,
+          radius: Math.random() * 1.5 + 1.2,
+          color: POINT_COLORS[Math.floor(Math.random() * POINT_COLORS.length)],
+          alpha: Math.random() * 0.5 + 0.35
+        });
+      }
+
+      if (!animRAF && !prefersReducedMotion) renderPoints();
+    }
+
+    let resizeTimer = null;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(initPoints, 150);
+    }, { passive: true });
+
+    function renderPoints() {
+      if (isAppHidden || prefersReducedMotion) {
+        animRAF = null;
+        return;
+      }
+
+      ctx.clearRect(0, 0, width, height);
+
+      const maxDist = 100;
+      const maxDistSq = maxDist * maxDist;
+      const pCount = particles.length;
+
+      ctx.lineWidth = 0.7;
+      ctx.strokeStyle = 'rgba(197, 160, 126, 0.1)';
+      ctx.beginPath();
+      for (let i = 0; i < pCount; i++) {
+        const p1 = particles[i];
+        for (let j = i + 1; j < pCount; j++) {
+          const p2 = particles[j];
+          const dx = p1.x - p2.x;
+          if (Math.abs(dx) > maxDist) continue;
+          const dy = p1.y - p2.y;
+          if (Math.abs(dy) > maxDist) continue;
+
+          if (dx * dx + dy * dy < maxDistSq) {
+            ctx.moveTo(p1.x, p1.y);
+            ctx.lineTo(p2.x, p2.y);
+          }
+        }
+      }
+      ctx.stroke();
+
+      for (let i = 0; i < pCount; i++) {
+        const p = particles[i];
+        ctx.fillStyle = p.color;
+        ctx.globalAlpha = p.alpha;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, 6.2831853);
+        ctx.fill();
+
+        p.x += p.vx;
+        p.y += p.vy;
+
+        if (p.x < 0 || p.x > width) p.vx = -p.vx;
+        if (p.y < 0 || p.y > height) p.vy = -p.vy;
+      }
+
+      ctx.globalAlpha = 1.0;
+      animRAF = requestAnimationFrame(renderPoints);
+    }
+
+    document.addEventListener('visibilitychange', () => {
+      isAppHidden = document.hidden;
+      if (!isAppHidden && !animRAF && !prefersReducedMotion) renderPoints();
+    });
+
+    initPoints();
+
+    function toggleGuideModal() { 
+      document.getElementById("guideModal").classList.toggle('active'); 
+    }
+
+    function copyChangelog(btn, text) {
+      navigator.clipboard.writeText(text).then(() => {
+        const prev = btn.innerHTML;
+        btn.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg> Copied!`;
+        btn.style.borderColor = 'var(--text-100)';
+        btn.style.color = 'var(--text-100)';
+        setTimeout(() => {
+          btn.innerHTML = prev;
+          btn.style.borderColor = '';
+          btn.style.color = '';
+        }, 1600);
+      });
+    }
+
+    function renderFlavorPills(flavor) {
+      if (!flavor) return '';
+      const list = Array.isArray(flavor) ? flavor : [flavor];
+      return list.map(f => {
+        const u = f.toUpperCase();
+        let cls = 'flavor-default';
+        if (u.includes('GAPPS')) cls = 'flavor-gapps';
+        else if (u.includes('VANILLA')) cls = 'flavor-vanilla';
+        else if (u.includes('INACTIVE') || u.includes('EOL')) cls = 'flavor-eol';
+        else if (u.includes('BALANCED')) cls = 'flavor-balanced';
+        return `<span class="flavor-pill ${cls}">${f}</span>`;
+      }).join(' ');
+    }
+
+    const lightboxModal = document.getElementById("lightboxModal");
+    const lightboxImgWrap = document.getElementById("lightboxImgWrap");
+    const lightboxImg = document.getElementById("lightboxImg");
+    const lightboxCounter = document.getElementById("lightboxCounter");
+
+    document.getElementById("buildsList").addEventListener('click', (e) => {
+      const target = e.target.closest('.img-thumb');
+      if (target) {
+        openLightbox(
+          parseInt(target.dataset.bidx, 10),
+          parseInt(target.dataset.imgidx, 10),
+          target.dataset.type
+        );
+      }
+    });
+
+    function openLightbox(buildIndex, imageIndex, type) {
+      const build = buildsData[buildIndex];
+      activeScreenshots = type === 'features' ? (build.featureScreenshots || []) : (build.screenshots || []);
+      currentImageIndex = imageIndex;
+      
+      lightboxImg.src = activeScreenshots[currentImageIndex];
+      lightboxCounter.innerText = `${currentImageIndex + 1} / ${activeScreenshots.length}`;
+      lightboxModal.classList.add("active");
+      document.body.style.overflow = "hidden";
+    }
+
+    function updateLightboxDisplay(dir = 1) {
+      if (!activeScreenshots.length) return;
+      lightboxCounter.innerText = `${currentImageIndex + 1} / ${activeScreenshots.length}`;
+      lightboxImg.style.opacity = '0.15';
+      lightboxImg.style.transform = `scale(0.92) translateX(${dir * -24}px)`;
+
+      setTimeout(() => {
+        lightboxImg.src = activeScreenshots[currentImageIndex];
+        lightboxImg.style.opacity = '1';
+        lightboxImg.style.transform = 'scale(1) translateX(0)';
+        isNavigating = false;
+      }, 75);
+    }
+
+    function navigateLightbox(dir) {
+      if (!activeScreenshots.length || isNavigating) return;
+      isNavigating = true;
+      currentImageIndex = (currentImageIndex + dir + activeScreenshots.length) % activeScreenshots.length;
+      updateLightboxDisplay(dir);
+    }
+
+    function closeLightbox() {
+      lightboxModal.classList.remove("active");
+      document.body.style.overflow = "";
+    }
+
+    function handleLightboxBackdropClick(e) {
+      if (e.target === lightboxModal || e.target === lightboxImgWrap) {
+        closeLightbox();
+      }
+    }
+    document.getElementById('lbToolbar').addEventListener('click', (e) => {
+      e.stopPropagation();
+    });
+
+    document.getElementById('lbPrevBtn').addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      navigateLightbox(-1);
+    });
+
+    document.getElementById('lbNextBtn').addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      navigateLightbox(1);
+    });
+
+    let touchStartX = 0;
+    let touchStartY = 0;
+
+    lightboxImgWrap.addEventListener('touchstart', (e) => {
+      touchStartX = e.changedTouches[0].clientX;
+      touchStartY = e.changedTouches[0].clientY;
+    }, { passive: true });
+
+    lightboxImgWrap.addEventListener('touchend', (e) => {
+      const deltaX = e.changedTouches[0].clientX - touchStartX;
+      const deltaY = e.changedTouches[0].clientY - touchStartY;
+      
+      if (Math.abs(deltaX) > 40 && Math.abs(deltaX) > Math.abs(deltaY) * 1.3) {
+        if (deltaX < 0) navigateLightbox(1);
+        else navigateLightbox(-1);
+      }
+    }, { passive: true });
+
+    document.addEventListener("keydown", (e) => {
+      if (lightboxModal.classList.contains("active")) {
+        if (e.key === "ArrowRight") navigateLightbox(1);
+        if (e.key === "ArrowLeft") navigateLightbox(-1);
+        if (e.key === "Escape") closeLightbox();
+      }
+    });
+
+    function createCardHTML(item, cardIndex) {
+      const realIndex = buildsData.indexOf(item);
+      const cat = (item.category || "rom").toLowerCase();
+      
+      const dateHtml = item.date ? `<div class="data-block"><div class="data-label">Date</div><div class="data-value">${item.date}</div></div>` : '';
+      const maintainerHtml = item.maintainer ? `<div class="data-block"><div class="data-label">Maintainer</div><div class="data-value">${item.maintainer}</div></div>` : '';
+      const flavorHtml = item.flavor ? `<div class="data-block"><div class="data-label">Edition / Variant</div><div class="data-value">${renderFlavorPills(item.flavor)}</div></div>` : '';
+      
+      let featuresHtml = '';
+      if (item.featureScreenshots?.length) {
+        featuresHtml = `<div class="gallery-container"><div class="data-label">Feature Screenshots</div><div class="gallery-track">` +
+          item.featureScreenshots.map((src, f) => `<img src="${src}" loading="lazy" decoding="async" fetchpriority="low" class="img-thumb" onerror="this.style.display='none'" data-bidx="${realIndex}" data-imgidx="${f}" data-type="features">`).join('') +
+          `</div></div>`;
+      }
+
+      let screensHtml = '';
+      if (item.screenshots?.length) {
+        screensHtml = `<div class="gallery-container"><div class="data-label">System Previews</div><div class="gallery-track">` +
+          item.screenshots.map((src, s) => `<img src="${src}" loading="lazy" decoding="async" fetchpriority="low" class="img-thumb" onerror="this.style.display='none'" data-bidx="${realIndex}" data-imgidx="${s}" data-type="rom">`).join('') +
+          `</div></div>`;
+      }
+
+      const hasMedia = featuresHtml !== '' || screensHtml !== '';
+      const noticeHtml = item.Notice ? `<div class="notice-box"><strong>// NOTICE:</strong><br>${item.Notice.replace(/\n/g, '<br>')}</div>` : '';
+      const safeChangelog = (item.changelog || '').trim();
+      const escapedChangelog = safeChangelog.replace(/`/g, '\\`').replace(/\$/g, '\\$');
+
+      const staggerDelay = Math.min((cardIndex || 0) * 50, 400);
+
+      return `
+        <div class="rom-card reveal-element" style="--stagger: ${staggerDelay}ms;">
+          <div class="card-top">
+            <div class="card-title-group">
+              <div class="build-name">${item.title}</div>
+              <div class="build-meta"><span>[ ${item.device} ]</span></div>
+            </div>
+            <span class="badge badge-${cat}">${cat}</span>
+          </div>
+          <div class="card-middle ${hasMedia ? '' : 'full-width'}">
+            <div style="display:flex; flex-direction:column; gap:1.25rem;">
+              <div style="display:flex; gap:1.75rem; flex-wrap:wrap;">
+                <div class="data-block"><div class="data-label">Target OS</div><div class="data-value">${item.android}</div></div>
+                ${dateHtml}${flavorHtml}${maintainerHtml}
+              </div>
+              ${noticeHtml}
+              <div class="data-block">
+                <div class="changelog-header">
+                  <span class="data-label">Changelog</span>
+                  <button class="copy-btn" onclick="copyChangelog(this, \`${escapedChangelog}\`)" aria-label="Copy changelog">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                    Copy
+                  </button>
+                </div>
+                <div class="changelog-box">${safeChangelog}</div>
+              </div>
+            </div>
+            ${hasMedia ? `<div style="display:flex; flex-direction:column; gap:1.25rem; overflow:hidden;">${featuresHtml}${screensHtml}</div>` : ''}
+          </div>
+          <div class="card-footer">
+            <a href="${item.downloadUrl}" target="_blank" rel="noopener noreferrer" class="download-btn">DOWNLOAD</a>
+          </div>
+        </div>`;
+    }
+
+    function renderBuilds() {
+      const container = document.getElementById("buildsList");
+      if (!container) return;
+
+      const buckets = {
+        "ANDROID 16 RELEASES": [],
+        "ANDROID 17 RELEASES": [],
+        "CUSTOM KERNELS": [],
+        "GOOGLE APPS (GAPPS)": [],
+        "SYSTEM RECOVERY": []
+      };
+
+      for (let i = 0; i < buildsData.length; i++) {
+        const item = buildsData[i];
+        const cat = (item.category || "rom").toLowerCase();
+
+        if (cat === "kernel") buckets["CUSTOM KERNELS"].push(item);
+        else if (cat === "gapps") buckets["GOOGLE APPS (GAPPS)"].push(item);
+        else if (cat === "recovery") buckets["SYSTEM RECOVERY"].push(item);
+        else if (cat === "rom") {
+          if (item.android && item.android.includes("16")) buckets["ANDROID 16 RELEASES"].push(item);
+          else if (item.android && item.android.includes("17")) buckets["ANDROID 17 RELEASES"].push(item);
+          else buckets["ANDROID 16 RELEASES"].push(item);
+        }
+      }
+
+      let htmlBuffer = "";
+      let cardCounter = 0;
+      for (const [title, list] of Object.entries(buckets)) {
+        if (!list.length) continue;
+        htmlBuffer += `<div class="section-label reveal-element"><span>// ${title}</span><span>[${list.length}]</span></div>`;
+        for (let j = 0; j < list.length; j++) {
+          htmlBuffer += createCardHTML(list[j], cardCounter++);
+        }
+      }
+
+      container.innerHTML = htmlBuffer;
+
+      const elementsToAnimate = container.querySelectorAll('.reveal-element');
+      
+      const observer = new IntersectionObserver((entries, obs) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            obs.unobserve(entry.target); 
+          }
+        });
+      }, { 
+        threshold: 0, 
+        rootMargin: "0px 0px 100px 0px" 
+      });
+
+      elementsToAnimate.forEach(el => observer.observe(el));
+
+      setTimeout(() => {
+        elementsToAnimate.forEach((el, idx) => {
+          if (idx < 5) el.classList.add('is-visible'); 
+        });
+      }, 100);
+    }
+
+    renderBuilds();
+  </script>
+</body>
+</html>
