@@ -12,17 +12,17 @@
 
   <style>
     :root {
-      /* The exact color palette from the video */
-      --bg-base: #eaddc5; /* Warm Beige Background */
-      --bg-card: #eaddc5;
-      --bg-card-alt: rgba(204, 41, 43, 0.05); /* Slight red tint */
+      /* High-Contrast Dark Theme */
+      --bg-base: #050505; /* Pitch Black */
+      --bg-card: #0a0a0a; /* Slightly lighter black for depth */
+      --bg-card-alt: rgba(239, 68, 68, 0.05); /* Very subtle red tint */
       
-      --accent-red: #cc292b; /* Deep Crimson */
-      --text-main: #1a1a1a;  /* Almost Black */
-      --text-muted: #555555;
+      --accent-red: #ef4444; /* Piercing Neon Crimson */
+      --text-main: #ffffff;  /* Stark White */
+      --text-muted: #a1a1aa; /* Light Zinc/Grey */
       
-      --border-main: #cc292b; /* Red Borders everywhere */
-      --border-subtle: rgba(204, 41, 43, 0.3);
+      --border-main: #ef4444; /* Solid Red Borders */
+      --border-subtle: rgba(239, 68, 68, 0.3); /* Faded Red for inner borders */
 
       --radius-sm: 4px;
       --radius-md: 8px;
@@ -54,7 +54,7 @@
       position: fixed; top: 0; left: 0; width: 100%;
       padding: 1.25rem 2rem;
       display: flex; justify-content: space-between; align-items: center;
-      background: rgba(234, 221, 197, 0.9);
+      background: rgba(5, 5, 5, 0.85);
       backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
       border-bottom: 2px solid var(--border-main);
       z-index: 100;
@@ -124,13 +124,13 @@
 
     .btn-solid {
       display: inline-flex; align-items: center; gap: 0.75rem;
-      background: var(--accent-red); color: #fff;
+      background: var(--accent-red); color: #ffffff;
       padding: 0.8rem 1.5rem; border: none; font-weight: 700; font-size: 0.9rem;
       cursor: pointer; text-decoration: none; transition: background 0.2s;
     }
-    .btn-solid:hover { background: #a31c1d; }
+    .btn-solid:hover { background: #dc2626; }
 
-    /* Hero Images Grid (Like the video) */
+    /* Hero Images Grid */
     .hero-images {
       display: grid; gap: 1.5rem; margin-top: 4rem;
     }
@@ -176,7 +176,7 @@
     .tags-container { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem; }
     .tag {
       font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; font-weight: 700;
-      padding: 0.3rem 0.6rem; border: 1px solid var(--text-main);
+      padding: 0.3rem 0.6rem; border: 1px solid var(--border-subtle);
       color: var(--text-main); background: transparent; text-transform: uppercase;
     }
 
@@ -229,7 +229,7 @@
     .changelog-box::-webkit-scrollbar-thumb { background: var(--border-subtle); }
 
     .notice-box {
-      background: rgba(204, 41, 43, 0.1); color: var(--accent-red);
+      background: rgba(239, 68, 68, 0.1); color: var(--accent-red);
       font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; font-weight: 700;
       border: 2px solid var(--accent-red); padding: 0.75rem 1rem; margin-bottom: 1rem; line-height: 1.6;
     }
@@ -277,8 +277,8 @@
       <!-- Add your graphic/anime images here just like the video -->
       <div class="hero-images">
         <div class="hero-img-box">
-           <!-- Placeholder for Anime Graphic (Replace src with your actual image) -->
-          <img src="https://images.unsplash.com/photo-1578305698516-724d101d2d0b?auto=format&fit=crop&q=80&w=800" alt="Graphic Art" style="height: 300px; filter: grayscale(100%) sepia(100%) hue-rotate(315deg) saturate(300%) contrast(1.2);">
+           <!-- High Contrast Placeholder for Anime Graphic (Replace src with your actual image) -->
+          <img src="https://images.unsplash.com/photo-1618331835717-801e976710b2?auto=format&fit=crop&q=80&w=800" alt="Graphic Art" style="height: 300px; filter: grayscale(100%) contrast(1.2);">
         </div>
       </div>
     </section>
@@ -384,7 +384,7 @@
       }, 100);
     });
 
-    // Full ROM Database (Shortened here for brevity, paste your FULL array)
+    // Full ROM Database
     const buildsData = [
       {
         title: "Everline kernel", category: "kernel", device: "A51, F41, M31, M31s, M21", android: "Android 13 - 16", date: "26 July 2026", maintainer: "PARBINDAR7", flavor: ["BALANCED"],
