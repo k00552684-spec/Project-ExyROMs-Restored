@@ -12,17 +12,21 @@
 
   <style>
     :root {
-      /* Aesthetic Matte Obsidian & Acid Green Theme */
-      --bg-base: #0D0D0D; /* Matte Black */
-      --bg-card: #0D0D0D;
-      --bg-card-alt: rgba(189, 255, 0, 0.03); /* Subtle Acid Tint */
+      /* Neo-Tokyo Cyberpunk Theme - Anti-Bank Aesthetic */
+      --bg-base: #06080D; /* Midnight Void */
+      --bg-card: #0B0F19; /* Deep Space Navy */
+      --bg-card-alt: rgba(255, 16, 83, 0.03); 
       
-      --accent-color: #BDFF00; /* Acid/Neon Green */
-      --text-main: #FAFAFA;  /* Stark White */
-      --text-muted: #A3A3A3; /* Neutral Grey */
+      --accent-pink: #FF1053; /* Laser Pink / Red */
+      --accent-cyan: #00F0FF; /* Hacker Cyan */
       
-      --border-main: #BDFF00; /* Solid Acid Green Borders */
-      --border-subtle: rgba(189, 255, 0, 0.2); /* Faded Acid Green for inner borders */
+      --text-main: #FFFFFF;  /* Stark White */
+      --text-muted: #8A93A6; /* Cool Grey */
+      
+      --border-pink: #FF1053; 
+      --border-cyan: #00F0FF;
+      --border-subtle: rgba(255, 16, 83, 0.25); /* Faded pink for section dividers */
+      --border-card: rgba(138, 147, 166, 0.15); /* Muted card borders until hovered */
 
       --radius-sm: 4px;
       --radius-md: 8px;
@@ -46,31 +50,32 @@
 
     /* Scrollbar */
     ::-webkit-scrollbar { width: 8px; }
-    ::-webkit-scrollbar-track { background: var(--bg-base); border-left: 1px solid var(--border-subtle); }
-    ::-webkit-scrollbar-thumb { background: var(--accent-color); }
+    ::-webkit-scrollbar-track { background: var(--bg-base); border-left: 1px solid var(--border-card); }
+    ::-webkit-scrollbar-thumb { background: var(--accent-pink); }
 
     /* Navigation */
     .navbar {
       position: fixed; top: 0; left: 0; width: 100%;
       padding: 1.25rem 2rem;
       display: flex; justify-content: space-between; align-items: center;
-      background: rgba(13, 13, 13, 0.85);
+      background: rgba(6, 8, 13, 0.85);
       backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-      border-bottom: 2px solid var(--border-main);
+      border-bottom: 2px solid var(--border-subtle);
       z-index: 100;
     }
 
     .nav-logo {
       font-weight: 900; font-size: 1.25rem; letter-spacing: -0.02em;
       text-decoration: none; color: var(--text-main);
-      display: flex; align-items: center; gap: 0.5rem; text-transform: uppercase;
+      display: flex; align-items: center; gap: 0.25rem; text-transform: uppercase;
     }
+    .nav-logo span { color: var(--accent-cyan); }
 
     /* Hamburger Menu Icon */
     .menu-icon {
       width: 30px; height: 20px; display: flex; flex-direction: column; justify-content: space-between; cursor: pointer;
     }
-    .menu-icon span { display: block; height: 2px; width: 100%; background: var(--text-main); }
+    .menu-icon span { display: block; height: 2px; width: 100%; background: var(--accent-cyan); }
 
     /* Container */
     .container {
@@ -93,20 +98,21 @@
     .hero {
       padding: 8rem 0 4rem 0;
       display: flex; flex-direction: column;
-      border-bottom: 2px solid var(--border-main);
+      border-bottom: 2px solid var(--border-subtle);
     }
 
     .hero-badge {
       display: inline-flex; align-items: center; justify-content: center;
-      width: 48px; height: 48px; border: 2px solid var(--border-main);
-      font-weight: 900; font-size: 1.2rem; color: var(--accent-color);
+      width: 48px; height: 48px; border: 2px solid var(--accent-cyan);
+      font-weight: 900; font-size: 1.2rem; color: var(--accent-cyan);
       margin-bottom: 1.5rem; letter-spacing: -1px;
+      box-shadow: 0 0 15px rgba(0, 240, 255, 0.15);
     }
 
     .jp-text {
       font-family: 'Noto Sans JP', sans-serif;
       font-weight: 900; font-size: 1.2rem;
-      color: var(--accent-color); letter-spacing: 0.1em;
+      color: var(--accent-cyan); letter-spacing: 0.1em;
       margin-bottom: 0.5rem;
     }
 
@@ -115,7 +121,7 @@
       line-height: 1.05; letter-spacing: -0.02em; margin-bottom: 1.5rem;
       color: var(--text-main); text-transform: uppercase;
     }
-    .hero-title span { color: var(--accent-color); }
+    .hero-title span { color: var(--accent-pink); text-shadow: 0 0 20px rgba(255, 16, 83, 0.4); }
 
     .hero-desc {
       font-size: 1.1rem; color: var(--text-muted); max-width: 600px;
@@ -124,27 +130,33 @@
 
     .btn-solid {
       display: inline-flex; align-items: center; gap: 0.75rem;
-      background: var(--accent-color); color: #000000;
-      padding: 0.8rem 1.5rem; border: none; font-weight: 800; font-size: 0.9rem;
-      cursor: pointer; text-decoration: none; transition: background 0.2s;
+      background: var(--accent-pink); color: #FFFFFF;
+      padding: 0.8rem 1.5rem; border: 2px solid var(--accent-pink);
+      font-weight: 800; font-size: 0.9rem; text-transform: uppercase;
+      cursor: pointer; text-decoration: none; transition: all 0.2s;
     }
-    .btn-solid:hover { background: #96cc00; }
+    .btn-solid:hover { 
+      background: var(--accent-cyan); 
+      border-color: var(--accent-cyan);
+      color: #000;
+      box-shadow: 0 0 20px rgba(0, 240, 255, 0.4);
+    }
 
     /* Hero Images Grid */
     .hero-images {
       display: grid; gap: 1.5rem; margin-top: 4rem;
     }
     .hero-img-box {
-      border: 2px solid var(--border-main); padding: 0.5rem;
+      border: 2px solid var(--border-subtle); padding: 0.5rem;
       background: var(--bg-card); display: flex; justify-content: center; align-items: center;
       overflow: hidden;
     }
     .hero-img-box img {
-      width: 100%; height: auto; object-fit: cover; border: 1px solid var(--border-subtle);
+      width: 100%; height: auto; object-fit: cover; border: 1px solid var(--border-card);
     }
 
     /* About / Introduction Section */
-    .section-spacing { padding: 6rem 0; border-bottom: 2px solid var(--border-main); }
+    .section-spacing { padding: 6rem 0; border-bottom: 2px solid var(--border-subtle); }
 
     .section-title {
       font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 900;
@@ -163,11 +175,13 @@
     }
 
     .flat-card {
-      border: 2px solid var(--border-main); padding: 1.5rem;
-      background: var(--bg-card-alt);
+      border: 2px solid var(--border-card); padding: 1.5rem;
+      background: var(--bg-card-alt); transition: border-color 0.2s;
     }
+    .flat-card:hover { border-color: var(--accent-pink); }
+    
     .flat-card-icon {
-      color: var(--accent-color); margin-bottom: 1rem;
+      color: var(--accent-cyan); margin-bottom: 1rem;
     }
     .flat-card h3 { font-size: 1.25rem; font-weight: 800; margin-bottom: 0.5rem; }
     .flat-card p { font-size: 0.95rem; color: var(--text-muted); line-height: 1.6; }
@@ -176,8 +190,8 @@
     .tags-container { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem; }
     .tag {
       font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; font-weight: 700;
-      padding: 0.3rem 0.6rem; border: 1px solid var(--border-subtle);
-      color: var(--text-main); background: transparent; text-transform: uppercase;
+      padding: 0.3rem 0.6rem; border: 1px solid var(--border-cyan);
+      color: var(--accent-cyan); background: transparent; text-transform: uppercase;
     }
 
     /* ROMs/Builds Section */
@@ -186,25 +200,27 @@
     }
 
     .build-card {
-      background: var(--bg-card); border: 2px solid var(--border-main);
+      background: var(--bg-card); border: 2px solid var(--border-card);
       padding: 2rem; display: flex; flex-direction: column; gap: 1.5rem;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
     }
     .build-card:hover {
-      transform: translateY(-4px); box-shadow: 4px 4px 0px var(--accent-color);
+      border-color: var(--accent-pink);
+      transform: translateY(-4px); 
+      box-shadow: 6px 6px 0px var(--accent-cyan);
     }
 
-    .card-top { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid var(--border-main); padding-bottom: 1.5rem; gap: 1rem; flex-wrap: wrap; }
+    .card-top { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid var(--border-subtle); padding-bottom: 1.5rem; gap: 1rem; flex-wrap: wrap; }
     .card-title-group { display: flex; flex-direction: column; gap: 0.4rem; }
     
     .build-name { font-size: 1.5rem; font-weight: 900; color: var(--text-main); text-transform: uppercase; }
     .build-meta { font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; font-weight: 600; color: var(--text-muted); }
-    .build-meta span { color: var(--accent-color); }
+    .build-meta span { color: var(--accent-cyan); }
 
     .badge {
       font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; padding: 0.3rem 0.8rem;
-      border: 2px solid var(--accent-color); text-transform: uppercase; font-weight: 800;
-      color: var(--accent-color); background: transparent;
+      border: 2px solid var(--accent-pink); text-transform: uppercase; font-weight: 800;
+      color: var(--text-main); background: transparent;
     }
 
     .card-middle { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
@@ -212,16 +228,16 @@
 
     .data-grid { display: flex; gap: 1.5rem; flex-wrap: wrap; margin-bottom: 1rem; }
     .data-block { display: flex; flex-direction: column; gap: 0.35rem; }
-    .data-label { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--accent-color); text-transform: uppercase; font-weight: 700; }
+    .data-label { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--accent-pink); text-transform: uppercase; font-weight: 700; }
     .data-value { font-size: 0.95rem; color: var(--text-main); font-weight: 700; }
 
     .changelog-box {
-      background: var(--bg-card-alt); border: 2px solid var(--border-subtle);
+      background: var(--bg-base); border: 1px solid var(--border-card);
       padding: 1rem; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem;
       font-weight: 500; color: var(--text-muted); white-space: pre-line;
       max-height: 150px; overflow-y: auto; line-height: 1.6; margin-top: 0.5rem;
     }
-    .changelog-box b { color: var(--text-main); }
+    .changelog-box b { color: var(--accent-cyan); }
     
     /* Scrollbar for changelog */
     .changelog-box::-webkit-scrollbar { width: 4px; }
@@ -229,21 +245,26 @@
     .changelog-box::-webkit-scrollbar-thumb { background: var(--border-subtle); }
 
     .notice-box {
-      background: rgba(189, 255, 0, 0.05); color: var(--accent-color);
+      background: rgba(0, 240, 255, 0.05); color: var(--accent-cyan);
       font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; font-weight: 700;
-      border: 2px solid var(--accent-color); padding: 0.75rem 1rem; margin-bottom: 1rem; line-height: 1.6;
+      border: 2px solid var(--accent-cyan); padding: 0.75rem 1rem; margin-bottom: 1rem; line-height: 1.6;
     }
 
-    .card-footer { display: flex; justify-content: flex-end; padding-top: 1.5rem; border-top: 2px solid var(--border-main); }
+    .card-footer { display: flex; justify-content: flex-end; padding-top: 1.5rem; border-top: 2px solid var(--border-subtle); }
     
     .btn-outline {
       display: inline-flex; align-items: center; gap: 0.5rem;
       background: transparent; color: var(--text-main);
       font-family: 'Inter', sans-serif; font-weight: 800; font-size: 0.85rem;
-      padding: 0.6rem 1.5rem; border: 2px solid var(--text-main);
+      padding: 0.6rem 1.5rem; border: 2px solid var(--border-card);
       text-decoration: none; text-transform: uppercase; transition: all 0.2s;
     }
-    .btn-outline:hover { background: var(--text-main); color: var(--bg-base); }
+    .btn-outline:hover { 
+      background: var(--accent-pink); 
+      color: #FFF; 
+      border-color: var(--accent-pink); 
+      box-shadow: 0 0 15px rgba(255, 16, 83, 0.3);
+    }
 
     /* Footer */
     footer { padding: 4rem 0; text-align: center; }
@@ -255,7 +276,7 @@
 
   <!-- Navbar -->
   <nav class="navbar">
-    <a href="#" class="nav-logo">EXYROMS</a>
+    <a href="#" class="nav-logo">EXY<span>ROMS</span></a>
     <div class="menu-icon">
       <span></span><span></span><span></span>
     </div>
@@ -277,8 +298,8 @@
       <!-- Add your graphic/anime images here just like the video -->
       <div class="hero-images">
         <div class="hero-img-box">
-           <!-- Acid Green Filtered Graphic (Replace src with your actual image) -->
-          <img src="https://images.unsplash.com/photo-1618331835717-801e976710b2?auto=format&fit=crop&q=80&w=800" alt="Graphic Art" style="height: 300px; filter: grayscale(100%) sepia(100%) hue-rotate(50deg) saturate(500%) contrast(1.2);">
+           <!-- Synthwave Pink/Purple Filtered Graphic (Replace src with your actual image) -->
+          <img src="https://images.unsplash.com/photo-1618331835717-801e976710b2?auto=format&fit=crop&q=80&w=800" alt="Graphic Art" style="height: 300px; filter: grayscale(100%) sepia(100%) hue-rotate(290deg) saturate(350%) contrast(1.2) brightness(0.9);">
         </div>
       </div>
     </section>
@@ -296,10 +317,10 @@
       <div class="jp-text">サポートされているデバイス</div> <!-- Japanese for "Supported Devices" -->
       <h2 class="section-title">Device Maintained</h2>
       
-      <div class="flat-card" style="margin-top: 2rem; text-align: center; max-width: 400px;">
+      <div class="flat-card" style="margin-top: 2rem; text-align: center; max-width: 400px; border-color: var(--border-card);">
         <h3 style="font-size: 1.5rem; text-transform: uppercase;">Samsung Galaxy<br>Exynos 9611 Series</h3>
         <p style="margin-top: 1rem; font-family: 'JetBrains Mono', monospace; font-weight: 700;">
-          Codename: <span style="color: var(--accent-color);">m31 / a51 / f41</span><br>
+          Codename: <span style="color: var(--accent-cyan);">m31 / a51 / f41</span><br>
           Exynos 9611 | Android 13-17<br>
           Maintained with ❤️
         </p>
