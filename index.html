@@ -12,17 +12,17 @@
 
   <style>
     :root {
-      /* High-Contrast Dark Theme */
-      --bg-base: #050505; /* Pitch Black */
-      --bg-card: #0a0a0a; /* Slightly lighter black for depth */
-      --bg-card-alt: rgba(239, 68, 68, 0.05); /* Very subtle red tint */
+      /* High-Contrast Electric Cyan & Midnight Slate Theme */
+      --bg-base: #020617; /* Deepest Midnight Slate / Almost Black */
+      --bg-card: #020617;
+      --bg-card-alt: rgba(0, 229, 255, 0.04); /* Subtle Cyan Tint */
       
-      --accent-red: #ef4444; /* Piercing Neon Crimson */
-      --text-main: #ffffff;  /* Stark White */
-      --text-muted: #a1a1aa; /* Light Zinc/Grey */
+      --accent-color: #00e5ff; /* Piercing Electric Cyan */
+      --text-main: #f8fafc;  /* Stark White */
+      --text-muted: #94a3b8; /* Cool Slate Grey */
       
-      --border-main: #ef4444; /* Solid Red Borders */
-      --border-subtle: rgba(239, 68, 68, 0.3); /* Faded Red for inner borders */
+      --border-main: #00e5ff; /* Solid Neon Cyan Borders */
+      --border-subtle: rgba(0, 229, 255, 0.25); /* Faded Cyan for inner borders */
 
       --radius-sm: 4px;
       --radius-md: 8px;
@@ -47,14 +47,14 @@
     /* Scrollbar */
     ::-webkit-scrollbar { width: 8px; }
     ::-webkit-scrollbar-track { background: var(--bg-base); border-left: 1px solid var(--border-subtle); }
-    ::-webkit-scrollbar-thumb { background: var(--accent-red); }
+    ::-webkit-scrollbar-thumb { background: var(--accent-color); }
 
     /* Navigation */
     .navbar {
       position: fixed; top: 0; left: 0; width: 100%;
       padding: 1.25rem 2rem;
       display: flex; justify-content: space-between; align-items: center;
-      background: rgba(5, 5, 5, 0.85);
+      background: rgba(2, 6, 23, 0.85);
       backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
       border-bottom: 2px solid var(--border-main);
       z-index: 100;
@@ -99,14 +99,14 @@
     .hero-badge {
       display: inline-flex; align-items: center; justify-content: center;
       width: 48px; height: 48px; border: 2px solid var(--border-main);
-      font-weight: 900; font-size: 1.2rem; color: var(--accent-red);
+      font-weight: 900; font-size: 1.2rem; color: var(--accent-color);
       margin-bottom: 1.5rem; letter-spacing: -1px;
     }
 
     .jp-text {
       font-family: 'Noto Sans JP', sans-serif;
       font-weight: 900; font-size: 1.2rem;
-      color: var(--accent-red); letter-spacing: 0.1em;
+      color: var(--accent-color); letter-spacing: 0.1em;
       margin-bottom: 0.5rem;
     }
 
@@ -115,7 +115,7 @@
       line-height: 1.05; letter-spacing: -0.02em; margin-bottom: 1.5rem;
       color: var(--text-main); text-transform: uppercase;
     }
-    .hero-title span { color: var(--accent-red); }
+    .hero-title span { color: var(--accent-color); }
 
     .hero-desc {
       font-size: 1.1rem; color: var(--text-muted); max-width: 600px;
@@ -124,13 +124,13 @@
 
     .btn-solid {
       display: inline-flex; align-items: center; gap: 0.75rem;
-      background: var(--accent-red); color: #ffffff;
-      padding: 0.8rem 1.5rem; border: none; font-weight: 700; font-size: 0.9rem;
+      background: var(--accent-color); color: #000000;
+      padding: 0.8rem 1.5rem; border: none; font-weight: 800; font-size: 0.9rem;
       cursor: pointer; text-decoration: none; transition: background 0.2s;
     }
-    .btn-solid:hover { background: #dc2626; }
+    .btn-solid:hover { background: #00b8cc; }
 
-    /* Hero Images Grid */
+    /* Hero Images Grid (Like the video) */
     .hero-images {
       display: grid; gap: 1.5rem; margin-top: 4rem;
     }
@@ -167,7 +167,7 @@
       background: var(--bg-card-alt);
     }
     .flat-card-icon {
-      color: var(--accent-red); margin-bottom: 1rem;
+      color: var(--accent-color); margin-bottom: 1rem;
     }
     .flat-card h3 { font-size: 1.25rem; font-weight: 800; margin-bottom: 0.5rem; }
     .flat-card p { font-size: 0.95rem; color: var(--text-muted); line-height: 1.6; }
@@ -191,7 +191,7 @@
       transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
     .build-card:hover {
-      transform: translateY(-4px); box-shadow: 4px 4px 0px var(--accent-red);
+      transform: translateY(-4px); box-shadow: 4px 4px 0px var(--accent-color);
     }
 
     .card-top { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid var(--border-main); padding-bottom: 1.5rem; gap: 1rem; flex-wrap: wrap; }
@@ -199,12 +199,12 @@
     
     .build-name { font-size: 1.5rem; font-weight: 900; color: var(--text-main); text-transform: uppercase; }
     .build-meta { font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; font-weight: 600; color: var(--text-muted); }
-    .build-meta span { color: var(--accent-red); }
+    .build-meta span { color: var(--accent-color); }
 
     .badge {
       font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; padding: 0.3rem 0.8rem;
-      border: 2px solid var(--accent-red); text-transform: uppercase; font-weight: 800;
-      color: var(--accent-red); background: transparent;
+      border: 2px solid var(--accent-color); text-transform: uppercase; font-weight: 800;
+      color: var(--accent-color); background: transparent;
     }
 
     .card-middle { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
@@ -212,7 +212,7 @@
 
     .data-grid { display: flex; gap: 1.5rem; flex-wrap: wrap; margin-bottom: 1rem; }
     .data-block { display: flex; flex-direction: column; gap: 0.35rem; }
-    .data-label { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--accent-red); text-transform: uppercase; font-weight: 700; }
+    .data-label { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--accent-color); text-transform: uppercase; font-weight: 700; }
     .data-value { font-size: 0.95rem; color: var(--text-main); font-weight: 700; }
 
     .changelog-box {
@@ -229,9 +229,9 @@
     .changelog-box::-webkit-scrollbar-thumb { background: var(--border-subtle); }
 
     .notice-box {
-      background: rgba(239, 68, 68, 0.1); color: var(--accent-red);
+      background: rgba(0, 229, 255, 0.1); color: var(--accent-color);
       font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; font-weight: 700;
-      border: 2px solid var(--accent-red); padding: 0.75rem 1rem; margin-bottom: 1rem; line-height: 1.6;
+      border: 2px solid var(--accent-color); padding: 0.75rem 1rem; margin-bottom: 1rem; line-height: 1.6;
     }
 
     .card-footer { display: flex; justify-content: flex-end; padding-top: 1.5rem; border-top: 2px solid var(--border-main); }
@@ -277,8 +277,8 @@
       <!-- Add your graphic/anime images here just like the video -->
       <div class="hero-images">
         <div class="hero-img-box">
-           <!-- High Contrast Placeholder for Anime Graphic (Replace src with your actual image) -->
-          <img src="https://images.unsplash.com/photo-1618331835717-801e976710b2?auto=format&fit=crop&q=80&w=800" alt="Graphic Art" style="height: 300px; filter: grayscale(100%) contrast(1.2);">
+           <!-- Cyberpunk Cyan Filtered Graphic (Replace src with your actual image) -->
+          <img src="https://images.unsplash.com/photo-1618331835717-801e976710b2?auto=format&fit=crop&q=80&w=800" alt="Graphic Art" style="height: 300px; filter: grayscale(100%) sepia(100%) hue-rotate(150deg) saturate(500%) contrast(1.2) brightness(1.1);">
         </div>
       </div>
     </section>
@@ -299,7 +299,7 @@
       <div class="flat-card" style="margin-top: 2rem; text-align: center; max-width: 400px;">
         <h3 style="font-size: 1.5rem; text-transform: uppercase;">Samsung Galaxy<br>Exynos 9611 Series</h3>
         <p style="margin-top: 1rem; font-family: 'JetBrains Mono', monospace; font-weight: 700;">
-          Codename: <span style="color: var(--accent-red);">m31 / a51 / f41</span><br>
+          Codename: <span style="color: var(--accent-color);">m31 / a51 / f41</span><br>
           Exynos 9611 | Android 13-17<br>
           Maintained with ❤️
         </p>
