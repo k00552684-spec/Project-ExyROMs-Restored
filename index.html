@@ -5,45 +5,43 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Project-ExyROMs | Official</title>
 
-  <!-- Google Fonts: Inter & JetBrains Mono -->
+  <!-- Google Fonts: Inter & JetBrains Mono for the Tech/Voltage Look -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
   <style>
     :root {
-      /* Deep Dark Background (VoltageOS) */
-      --bg: #030305;
-      --bg-panel: rgba(18, 18, 22, 0.65);
+      /* Deep Dark Background (Pure VoltageOS) */
+      --bg: #000000;
+      --bg-panel: rgba(10, 10, 15, 0.75);
       
       /* Glassmorphism Cards */
-      --bg-card: rgba(25, 25, 30, 0.4);
-      --bg-card-hover: rgba(35, 35, 45, 0.6);
-      --bg-inset: rgba(0, 0, 0, 0.4);
+      --bg-card: rgba(16, 16, 20, 0.45);
+      --bg-card-hover: rgba(22, 22, 28, 0.8);
+      --bg-inset: rgba(0, 0, 0, 0.5);
       
-      /* Accent Colors (Mix of Voltage & PixelOS) */
-      --accent-primary: #a78bfa; /* Purple */
+      /* VoltageOS Signature Accents */
+      --accent-primary: #818cf8; /* Electric Purple */
       --accent-secondary: #38bdf8; /* Cyan */
-      --accent-tertiary: #f472b6; /* Pink */
       
-      /* Subtle Glass Borders */
-      --border-subtle: rgba(255, 255, 255, 0.08);
+      /* Sharp Borders */
+      --border-subtle: rgba(255, 255, 255, 0.1);
       --border-light: rgba(255, 255, 255, 0.15);
-      --border-hover: rgba(255, 255, 255, 0.25);
+      --border-hover: rgba(129, 140, 248, 0.5); /* Purple Glow */
       
       /* Text Colors */
       --text-100: #ffffff;
-      --text-200: #cbd5e1;
+      --text-200: #a1a1aa; /* Zinc */
       --text-300: #818cf8;
 
-      /* Material You / PixelOS Radii */
-      --radius-sm: 12px;
-      --radius-md: 20px;
-      --radius-lg: 32px;
-      --radius-full: 9999px;
+      /* Sharp Tech Radii (Not bubbly) */
+      --radius-sm: 4px;
+      --radius-md: 8px;
+      --radius-lg: 12px;
 
-      /* Smooth Animations */
-      --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      /* Snappy Animations */
+      --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
       --ease-out: cubic-bezier(0.25, 1, 0.5, 1);
     }
 
@@ -76,7 +74,7 @@
       body { padding: 0 1.5rem 8rem 1.5rem; }
     }
 
-    /* Ambient Background Effects (VoltageOS) */
+    /* Ambient Background Effects */
     .ambient-stage {
       position: fixed;
       inset: 0;
@@ -93,7 +91,7 @@
       transform: translateX(-50%);
       width: 120vw;
       height: 70vh;
-      background: radial-gradient(ellipse at top, rgba(56, 189, 248, 0.15) 0%, rgba(167, 139, 250, 0.08) 45%, transparent 70%);
+      background: radial-gradient(ellipse at top, rgba(56, 189, 248, 0.12) 0%, rgba(129, 140, 248, 0.08) 45%, transparent 70%);
       pointer-events: none;
       z-index: 0;
     }
@@ -117,9 +115,9 @@
       left: -24vw; 
       top: -24vw; 
       border-radius: 50%;
-      background: radial-gradient(circle, rgba(56, 189, 248, 0.25) 0%, rgba(167, 139, 250, 0.15) 40%, transparent 70%);
+      background: radial-gradient(circle, rgba(56, 189, 248, 0.2) 0%, rgba(129, 140, 248, 0.1) 40%, transparent 70%);
       filter: blur(80px);
-      animation: orbSpin 20s linear infinite;
+      animation: orbSpin 16s linear infinite;
     }
 
     @media (max-width: 768px) {
@@ -147,141 +145,149 @@
     .ambient-glass-shield {
       position: fixed;
       inset: 0;
-      background: rgba(3, 3, 5, 0.3);
-      backdrop-filter: blur(1px);
+      background: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(2px);
       pointer-events: none;
       z-index: 2;
     }
 
     /* Scrollbar */
-    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
     ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.15); border-radius: 8px; }
-    ::-webkit-scrollbar-thumb:hover { background: var(--accent-secondary); }
+    ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 2px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--accent-primary); }
 
     .layout-grid {
       width: 100%;
-      max-width: 1000px;
+      max-width: 960px;
       display: flex;
       flex-direction: column;
-      gap: 2.5rem;
+      gap: 2rem;
       position: relative;
       z-index: 10;
     }
 
-    /* Floating Navigation (PixelOS Style) */
+    /* Voltage Sleek Navigation */
     nav {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 0.85rem 1.5rem;
+      padding: 1rem 1.25rem;
       background: var(--bg-panel);
-      backdrop-filter: blur(32px) saturate(200%);
-      -webkit-backdrop-filter: blur(32px) saturate(200%);
-      border: 1px solid var(--border-light);
-      border-radius: var(--radius-full);
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255,255,255,0.1);
-      position: sticky;
-      top: 1.5rem;
-      z-index: 100;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+      position: relative;
       margin-top: 1.5rem;
     }
 
     .logo {
       font-weight: 900;
-      font-size: 1.25rem;
-      letter-spacing: -0.04em;
+      font-size: 1.15rem;
+      letter-spacing: 0.05em;
       text-decoration: none;
-      background: linear-gradient(135deg, var(--text-100), var(--text-300));
+      background: linear-gradient(135deg, var(--text-100), var(--accent-primary));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      transition: opacity 0.2s;
+      text-transform: uppercase;
     }
-    
-    .logo:hover { opacity: 0.8; }
 
     .nav-actions { display: flex; gap: 0.75rem; align-items: center; }
 
     .nav-cta {
-      font-family: 'Inter', sans-serif;
-      font-size: 0.8rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.1em;
       text-decoration: none;
       color: #000;
-      background: var(--text-100);
-      padding: 0.6rem 1.25rem;
-      border-radius: var(--radius-full);
-      transition: all 0.25s var(--ease-spring);
+      background: var(--accent-primary);
+      padding: 0.5rem 1.15rem;
+      border-radius: var(--radius-sm);
+      transition: all 0.2s ease;
       cursor: pointer;
-      border: none;
+      border: 1px solid var(--accent-primary);
     }
 
-    .nav-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(255,255,255,0.2); }
+    .nav-cta:hover { 
+      background: transparent; 
+      color: var(--accent-primary);
+      box-shadow: 0 0 15px rgba(129, 140, 248, 0.3);
+    }
 
     .nav-cta.secondary {
-      background: rgba(255, 255, 255, 0.08);
-      color: var(--text-100);
+      background: transparent;
+      color: var(--text-200);
       border: 1px solid var(--border-subtle);
     }
-    .nav-cta.secondary:hover { background: rgba(255, 255, 255, 0.15); border-color: var(--border-hover); box-shadow: none; }
+    .nav-cta.secondary:hover { 
+      background: rgba(255, 255, 255, 0.05); 
+      color: #fff; 
+      border-color: var(--text-100); 
+      box-shadow: none; 
+    }
 
-    /* Hero Section */
+    /* Voltage Hero Section */
     .hero {
       display: flex;
       flex-direction: column;
       align-items: center;
       text-align: center;
-      gap: 1rem;
+      gap: 0.5rem;
       margin-top: 2rem;
     }
 
     .mesh-title {
-      font-size: clamp(3rem, 10vw, 6.5rem);
+      font-size: clamp(3rem, 11vw, 7rem);
       font-weight: 900;
-      line-height: 1.1;
+      line-height: 1.05;
       letter-spacing: -0.05em;
       text-transform: uppercase;
-      background: linear-gradient(135deg, var(--accent-secondary) 0%, var(--accent-primary) 50%, var(--accent-tertiary) 100%);
+      background: linear-gradient(to right, #ffffff, var(--accent-primary));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       margin: 0;
-      filter: drop-shadow(0 0 30px rgba(167, 139, 250, 0.3));
+      text-shadow: 0 0 40px rgba(129, 140, 248, 0.2);
     }
 
     .hero-desc {
-      font-size: 1.15rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.95rem;
       color: var(--text-200);
       max-width: 600px;
       line-height: 1.6;
       font-weight: 400;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
     }
 
-    .hero-desc b { color: var(--text-100); }
+    .hero-desc b { color: var(--accent-primary); font-weight: 700; }
 
     .hero-devices-img {
       width: 100%;
-      max-width: 800px;
+      max-width: 750px;
       height: auto;
       object-fit: contain;
-      filter: drop-shadow(0 30px 50px rgba(0, 0, 0, 0.9));
+      filter: drop-shadow(0 25px 40px rgba(0, 0, 0, 0.8));
       user-select: none;
       pointer-events: none;
-      margin: 2rem 0;
+      margin: 1rem 0;
     }
 
     .builds-container {
       display: flex;
       flex-direction: column;
-      gap: 2rem;
+      gap: 1.5rem;
       width: 100%;
     }
 
     .reveal-element {
       opacity: 0;
-      transform: translateY(40px);
-      transition: opacity 0.7s var(--ease-out), transform 0.7s var(--ease-spring);
+      transform: translateY(30px);
+      transition: opacity 0.6s var(--ease-out), transform 0.6s var(--ease-spring);
     }
     .reveal-element.is-visible {
       opacity: 1;
@@ -290,38 +296,40 @@
 
     .section-label {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 0.85rem;
+      font-size: 0.75rem;
       font-weight: 700;
-      color: var(--text-300);
+      color: var(--text-200);
       text-transform: uppercase;
       letter-spacing: 0.1em;
-      border-bottom: 2px solid var(--border-subtle);
-      padding-bottom: 0.75rem;
-      margin-top: 2rem;
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 0.5rem;
+      margin-top: 1.5rem;
       display: flex;
       justify-content: space-between;
     }
+    .section-label span:first-child { color: var(--accent-primary); }
 
-    /* Cards - The PixelOS + VoltageOS Blend */
+    /* Voltage Tech Cards */
     .rom-card {
       background: var(--bg-card);
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-lg);
-      padding: 2rem;
+      border-radius: var(--radius-md);
+      padding: 1.5rem;
       display: flex;
       flex-direction: column;
       gap: 1.5rem;
-      transition: all 0.3s var(--ease-spring);
+      transition: all 0.2s ease;
       position: relative;
     }
 
+    @media (min-width: 768px) { .rom-card { padding: 2rem; } }
+
     .rom-card:hover {
       background: var(--bg-card-hover);
-      border-color: rgba(167, 139, 250, 0.4);
-      transform: translateY(-4px) scale(1.005);
-      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5), 0 0 40px rgba(56, 189, 248, 0.05);
+      border-color: var(--border-hover);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5), inset 0 0 20px rgba(129, 140, 248, 0.05);
     }
 
     .card-top {
@@ -329,151 +337,152 @@
       justify-content: space-between;
       align-items: flex-start;
       border-bottom: 1px solid var(--border-subtle);
-      padding-bottom: 1.5rem;
-      gap: 1rem;
+      padding-bottom: 1.25rem;
+      gap: 0.75rem;
     }
 
-    .card-title-group { display: flex; flex-direction: column; gap: 0.5rem; }
+    .card-title-group { display: flex; flex-direction: column; gap: 0.4rem; }
 
     .title-row {
       display: flex;
       align-items: center;
-      gap: 1rem;
+      gap: 0.75rem;
       flex-wrap: wrap;
     }
 
     .build-name {
-      font-size: 1.6rem;
-      font-weight: 900;
-      letter-spacing: -0.02em;
+      font-size: 1.45rem;
+      font-weight: 800;
+      letter-spacing: -0.01em;
       color: var(--text-100);
     }
 
     .build-meta {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       font-weight: 500;
       color: var(--text-200);
     }
     .build-meta span { color: var(--text-300); }
 
-    /* Material Tonal Badges */
+    /* Tech Badges */
     .badge {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 0.7rem;
-      padding: 0.35rem 0.8rem;
-      border-radius: var(--radius-full);
+      font-size: 0.65rem;
+      padding: 0.25rem 0.6rem;
+      border-radius: var(--radius-sm);
       text-transform: uppercase;
-      font-weight: 800;
+      font-weight: 700;
       letter-spacing: 0.05em;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-subtle);
     }
 
-    .badge-rom { color: #38bdf8; background: rgba(56, 189, 248, 0.15); border: 1px solid rgba(56, 189, 248, 0.25); }
-    .badge-kernel { color: #34d399; background: rgba(52, 211, 153, 0.15); border: 1px solid rgba(52, 211, 153, 0.25); }
-    .badge-gapps { color: #fbbf24; background: rgba(251, 191, 36, 0.15); border: 1px solid rgba(251, 191, 36, 0.25); }
-    .badge-recovery { color: #a78bfa; background: rgba(167, 139, 250, 0.15); border: 1px solid rgba(167, 139, 250, 0.25); }
+    .badge-rom { color: var(--accent-secondary); border-color: rgba(56, 189, 248, 0.3); }
+    .badge-kernel { color: #34d399; border-color: rgba(52, 211, 153, 0.3); }
+    .badge-gapps { color: #fbbf24; border-color: rgba(251, 191, 36, 0.3); }
+    .badge-recovery { color: var(--accent-primary); border-color: rgba(167, 139, 250, 0.3); }
 
     .flavor-pill {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 0.7rem;
-      font-weight: 700;
-      padding: 0.3rem 0.75rem;
+      font-size: 0.65rem;
+      font-weight: 600;
+      padding: 0.2rem 0.5rem;
       border-radius: var(--radius-sm);
       text-transform: uppercase;
       letter-spacing: 0.05em;
       background: var(--bg-inset);
-      border: 1px solid var(--border-light);
-      color: var(--text-100);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-200);
     }
     
-    .flavor-gapps { color: #38bdf8; border-color: rgba(56, 189, 248, 0.3); }
-    .flavor-eol { color: #f87171; border-color: rgba(239, 68, 68, 0.3); }
+    .flavor-gapps { color: var(--accent-secondary); border-color: rgba(56, 189, 248, 0.25); }
+    .flavor-eol { color: #f87171; border-color: rgba(239, 68, 68, 0.25); }
 
     .card-middle {
       display: grid;
-      grid-template-columns: 1.2fr 1fr;
-      gap: 2.5rem;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
     }
     
     .card-middle.full-width { grid-template-columns: 1fr; }
 
     @media (max-width: 768px) { 
-      .card-middle { grid-template-columns: 1fr; gap: 2rem; } 
-      .rom-card { padding: 1.5rem; }
+      .card-middle { grid-template-columns: 1fr; gap: 1.5rem; } 
     }
 
     .data-grid {
       display: flex;
-      gap: 1.5rem;
+      gap: 1.25rem;
       flex-wrap: wrap;
       margin-bottom: 1rem;
     }
 
-    .data-block { display: flex; flex-direction: column; gap: 0.4rem; }
+    .data-block { display: flex; flex-direction: column; gap: 0.35rem; }
 
     .data-label {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 0.7rem;
+      font-size: 0.65rem;
       color: var(--text-300);
       text-transform: uppercase;
       letter-spacing: 0.05em;
       font-weight: 700;
     }
 
-    .data-value { font-size: 0.95rem; color: var(--text-100); font-weight: 600; display: flex; gap: 0.5rem; flex-wrap: wrap; }
+    .data-value { font-size: 0.85rem; color: var(--text-100); font-weight: 500; display: flex; gap: 0.5rem; flex-wrap: wrap; }
 
     .changelog-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.25rem;
     }
 
     .copy-btn {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid var(--border-light);
+      background: transparent;
+      border: 1px solid var(--border-subtle);
       color: var(--text-200);
       font-family: 'JetBrains Mono', monospace;
-      font-size: 0.7rem;
-      padding: 0.3rem 0.75rem;
-      border-radius: var(--radius-full);
+      font-size: 0.65rem;
+      padding: 0.25rem 0.6rem;
+      border-radius: var(--radius-sm);
       cursor: pointer;
       display: inline-flex;
       align-items: center;
-      gap: 0.4rem;
-      transition: all 0.2s ease;
+      gap: 0.35rem;
+      transition: all 0.15s ease;
     }
 
     .copy-btn:hover {
       color: #fff;
-      border-color: var(--accent-secondary);
-      background: rgba(56, 189, 248, 0.1);
+      border-color: var(--accent-primary);
+      background: rgba(129, 140, 248, 0.1);
     }
 
     .changelog-box {
       background: var(--bg-inset);
       border: 1px solid var(--border-subtle);
-      padding: 1rem 1.25rem;
-      border-radius: var(--radius-md);
+      padding: 0.85rem 1rem;
+      border-radius: var(--radius-sm);
       font-family: 'JetBrains Mono', monospace;
-      font-size: 0.8rem;
-      font-weight: 500;
+      font-size: 0.75rem;
+      font-weight: 400;
       color: var(--text-200);
       white-space: pre-line;
-      max-height: 200px;
+      max-height: 180px;
       overflow-y: auto;
-      line-height: 1.7;
+      line-height: 1.6;
     }
 
-    .changelog-box b { color: var(--accent-primary); font-weight: 800; }
+    .changelog-box b { color: #fff; font-weight: 600; }
 
     .notice-box {
-      background: rgba(245, 158, 11, 0.08);
+      background: rgba(245, 158, 11, 0.05);
       color: #fde68a;
       font-family: 'JetBrains Mono', monospace;
-      font-size: 0.8rem;
-      border-left: 4px solid #f59e0b;
-      padding: 1rem;
+      font-size: 0.75rem;
+      border-left: 2px solid #f59e0b;
+      padding: 0.75rem 1rem;
       border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
       margin-bottom: 1rem;
       line-height: 1.6;
@@ -483,24 +492,24 @@
       width: 100%; 
       display: flex;
       flex-direction: column;
-      gap: 0.75rem;
+      gap: 0.5rem;
     }
 
     .gallery-track {
       display: flex;
       gap: 0.75rem;
       overflow-x: auto;
-      padding-bottom: 0.75rem;
+      padding-bottom: 0.5rem;
       scrollbar-width: none;
     }
     .gallery-track::-webkit-scrollbar { display: none; }
 
     .img-thumb {
-      height: 180px !important;
+      height: 160px !important;
       width: auto !important;
       border-radius: var(--radius-sm);
       cursor: pointer;
-      border: 2px solid transparent;
+      border: 1px solid var(--border-light);
       object-fit: contain;
       flex-shrink: 0;
       transition: all 0.2s ease;
@@ -509,13 +518,13 @@
 
     .img-thumb:hover {
       border-color: var(--accent-primary);
-      transform: scale(1.03);
+      filter: brightness(1.1);
     }
 
     .card-footer {
       display: flex;
       justify-content: flex-end;
-      padding-top: 1.5rem;
+      padding-top: 1.25rem;
       border-top: 1px solid var(--border-subtle);
     }
 
@@ -523,21 +532,22 @@
       display: inline-flex;
       align-items: center;
       gap: 0.5rem;
-      background: linear-gradient(135deg, var(--accent-secondary), var(--accent-primary));
-      color: #000;
-      font-family: 'Inter', sans-serif;
-      font-weight: 800;
-      font-size: 0.9rem;
-      padding: 0.75rem 2rem;
-      border-radius: var(--radius-full);
+      background: #ffffff;
+      color: #000000;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      font-size: 0.8rem;
+      padding: 0.6rem 1.5rem;
+      border-radius: var(--radius-sm);
       text-decoration: none;
-      transition: all 0.2s var(--ease-spring);
-      box-shadow: 0 10px 25px rgba(167, 139, 250, 0.25);
+      text-transform: uppercase;
+      transition: all 0.15s ease;
     }
 
     .download-btn:hover {
-      transform: translateY(-3px) scale(1.02);
-      box-shadow: 0 15px 30px rgba(167, 139, 250, 0.4);
+      background: var(--accent-primary);
+      color: #000;
+      box-shadow: 0 0 15px rgba(129, 140, 248, 0.4);
     }
 
     /* Modal / Lightbox System */
@@ -545,51 +555,52 @@
       position: fixed;
       inset: 0;
       background: rgba(0, 0, 0, 0.85);
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
       z-index: 2000;
       display: flex;
       justify-content: center;
       align-items: center;
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.3s ease;
+      transition: opacity 0.25s ease;
       padding: 1rem;
     }
 
     .overlay.active { opacity: 1; pointer-events: all; }
 
     .modal-content {
-      background: rgba(18, 18, 22, 0.8);
-      border: 1px solid var(--border-light);
-      padding: 3rem;
-      border-radius: var(--radius-lg);
-      max-width: 600px;
+      background: var(--bg-panel);
+      border: 1px solid var(--border-subtle);
+      padding: 2.5rem;
+      border-radius: var(--radius-md);
+      max-width: 540px;
       width: 100%;
       position: relative;
-      transform: scale(0.9) translateY(20px);
-      transition: transform 0.4s var(--ease-spring);
-      box-shadow: 0 30px 60px rgba(0,0,0,0.8);
+      transform: scale(0.95) translateY(10px);
+      transition: transform 0.3s var(--ease-spring);
+      box-shadow: 0 24px 50px rgba(0,0,0,0.8);
     }
 
     .overlay.active .modal-content { transform: scale(1) translateY(0); }
 
     .modal-title {
-      font-size: 1.5rem;
-      font-weight: 800;
-      margin-bottom: 1.5rem;
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 1.25rem;
       border-bottom: 1px solid var(--border-light);
-      padding-bottom: 1rem;
+      padding-bottom: 0.75rem;
       color: var(--text-100);
+      text-transform: uppercase;
     }
 
     .guide-step-title {
-      color: var(--accent-secondary);
+      color: var(--accent-primary);
       font-family: 'JetBrains Mono', monospace;
-      font-size: 0.85rem;
-      font-weight: 800;
-      margin-bottom: 0.75rem;
-      margin-top: 1.5rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      margin-top: 1.25rem;
     }
 
     .guide-list {
@@ -597,7 +608,8 @@
       padding-left: 1.25rem;
       color: var(--text-200);
       line-height: 1.8;
-      font-size: 0.95rem;
+      font-size: 0.85rem;
+      font-family: 'JetBrains Mono', monospace;
     }
     
     .guide-list b { color: #fff; }
@@ -613,37 +625,39 @@
       opacity: 0;
       visibility: hidden;
       pointer-events: none;
-      transition: opacity 0.3s ease, visibility 0s linear 0.3s;
+      transition: opacity 0.25s ease, visibility 0s linear 0.25s;
     }
 
     .lightbox-overlay.active {
       opacity: 1;
       visibility: visible;
       pointer-events: all;
-      transition: opacity 0.3s ease, visibility 0s;
+      transition: opacity 0.25s ease, visibility 0s;
     }
 
     .lightbox-img-wrap {
       max-width: 90vw;
-      max-height: 80vh;
+      max-height: 75vh;
       display: flex;
       align-items: center;
       justify-content: center;
+      margin-top: -2rem;
       touch-action: pan-y;
     }
 
     .lightbox-img {
       max-width: 88vw;
-      max-height: 75vh;
+      max-height: 72vh;
       width: auto;
       height: auto;
-      border-radius: var(--radius-md);
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-subtle);
       object-fit: contain;
       user-select: none;
-      box-shadow: 0 40px 100px rgba(0, 0, 0, 1);
+      box-shadow: 0 30px 90px rgba(0, 0, 0, 0.95);
       opacity: 0;
-      transform: scale3d(0.9, 0.9, 1);
-      transition: transform 0.4s var(--ease-spring), opacity 0.3s ease;
+      transform: scale3d(0.95, 0.95, 1);
+      transition: transform 0.3s var(--ease-spring), opacity 0.2s ease;
     }
 
     .lightbox-overlay.active .lightbox-img {
@@ -653,11 +667,11 @@
 
     .lb-close {
       position: fixed;
-      top: 1.5rem;
-      right: 1.5rem;
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
+      top: max(1.25rem, calc(env(safe-area-inset-top) + 0.5rem));
+      right: max(1.25rem, calc(env(safe-area-inset-right) + 0.5rem));
+      width: 44px;
+      height: 44px;
+      border-radius: var(--radius-sm);
       background: rgba(255, 255, 255, 0.1);
       border: 1px solid var(--border-light);
       color: var(--text-100);
@@ -668,31 +682,31 @@
       z-index: 100000;
       opacity: 0;
       transform: scale(0.8);
-      transition: all 0.3s var(--ease-spring);
+      transition: all 0.2s;
     }
 
     .lightbox-overlay.active .lb-close { opacity: 1; transform: scale(1); }
-    .lb-close:hover { background: var(--accent-tertiary); color: #000; border-color: transparent; }
-    .lb-close svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+    .lb-close:hover { background: var(--accent-primary); color: #000; border-color: transparent; }
+    .lb-close svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 
     .lb-toolbar {
       position: fixed;
-      bottom: 2rem;
+      bottom: max(1.5rem, calc(env(safe-area-inset-bottom) + 1rem));
       left: 50%;
       transform: translateX(-50%) translateY(20px);
       display: flex;
       align-items: center;
       gap: 0.5rem;
-      background: rgba(20, 20, 25, 0.85);
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
+      background: rgba(10, 10, 15, 0.9);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       border: 1px solid var(--border-light);
-      padding: 0.5rem 1rem;
-      border-radius: var(--radius-full);
+      padding: 0.4rem 0.75rem;
+      border-radius: var(--radius-sm);
       z-index: 100000;
       opacity: 0;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
-      transition: transform 0.4s var(--ease-spring), opacity 0.3s ease;
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.85);
+      transition: transform 0.3s var(--ease-spring), opacity 0.2s ease;
     }
 
     .lightbox-overlay.active .lb-toolbar {
@@ -701,9 +715,9 @@
     }
 
     .lb-nav-btn {
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-sm);
       background: transparent;
       border: none;
       color: var(--text-200);
@@ -711,27 +725,27 @@
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      transition: all 0.2s ease;
+      transition: color 0.15s ease;
     }
 
-    .lb-nav-btn:hover { background: rgba(255,255,255,0.1); color: #fff; }
-    .lb-nav-btn svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+    .lb-nav-btn:hover { background: rgba(255,255,255,0.05); color: #fff; }
+    .lb-nav-btn svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 
     .lb-counter {
       font-family: 'JetBrains Mono', monospace;
-      color: var(--text-100);
-      font-size: 0.9rem;
-      font-weight: 700;
-      padding: 0 1rem;
+      color: var(--text-200);
+      font-size: 0.85rem;
+      font-weight: 600;
+      padding: 0 0.5rem;
       user-select: none;
-      min-width: 75px;
+      min-width: 65px;
       text-align: center;
     }
   </style>
 </head>
 <body>
 
-  <!-- Ambient Background Orbs -->
+  <!-- Voltage Background Orbs -->
   <div class="ambient-top-glow"></div>
   <div class="ambient-stage">
     <div id="interactiveOrb" class="interactive-orb-wrapper">
@@ -744,19 +758,19 @@
 
   <div class="layout-grid">
     
-    <!-- Floating PixelOS Style Nav -->
+    <!-- Sharp Tech Nav -->
     <nav>
       <a href="#" class="logo">EXYROMS</a>
       <div class="nav-actions">
-        <button onclick="toggleGuideModal()" class="nav-cta secondary">Guide</button>
-        <a href="https://t.me/ExyROMs" target="_blank" class="nav-cta">Telegram</a>
+        <button onclick="toggleGuideModal()" class="nav-cta secondary">GUIDE</button>
+        <a href="https://t.me/ExyROMs" target="_blank" class="nav-cta">TELEGRAM</a>
       </div>
     </nav>
 
     <!-- VoltageOS Hero -->
     <section class="hero">
       <h1 class="mesh-title" id="meshTitle">EXYNOS 9611</h1>
-      <p class="hero-desc"><b>NEXT-LEVEL OPTIMISATION AND PERFORMANCE.</b> Welcome to Project ExyROMs.</p>
+      <p class="hero-desc"><b>PERFORMANCE OVERDRIVE.</b> WELCOME TO PROJECT EXYROMS</p>
       <img src="devices.png" alt="Devices" class="hero-devices-img" loading="eager" decoding="async" onerror="this.style.display='none'">
     </section>
 
@@ -767,10 +781,10 @@
   <!-- Guide Modal -->
   <div class="overlay" id="guideModal">
     <div class="modal-content">
-      <button class="lb-close" style="position: absolute; top: 1.5rem; right: 1.5rem; width: 44px; height: 44px; opacity: 1; transform: scale(1);" onclick="toggleGuideModal()" aria-label="Close">
+      <button class="lb-close" style="position: absolute; top: 1.25rem; right: 1.25rem; width: 40px; height: 40px; opacity: 1; transform: scale(1);" onclick="toggleGuideModal()" aria-label="Close">
         <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
       </button>
-      <h2 class="modal-title">Deployment Protocol</h2>
+      <h2 class="modal-title">DEPLOYMENT PROTOCOL</h2>
       
       <div class="guide-step-title">// CLEAN FLASH (NEW INSTALL)</div>
       <ol class="guide-list">
@@ -1018,7 +1032,7 @@
     let animRAF = null;
     let isAppHidden = false;
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const POINT_COLORS = ['#a78bfa', '#c084fc', '#38bdf8', '#ffffff'];
+    const POINT_COLORS = ['#818cf8', '#38bdf8', '#c084fc', '#ffffff'];
     
     function initPoints() {
       const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
@@ -1056,7 +1070,7 @@
       const pCount = particles.length;
 
       ctx.lineWidth = 0.6;
-      ctx.strokeStyle = 'rgba(167, 139, 250, 0.1)';
+      ctx.strokeStyle = 'rgba(129, 140, 248, 0.15)';
       ctx.beginPath();
       for (let i = 0; i < pCount; i++) {
         const p1 = particles[i];
@@ -1096,7 +1110,7 @@
     function copyChangelog(btn, text) {
       navigator.clipboard.writeText(text).then(() => {
         const prev = btn.innerHTML;
-        btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg> Copied!`;
+        btn.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg> COPIED`;
         btn.style.borderColor = 'var(--text-100)'; btn.style.color = 'var(--text-100)';
         setTimeout(() => { btn.innerHTML = prev; btn.style.borderColor = ''; btn.style.color = ''; }, 1600);
       });
@@ -1214,7 +1228,7 @@
                 <div class="build-name">${item.title}</div>
                 <span class="badge badge-${cat}">${cat}</span>
               </div>
-              <div class="build-meta"><span>Device:</span> ${item.device}</div>
+              <div class="build-meta"><span>[ Device:</span> ${item.device} <span>]</span></div>
             </div>
           </div>
 
@@ -1229,17 +1243,17 @@
                 <div class="changelog-header">
                   <span class="data-label">Changelog</span>
                   <button class="copy-btn" onclick="copyChangelog(this, \`${escapedChangelog}\`)" aria-label="Copy changelog">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg> Copy
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg> COPY
                   </button>
                 </div>
                 <div class="changelog-box">${safeChangelog}</div>
               </div>
             </div>
-            ${hasMedia ? `<div style="display:flex; flex-direction:column; gap:1.5rem; overflow:hidden;">${featuresHtml}${screensHtml}</div>` : ''}
+            ${hasMedia ? `<div style="display:flex; flex-direction:column; gap:1.25rem; overflow:hidden;">${featuresHtml}${screensHtml}</div>` : ''}
           </div>
 
           <div class="card-footer">
-            <a href="${item.downloadUrl}" target="_blank" rel="noopener noreferrer" class="download-btn">DOWNLOAD <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline></svg></a>
+            <a href="${item.downloadUrl}" target="_blank" rel="noopener noreferrer" class="download-btn">DOWNLOAD</a>
           </div>
         </div>`;
     }
