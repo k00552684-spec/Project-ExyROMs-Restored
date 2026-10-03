@@ -27,8 +27,6 @@
       --radius-sm: 4px;
       --radius-md: 8px;
       --radius-lg: 12px;
-
-      --ease-out: cubic-bezier(0.25, 1, 0.5, 1);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -66,27 +64,19 @@
       display: flex; align-items: center; gap: 0.5rem; text-transform: uppercase;
     }
 
-    /* Hamburger Menu Icon */
-    .menu-icon {
-      width: 30px; height: 20px; display: flex; flex-direction: column; justify-content: space-between; cursor: pointer;
-    }
-    .menu-icon span { display: block; height: 2px; width: 100%; background: var(--text-main); }
-
     /* Container */
     .container {
       max-width: 1000px; margin: 0 auto; padding: 0 1.5rem; width: 100%;
     }
 
-    /* Scroll Reveal Animation Classes */
-    .reveal {
-      opacity: 0;
-      transform: translateY(40px);
-      transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-      will-change: opacity, transform;
+    /* Reliable CSS Animations (Replaces buggy Intersection Observer) */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
     }
-    .reveal.active {
-      opacity: 1;
-      transform: translateY(0);
+    
+    .animate-up {
+      animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
 
     /* Hero Section */
@@ -257,14 +247,17 @@
   <nav class="navbar">
     <a href="#" class="nav-logo">EXYROMS</a>
     <div class="menu-icon">
-      <span></span><span></span><span></span>
+      <!-- Just decorative dashes for the minimalist look -->
+      <span style="display:block; width:20px; height:2px; background:var(--text-main); margin-bottom:4px;"></span>
+      <span style="display:block; width:20px; height:2px; background:var(--text-main); margin-bottom:4px;"></span>
+      <span style="display:block; width:20px; height:2px; background:var(--text-main);"></span>
     </div>
   </nav>
 
   <main class="container">
     
     <!-- Hero Section -->
-    <section class="hero reveal">
+    <section class="hero animate-up">
       <div class="hero-badge">EXY</div>
       <div class="jp-text">アンドロイド</div> <!-- Japanese for "Android" -->
       <h1 class="hero-title">Crafting Smooth,<br>Reliable <span>Android<br>Experiences.</span></h1>
@@ -274,17 +267,15 @@
         <a href="#builds" class="btn-solid">Explore ROMs &rarr;</a>
       </div>
 
-      <!-- Add your graphic/anime images here just like the video -->
       <div class="hero-images">
         <div class="hero-img-box">
-           <!-- Red Tinted Graphic (Replace src with your actual image) -->
           <img src="https://images.unsplash.com/photo-1578305698516-724d101d2d0b?auto=format&fit=crop&q=80&w=800" alt="Graphic Art" style="height: 300px; filter: grayscale(100%) sepia(100%) hue-rotate(315deg) saturate(300%) contrast(1.2);">
         </div>
       </div>
     </section>
 
     <!-- About / Intro Section -->
-    <section class="section-spacing reveal">
+    <section class="section-spacing animate-up">
       <div class="jp-text">私たちについて</div> <!-- Japanese for "About Us" -->
       <h2 class="section-title">Built with Passion.<br>For the <span>Community.</span></h2>
       <p class="section-text">All ROMs are built with dedication and a focus on performance, stability, and user experience.</p>
@@ -292,7 +283,7 @@
     </section>
 
     <!-- Device Maintainer Section -->
-    <section class="section-spacing reveal">
+    <section class="section-spacing animate-up">
       <div class="jp-text">サポートされているデバイス</div> <!-- Japanese for "Supported Devices" -->
       <h2 class="section-title">Device Maintained</h2>
       
@@ -307,7 +298,7 @@
     </section>
 
     <!-- Tech Stack Section -->
-    <section class="section-spacing reveal">
+    <section class="section-spacing animate-up">
       <div class="jp-text">技術スタック</div> <!-- Japanese for "Tech Stack" -->
       <h2 class="section-title">Tech Stack</h2>
       
@@ -343,14 +334,13 @@
     </section>
 
     <!-- Downloads / Firmware Hub -->
-    <section id="builds" class="section-spacing reveal" style="border-bottom: none;">
+    <section id="builds" class="section-spacing animate-up" style="border-bottom: none;">
       <div class="jp-text">ファームウェア</div> <!-- Japanese for "Firmware" -->
       <h2 class="section-title">Firmware Hub</h2>
       <p class="section-text">Explore the work, download the projects, and elevate your device.</p>
 
-      <div class="builds-grid" id="buildsList">
-        <!-- Cards will be injected here via JavaScript -->
-      </div>
+      <!-- The ROMs will be injected into this container -->
+      <div class="builds-grid" id="buildsList"></div>
     </section>
 
   </main>
@@ -363,28 +353,6 @@
   </footer>
 
   <script>
-    // Intersection Observer for Smooth Scroll Reveals (Just like the video)
-    document.addEventListener("DOMContentLoaded", () => {
-      const observerOptions = { root: null, rootMargin: '0px', threshold: 0.15 };
-      const observer = new IntersectionObserver((entries, observer) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('active');
-            observer.unobserve(entry.target); 
-          }
-        });
-      }, observerOptions);
-
-      const revealElements = document.querySelectorAll('.reveal');
-      revealElements.forEach(el => observer.observe(el));
-      
-      // Force trigger hero immediately
-      setTimeout(() => {
-        document.querySelector('.hero').classList.add('active');
-      }, 100);
-    });
-
-    // Full ROM Database Restored
     const buildsData = [
      {
         title: "Everline kernel",
@@ -946,6 +914,7 @@
         downloadUrl: "https://nikgapps.com/downloads"
       }
     ];
+
     function renderFlavorPills(flavor) {
       if (!flavor) return '';
       const list = Array.isArray(flavor) ? flavor : [flavor];
@@ -958,7 +927,7 @@
       const noticeHtml = item.Notice ? `<div class="notice-box"><strong>// NOTICE:</strong><br>${item.Notice.replace(/\n/g, '<br>')}</div>` : '';
 
       return `
-        <div class="build-card reveal">
+        <div class="build-card animate-up">
           <div class="card-top">
             <div class="card-title-group">
               <div class="build-name">${item.title}</div>
@@ -990,28 +959,21 @@
         </div>`;
     }
 
+    // Explicitly call the function to build the cards on load
     function renderBuilds() {
       const container = document.getElementById("buildsList");
       let htmlBuffer = "";
-      buildsData.forEach(item => {
-        htmlBuffer += createCardHTML(item);
-      });
-      container.innerHTML = htmlBuffer;
       
-      // Re-trigger observer for newly added cards
-      const observerOptions = { root: null, rootMargin: '0px', threshold: 0.1 };
-      const cardObserver = new IntersectionObserver((entries, obs) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('active');
-            obs.unobserve(entry.target);
-          }
-        });
-      }, observerOptions);
-
-      document.querySelectorAll('#buildsList .reveal').forEach(el => cardObserver.observe(el));
+      // Loop through all data and append it to the buffer
+      for (let i = 0; i < buildsData.length; i++) {
+        htmlBuffer += createCardHTML(buildsData[i]);
+      }
+      
+      // Inject it safely
+      container.innerHTML = htmlBuffer;
     }
 
+    // Fire the render function as soon as the browser is ready
     renderBuilds();
   </script>
 </body>
