@@ -12,17 +12,17 @@
 
   <style>
     :root {
-      /* Aesthetic Neon Peach & Midnight Charcoal Theme */
-      --bg-base: #111113; /* Deep Charcoal / Almost Black */
-      --bg-card: #161619;
-      --bg-card-alt: rgba(255, 126, 103, 0.05); /* Subtle Peach Tint */
+      /* Aesthetic Matte Obsidian & Acid Green Theme */
+      --bg-base: #0D0D0D; /* Matte Black */
+      --bg-card: #0D0D0D;
+      --bg-card-alt: rgba(189, 255, 0, 0.03); /* Subtle Acid Tint */
       
-      --accent-color: #FF7E67; /* Vibrant Neon Peach / Coral */
-      --text-main: #F4F4F5;  /* Off-White */
-      --text-muted: #A1A1AA; /* Muted Grey */
+      --accent-color: #BDFF00; /* Acid/Neon Green */
+      --text-main: #FAFAFA;  /* Stark White */
+      --text-muted: #A3A3A3; /* Neutral Grey */
       
-      --border-main: #FF7E67; /* Solid Peach Borders */
-      --border-subtle: rgba(255, 126, 103, 0.25); /* Faded Peach for inner borders */
+      --border-main: #BDFF00; /* Solid Acid Green Borders */
+      --border-subtle: rgba(189, 255, 0, 0.2); /* Faded Acid Green for inner borders */
 
       --radius-sm: 4px;
       --radius-md: 8px;
@@ -54,7 +54,7 @@
       position: fixed; top: 0; left: 0; width: 100%;
       padding: 1.25rem 2rem;
       display: flex; justify-content: space-between; align-items: center;
-      background: rgba(17, 17, 19, 0.85);
+      background: rgba(13, 13, 13, 0.85);
       backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
       border-bottom: 2px solid var(--border-main);
       z-index: 100;
@@ -128,9 +128,9 @@
       padding: 0.8rem 1.5rem; border: none; font-weight: 800; font-size: 0.9rem;
       cursor: pointer; text-decoration: none; transition: background 0.2s;
     }
-    .btn-solid:hover { background: #e06b56; }
+    .btn-solid:hover { background: #96cc00; }
 
-    /* Hero Images Grid (Like the video) */
+    /* Hero Images Grid */
     .hero-images {
       display: grid; gap: 1.5rem; margin-top: 4rem;
     }
@@ -229,7 +229,7 @@
     .changelog-box::-webkit-scrollbar-thumb { background: var(--border-subtle); }
 
     .notice-box {
-      background: rgba(255, 126, 103, 0.1); color: var(--accent-color);
+      background: rgba(189, 255, 0, 0.05); color: var(--accent-color);
       font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; font-weight: 700;
       border: 2px solid var(--accent-color); padding: 0.75rem 1rem; margin-bottom: 1rem; line-height: 1.6;
     }
@@ -277,8 +277,8 @@
       <!-- Add your graphic/anime images here just like the video -->
       <div class="hero-images">
         <div class="hero-img-box">
-           <!-- Peach Filtered Graphic (Replace src with your actual image) -->
-          <img src="https://images.unsplash.com/photo-1618331835717-801e976710b2?auto=format&fit=crop&q=80&w=800" alt="Graphic Art" style="height: 300px; filter: grayscale(100%) sepia(100%) hue-rotate(330deg) saturate(300%) contrast(1.2);">
+           <!-- Acid Green Filtered Graphic (Replace src with your actual image) -->
+          <img src="https://images.unsplash.com/photo-1618331835717-801e976710b2?auto=format&fit=crop&q=80&w=800" alt="Graphic Art" style="height: 300px; filter: grayscale(100%) sepia(100%) hue-rotate(50deg) saturate(500%) contrast(1.2);">
         </div>
       </div>
     </section>
@@ -363,14 +363,14 @@
   </footer>
 
   <script>
-    // Intersection Observer for Smooth Scroll Reveals (Just like the video)
+    // Intersection Observer for Smooth Scroll Reveals
     document.addEventListener("DOMContentLoaded", () => {
       const observerOptions = { root: null, rootMargin: '0px', threshold: 0.15 };
       const observer = new IntersectionObserver((entries, observer) => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
             entry.target.classList.add('active');
-            observer.unobserve(entry.target); // Only animate once
+            observer.unobserve(entry.target); 
           }
         });
       }, observerOptions);
@@ -384,35 +384,176 @@
       }, 100);
     });
 
-    // Full ROM Database
+    // FULL Original ROM Database Restored
     const buildsData = [
       {
-        title: "Everline kernel", category: "kernel", device: "A51, F41, M31, M31s, M21", android: "Android 13 - 16", date: "26 July 2026", maintainer: "PARBINDAR7", flavor: ["BALANCED"],
+        title: "Everline kernel", category: "kernel", device: "Samsung Galaxy A51, F41, M31, M31s, M21", android: "Android 13 to 16", date: "26 July 2026", maintainer: "PARBINDAR7", flavor: ["BALANCED"],
         changelog: "1. sched/uclamp: Move tunables to cpuctl\n2. sched/uclamp: Expose latency_sensitive and uclamp.boosted",
+        Notice: "1. Only support builds 25.07.2026 or newer\n2. crDroid not compatible",
         downloadUrl: "https://sourceforge.net/projects/parbindar7-builds/files/Everline%2025-07-2026/"
       },
       {
-        title: "Voltage OS v6.0", category: "rom", device: "A51, F41, M31, M31s, M21", android: "Android 17", date: "11 August 2026", maintainer: "PARBINDAR7", flavor: ["VANILLA", "UNOFFICIAL"],
-        changelog: "1. Update included soong namespaces\n2. Set legacy gralloc flag\n3. Remove apk_verity_prop from flags_health_check.te\n4. Disable app launch blur",
-        Notice: "1. Initial Android 17 release\n2. Blur Disabled",
+        title: "Everline Kernel", category: "kernel", device: "Samsung Galaxy A51, F41, M31, M31s, M21", android: "Android 13 to 17", date: "24 August 2026", maintainer: "PARBINDAR7", flavor: ["BALANCED"],
+        changelog: "1. Add AutoFDO support\n2. cpufreq_schedutil: Add sugov_cpu_is_busy\n3. cpufreq_schedutil: Add ignore_dl_rate_limit\n4. cpufreq_schedutil: Add rt_rq_is_runnable\n5. ems: Uclamp ontime_load_avg boost\n6. ems: Add ontime_en and ontime_prefer_perf\n7. Built with Clang 22.1.8",
+        Notice: "1. crDroid latest compatible\n2. Only support builds 26.07.2026 or newer",
+        downloadUrl: "https://sourceforge.net/projects/parbindar7-builds/files/Everline%2024-08-2026/"
+      },
+      {
+        title: "Everline kernel", category: "kernel", device: "Samsung Galaxy A51, F41, M31, M31s, M21", android: "Android 13 to 16", date: "18 May 2026", maintainer: "PARBINDAR7", flavor: ["BALANCED"],
+        changelog: "1. sched: fix uclamp_boosted()\n2. BACKPORT: Add min_task_util_for_boost and min_task_util_for_uclamp\n3. sched/cpufreq_schedutil: use UCLAMP_MIN in sugov_need_slack_timer()\n4. Fixup: sched/uclamp: sched: Fix cpuset_cgrp_id in uclamp_latency_sensitive\n5. sched: Replace schedtune with uclamp\n6. BACKPORT: sched/cpufreq_schedutil: Make iowait boost uclamp-aware\n7. BACKPORT: sched/fair: Make cpu_overutilized() uclamp-aware\n8. BACKPORT: sched/uclamp: Simplify uclamp_tg_restrict() using clamp()\n9. sched/cpufreq_schedutil: Fix undefined uclamp_rq_util_with()\n10. Fixup: sched/cpufreq: remove rq-level uclamp_min floor",
+        downloadUrl: "https://sourceforge.net/projects/parbindar7-builds/files/Everline%2018-05-2026/"
+      },
+      {
+        title: "Project Matrixx OS v12.3", category: "rom", device: "Samsung Galaxy A51, F41, M31, M31s, M21", android: "Android 16", date: "May 2026", maintainer: "PARBINDAR7", flavor: ["INACTIVE"],
+        changelog: "1. Contains all previous commits",
+        Notice: "Project Matrixx OS has been officially discontinued as per the announcement of Matrixx OS Developers.",
+        downloadUrl: "https://sourceforge.net/projects/projectmatrixx/files/Android-16/"
+      },
+      {
+        title: "InfinityX v3.10", category: "rom", device: "Samsung Galaxy A51, F41, M31, M31s, M21", android: "Android 16", date: "05 May 2026", maintainer: "PARBINDAR7", flavor: ["GAPPS INCLUDED"],
+        changelog: "1. Contains all previous commits\n2. OTA push",
+        downloadUrl: "https://github.com/Parbindar7/OTA/releases/tag/InfinityX_06-05-2026"
+      },
+      {
+        title: "Afterlife OS v8.4", category: "rom", device: "Samsung Galaxy A51, F41, M31, M31s, M21", android: "Android 16", date: "23 April 2026", maintainer: "PARBINDAR7", flavor: ["INACTIVE"],
+        changelog: "1. Enable frame pacing\n2. Define screenRecorderAVCProfileLevel\n3. Decrease launch boost to 3sec\n4. Tune schedutil rate limits\n5. HWC Adapted from exynos9630 T BSP\n6. Adapted struct decon_win_config_data to exynos9610\n7. Fix missing dmabuf_trace_free call on buffer release path\n8. Free exporter name on buffer release\n9. CONFIG_HZ to 300",
+        downloadUrl: "https://afterlifeos.com/download"
+      },
+      {
+        title: "Lineage OS v23.2", category: "rom", device: "Samsung Galaxy A51, F41, M31, M31s, M21", android: "Android 16", date: "26 Jun 2026", maintainer: "PARBINDAR7", flavor: ["VANILLA"],
+        changelog: "1. Refactor Powerhint.json\n2. Tune up/down frequency rate limits\n3. Cleanup task_profiles_30.json",
+        downloadUrl: "https://drive.google.com/drive/folders/1sUjnPe88Q6sRX2-8nxYO37ac-MDAmhyj?usp=sharing"
+      },
+      {
+        title: "Lineage OS v23.2", category: "rom", device: "Samsung Galaxy A51, F41, M31, M31s, M21", android: "Android 16", date: "01 Jun 2026", maintainer: "PARBINDAR7", flavor: ["VANILLA"],
+        changelog: "1. Refactor Powerhint.json\n2. Add software c2 av1/dav1d decoder\n3. Move media codecs configurations on tree",
+        downloadUrl: "https://drive.google.com/drive/folders/1OvkxJulj3QWW-0S4u0Kq8DKxLjsmJs_Y?usp=sharing"
+      },
+      {
+        title: "Lineage OS v23.2", category: "rom", device: "Samsung Galaxy A51, F41, M31, M31s, M21", android: "Android 16", date: "02 May 2026", maintainer: "PARBINDAR7", flavor: ["VANILLA"],
+        changelog: "1. Powerhint: Re-tune for efficiency\n2. Powerhint: Cleanup\n3. Powerhint: Add UclampTAMin & UclampTALatency\n4. Powerhint: Add UclampTAMin to LAUNCH\n5. Powerhint: Refactor powerhint.json\n6. Update cpuset parameters\n7. Migrate from Schedtune to Uclamp\n8. Drop schedtune\n9. Refactor task_profiles for to reflect Uclamp changes",
+        downloadUrl: "https://drive.google.com/drive/folders/1quhVFJwp1_wL0WKlpM4YqvpQs_oq9yvM?usp=sharing"
+      },
+      {
+        title: "Voltage OS v5.8", category: "rom", device: "Samsung Galaxy A51, F41, M31, M31s, M21", android: "Android 16", date: "25 April 2026", maintainer: "PARBINDAR7", flavor: ["VANILLA"],
+        changelog: "1. Re-tune POWERHINT for efficiency\n2. Boost CPU on EXPENSIVE_RENDERING\n3. Set TARGET_CPU_VARIANT to cortex-a73",
+        downloadUrl: "https://drive.google.com/drive/folders/16UW_O8Megsh4MpqPprNJgv4JV1j4taP5?usp=sharing"
+      },
+      {
+        title: "Lineage OS v23.2", category: "rom", device: "Samsung Galaxy A51, F41, M31, M31s, M21", android: "Android 16", date: "20 April 2026", maintainer: "PARBINDAR7", flavor: ["VANILLA"],
+        changelog: "1. Blur Disabled\n2. Enable frame pacing\n3. Define screenRecorderAVCProfileLevel\n4. Decrease launch boost to 3sec\n5. Tune schedutil rate limits\n6. HWC Adapt from exynos9630 T BSP\n7. adapt struct decon_win_config_data to exynos9610\n8. fix missing dmabuf_trace_free call on buffer release path\n9. free exporter name on buffer release\n10. CONFIG_HZ to 300",
+        downloadUrl: "https://drive.google.com/drive/folders/1coT6KSsNsyvF5VHY57uvHnj7pNAfHQo_?usp=drive_link"
+      },
+      {
+        title: "Matrixx OS v12.2", category: "rom", device: "Samsung Galaxy A51, F41, M31, M31s, M21", android: "Android 16", date: "13 April 2026", maintainer: "PARBINDAR7", flavor: ["INACTIVE"],
+        changelog: "1. Blur Disabled\n2. Decrease launch boost to 3sec\n3. Tune schedutil rate limits\n4. HWC Adapt from exynos9630 T BSP\n5. adapt struct decon_win_config_data to exynos9610\n6. fix missing dmabuf_trace_free call on buffer release path\n7. free exporter name on buffer release",
+        Notice: "Matrixx OS has been officially discontinued as per the announcement of Matrixx OS Developers.",
+        downloadUrl: "https://drive.google.com/drive/folders/1b_54tfSj5k1Ypmu07LL8pKS-JnuF9eXm?usp=sharing"
+      },
+      {
+        title: "LunarisAOSP v3.12 ", category: "rom", device: "Samsung Galaxy A51, F41, M31, M31s, M21", android: "Android 16", date: "01 July 2026", maintainer: "PARBINDAR7", flavor: ["VANILLA"],
+        changelog: "1. Remove unused /dev/freezer\n2. Tune up/down frequency transition rate limits\n3. Switch to AOSP task profiles",
+        downloadUrl: "https://drive.google.com/drive/folders/1_RG0oDENhUGLcEh5kDkDNwOtc5VT5s3t"
+      },
+      {
+        title: "LunarisAOSP v3.12 EOL", category: "rom", device: "Samsung Galaxy A51, F41, M31, M31s, M21", android: "Android 16", date: "13 August 2026", maintainer: "PARBINDAR7", flavor: ["VANILLA", "EOL"],
+        changelog: "1. Re-configure cpuset\n2. Remove cpuidle off node",
+        Notice: "1. EOL A16. Next update based on Android 17\n2. Mostly source side changes in this build\n3. No Kernel changes",
+        downloadUrl: "https://drive.google.com/drive/folders/1ZYYzDbaUuHe5nAPtg2ryV5afHvq6LACQ?usp=sharing"
+      },
+      {
+        title: "InfinityX 12.3", category: "rom", device: "Samsung Galaxy A51, F41, M31, M31s, M21", android: "Android 16", date: "16 August 2026", maintainer: "PARBINDAR7", flavor: ["GAPPS", "EOL"],
+        changelog: "1. Re-configure cpuset\n2. Remove cpuidle off node",
+        Notice: "1. OTA Pushed\n2. EOL A16. Next update based on Android 17\n3. No Kernel changes",
+        downloadUrl: "https://github.com/Parbindar7/OTA/releases"
+      },
+      {
+        title: "Lineage OS v23.2", category: "rom", device: "Samsung Galaxy A51, F41, M31, M31s, M21", android: "Android 16", date: "09 August 2026", maintainer: "PARBINDAR7", flavor: ["VANILLA"],
+        changelog: "1. Tune Powerhint.json\n2. Tune up/down frequency rate limits\n3. Switch to AOSP task profiles\n4. Remove unused /dev/freezer",
+        downloadUrl: "https://drive.google.com/drive/folders/1-M5lUH2KREBlKlmYeRi5mXcA1sdh48e4?usp=sharing"
+      },
+      {
+        title: "VoltageOS 5.11 EOL", category: "rom", device: "Samsung Galaxy A51, F41, M31, M31s, M21", android: "Android 16", date: "10 August 2026", maintainer: "PARBINDAR7", flavor: ["VANILLA", "EOL"],
+        changelog: "1. Tune Powerhint\n2. Tune up/down frequency rate limits\n3. Switch to AOSP task profiles\n4. Remove unused /dev/freezer",
+        Notice: "1. Blur disabled",
+        downloadUrl: "https://drive.google.com/drive/folders/19QBt1_8HF0gyskg9fnHgojGY8s5MsnFm?usp=sharing"
+      },
+      {
+        title: "LineageOS EXT", category: "rom", device: "Samsung Galaxy A51, F41, M31, M31s, M21", android: "Android 17", date: "10 August 2026", maintainer: "PARBINDAR7", flavor: ["VANILLA"],
+        changelog: "1. Update included soong namespaces\n2. Set legacy gralloc flag\n3. Remove apk_verity_prop from flags_health_check.te\n4. Remove duplicate sysfs_block\n5. Remove duplicate clean_scratch_files\n6. Use legacy libion implementation\n7. Disable app launch blur",
+        Notice: "1. Initial A17 release\n2. Report bugs with proper log please",
+        downloadUrl: "https://drive.google.com/drive/folders/11VAKKkzQEnQ-hCucJFv6She-AtUQNiDo?usp=sharing"
+      },
+      {
+        title: "Everline Kernel", category: "kernel", device: "Samsung Galaxy A51, F41, M31, M31s, M21", android: "A13-A17 Supported", date: "10 August 2026", maintainer: "PARBINDAR7", flavor: ["BALANCED"],
+        changelog: "1. sched/cpufreq_schedutil: Add sugov_iowait_reset\n2. sched/uclamp: Use uclamp_rq_is_idle in task_fits_cpu\n3. sched/uclamp: Add util_fits_cpu and task_fits_cpu\n4. sched/uclamp: Add uclamp_rq_get, uclamp_rq_set and uclamp_rq_is_idle\n5. Removed old unnecessary uclamp commits and backports\n6. Merge 5.10 BPF from phoenix\n7. Add cgroup v2 freezer",
+        Notice: "1. crDroid not compatible\n2. Only support builds 26.07.2026 or newer",
+        downloadUrl: "https://sourceforge.net/projects/parbindar7-builds/files/Everline%2010-08-2026/"
+      },
+      {
+        title: "VoltageOS v6.0", category: "rom", device: "Samsung Galaxy A51, F41, M31, M31s, M21", android: "Android 17", date: "11 August 2026", maintainer: "PARBINDAR7", flavor: ["VANILLA", "UNOFFICIAL"],
+        changelog: "1. Update included soong namespaces\n2. Set legacy gralloc flag\n3. Remove apk_verity_prop from flags_health_check.te\n4. Remove duplicate sysfs_block\n5. Remove duplicate clean_scratch_files\n6. Use legacy libion implementation\n7. Disable app launch blur",
+        Notice: "1. Initial Android 17 release\n2. Blur Disabled\n3. Report bugs with proper log please",
         downloadUrl: "https://drive.google.com/drive/folders/1D-w32e6LOOtJuwNrJ_0rTNRPlI34Y6IA"
       },
       {
-        title: "PixelOS v16.2", category: "rom", device: "A51, F41, M31, M31s, M21", android: "Android 16", date: "17 August 2026", maintainer: "PARBINDAR7", flavor: ["GAPPS"],
+        title: "PixelOS v16.2", category: "rom", device: "Samsung Galaxy A51, F41, M31, M31s, M21", android: "Android 16", date: "17 August 2026", maintainer: "PARBINDAR7", flavor: ["GAPPS"],
         changelog: "1. GPU Frequency set to 949mhz\n2. Blur disabled",
-        Notice: "1. June Security Patch\n2. Only supported by Everline 25.07.2026 and newer",
+        Notice: "1. June Security Patch\n2. Only supported by Everline 25.07.2026 and newer\n4. ROM takes time to get stable",
         downloadUrl: "https://drive.google.com/drive/folders/1y9wpS1P07NaXY9XiLxwQLYonk-ucRgDv"
       },
       {
-        title: "LineageOS v23.2", category: "rom", device: "A51, F41, M31, M31s, M21", android: "Android 16", date: "24 August 2026", maintainer: "PARBINDAR7", flavor: ["VANILLA"],
-        changelog: "1. AIDL Widevine from A14\n2. Drop config_sustainedPerformanceModeSupported\n3. Boost on EXPENSIVE_RENDERING\n4. Remove cpuidle off node",
+        title: "LineageOS v23.2", category: "rom", device: "Samsung Galaxy A51, F41, M31, M31s, M21", android: "Android 16", date: "24 August 2026", maintainer: "PARBINDAR7", flavor: ["VANILLA"],
+        changelog: "1. AIDL Widevine from A14\n2. Drop config_sustainedPerformanceModeSupported\n3. Boost on EXPENSIVE_RENDERING\n4. Remove cpuidle off node\n5.Re-configure cpuset\n6. GPU Frequency upto 949mhz",
+        Notice: "1. August Security Patch\n2. Only supported by Everline 25.07.2026 and newer\n3. ROM takes time to get stable",
         downloadUrl: "https://drive.google.com/drive/folders/1p3QDf6tItfNd5HCWECp0zGKtK74zj4Ji?usp=sharing"
       },
       {
-        title: "TWRP Recovery v3.7.1", category: "recovery", device: "All Supported Devices", android: "Android 13 - 17", date: "2026", maintainer: "TWRP Team", flavor: ["TAR/IMG"],
+        title: "VoltageOS v6.1", category: "rom", device: "Samsung Galaxy A51, F41, M31, M31s, M21", android: "Android 17", date: "04 Sep 2026", maintainer: "PARBINDAR7", flavor: ["VANILLA"],
+        changelog: "1. Same as Lineage 24.08.2026 Build",
+        Notice: "1. VoLTE Working\n2. VoWiFi (Voice over Wi-Fi) Broken\n3. Tested on JIO, Airtel so far\n4. Keep data enabled when call\n5. Blur Disabled\n6. Report bugs with proper log please",
+        downloadUrl: "https://drive.google.com/drive/folders/1fFEDXhGoLg-_KhCJjnBarxl8PBqGfwgq?usp=sharing"
+      },
+      {
+        title: "Everline Kernel", category: "kernel", device: "Samsung Galaxy A51, F41, M31, M31s, M21", android: "A13-A17 Supported", date: "04 sep 2026", maintainer: "PARBINDAR7", flavor: ["BALANCED"],
+        changelog: "1. Upstream to 4.14.357\n2. Rebase and merge linux-4.14.y branch from OpenELA\n3. Merge android-4.14-phoenix branch from PhoenixKernel with 5.10 BPF patches\n4. Built with Clang 20.0.0",
+        Notice: "1. crDroid latest compatible\n2. Only support builds 26.07.2026 or newer\n3. Everline-AOSP Supports Magisk & Apatch\n4. Everline-KSUN Supports KSU-Next",
+        downloadUrl: "https://sourceforge.net/projects/parbindar7-builds/files/Everline%2004-09-2026/"
+      },
+      {
+        title: "LineageOS 23.2", category: "rom", device: "Samsung Galaxy A51, F41, M31, M31s, M21", android: "Android 16", date: "13 Sep 2026", maintainer: "PARBINDAR7", flavor: ["VANILLA"],
+        changelog: "1. Same as Lineage 24.08.2026 Build",
+        Notice: "1. Supported: VoLTE and VoWiFi\n2.Fixed dialer freeze on hang up\n3. September Security Patch\n4. Only supported by Everline 25.07.2026 and newer",
+        downloadUrl: "https://drive.google.com/drive/folders/1DZqSk6s6YPhJtNOtjODjjOWmJhVp2RGo?usp=sharing",
+      },
+      {
+        title: "LunarisAOSP v3.12", category: "rom", device: "Samsung Galaxy A51, F41, M31, M31s, M21", android: "Android 16", date: "14 Sep 2026", maintainer: "PARBINDAR7", flavor: ["VANILLA"],
+        changelog: "1. Audio Increased on Calls , Media , Ringtone",
+        Notice: "1. Audio Increased on Calls , Media , Ringtone\n2. September Security Patch\n3. Only supported by Everline 25.07.2026 and newer",
+        downloadUrl: "https://drive.google.com/drive/folders/1Lgm6q2KtUfKZsyJ3RixYRUMYAgooykHf?usp=sharing"
+      },
+      {
+        title: "Project Infinity-X v3.12", category: "rom", device: "Samsung Galaxy A51, F41, M31, M31s, M21", android: "Android 16", date: "17 Sep 2026", maintainer: "PARBINDAR7", flavor: ["VANILLA"],
+        changelog: "1. Same as Lineage 24.08.2026 Build",
+        Notice: "1. Supported: VoLTE and VoWiFi\n2. September Security Patch\n3. Only supported by Everline 25.07.2026 and newer",
+        downloadUrl: "https://github.com/Parbindar7/OTA/releases/tag/InfinityX_17-09-2026"
+      },
+      {
+        title: "TWRP Recovery v3.7.1", category: "recovery", device: "All Supported Devices", android: "Android 13 to 17", date: "2026", maintainer: "TWRP Team", flavor: ["FLASHABLE ZIP/TAR"],
         changelog: "1. Fully compatible with Android 16 & 17 custom ROMs",
         Notice: "1. Flash via Odin (.tar) or existing recovery (.img)",
         downloadUrl: "https://twrp.me/Devices/"
+      },
+      {
+        title: "LiteGapps", category: "gapps", device: "ARM64 Devices", android: "Android 17", date: "2026", maintainer: "LiteGapps", flavor: ["GOOGLE APPS PACKAGE"],
+        changelog: "1. Official litegapps release packages for custom rom Android 17",
+        Notice: "1. Only compatible for Android 17",
+        downloadUrl: "https://sourceforge.net/projects/litegapps/files/litegapps/arm64/37/core/2026-05-13/"
+      },
+      {
+        title: "NikGApps — Official Builds", category: "gapps", device: "ARM64 Devices", android: "Android 16", date: "2026", maintainer: "NikGApps Team", flavor: ["GOOGLE APPS PACKAGE"],
+        changelog: "1. Official NikGApps release packages (Core, Basic, Omni, Full) for Custom ROMs.",
+        downloadUrl: "https://nikgapps.com/downloads"
       }
     ];
 
