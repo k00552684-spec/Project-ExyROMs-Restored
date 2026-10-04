@@ -12,32 +12,29 @@
 
   <style>
     :root {
-      /* Modern Bento Box Palette */
-      --bg: #111111; /* Deep off-black */
-      --bg-panel: rgba(26, 26, 26, 0.85);
+      /* Linear / Vercel Developer Aesthetic */
+      --bg: #000000;
+      --bg-panel: rgba(10, 10, 10, 0.7);
+      
+      --bg-card: #0A0A0A;
+      --bg-card-hover: rgba(255, 255, 255, 0.02);
+      --bg-inset: rgba(255, 255, 255, 0.03);
 
-      --bg-card: #1A1A1A; /* Lighter gray for widgets */
-      --bg-card-hover: #222222;
-      --bg-inset: rgba(255, 255, 255, 0.04);
+      /* Extremely subtle accent colors */
+      --accent-primary: #EDEDED;
+      --accent-secondary: #888888;
+      
+      --border-subtle: rgba(255, 255, 255, 0.1);
+      --border-hover: rgba(255, 255, 255, 0.2);
 
-      /* Vibrant Bento Highlights */
-      --accent-primary: #ccff00; /* Neon Chartreuse / Lime */
-      --accent-secondary: #00f0ff; /* Neon Blue */
+      --text-100: #EDEDED;
+      --text-200: #888888;
+      --text-300: #444444;
 
-      --border-subtle: rgba(255, 255, 255, 0.08);
-      --border-hover: rgba(204, 255, 0, 0.4); /* Chartreuse border on hover */
-
-      --text-100: #ffffff;
-      --text-200: #a1a1aa;
-      --text-300: #71717a;
-
-      /* Apple-style Squircle Radii */
-      --radius-sm: 12px;
-      --radius-md: 24px;
-      --radius-lg: 32px;
+      --radius-sm: 6px;
+      --radius-md: 8px;
+      --radius-lg: 12px;
       --radius-full: 9999px;
-
-      --gap-bento: 16px;
 
       --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
       --ease-out: cubic-bezier(0.25, 1, 0.5, 1);
@@ -60,6 +57,7 @@
       scroll-behavior: smooth;
     }
 
+    /* Vercel Grid Background Pattern */
     body {
       display: flex;
       flex-direction: column;
@@ -67,91 +65,113 @@
       padding: 0 1rem 6rem 1rem;
       position: relative;
       overflow-x: hidden;
+      background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+      background-size: 40px 40px;
+      background-position: center top;
     }
 
     @media (min-width: 768px) {
-      body {
-        padding: 0 1.5rem 8rem 1.5rem;
-      }
+      body { padding: 0 1.5rem 8rem 1.5rem; }
     }
 
-    /* Keep ambient effects but adjust color to chartreuse */
-    .ambient-stage {
-      position: fixed;
-      inset: 0;
-      overflow: hidden;
-      pointer-events: none;
-      z-index: 0;
-      background: var(--bg);
-      contain: strict;
-      transform: translateZ(0);
-    }
-
+    /* Ambient Glow Behind Hero */
     .ambient-top-glow {
       position: fixed;
-      top: -20vh;
+      top: -15vh;
       left: 50%;
       transform: translateX(-50%) translateZ(0);
-      width: 120vw;
-      height: 70vh;
-      background: radial-gradient(ellipse at top, rgba(204, 255, 0, 0.08) 0%, rgba(0, 240, 255, 0.05) 45%, transparent 70%);
+      width: 70vw;
+      height: 60vh;
+      background: radial-gradient(ellipse at center, rgba(139, 92, 246, 0.15) 0%, rgba(6, 182, 212, 0.1) 40%, transparent 70%);
       pointer-events: none;
       z-index: 0;
-    }
-
-    .interactive-orb-wrapper {
-      position: absolute;
-      top: 0; left: 0; width: 0; height: 0;
-      pointer-events: none; z-index: 0;
-    }
-
-    .interactive-orb-inner {
-      position: absolute;
-      width: 48vw; height: 48vw;
-      min-width: 380px; min-height: 380px;
-      left: -24vw; top: -24vw;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(204, 255, 0, 0.15) 0%, rgba(0, 240, 255, 0.1) 40%, transparent 70%);
       filter: blur(80px);
-      animation: orbSpin 16s linear infinite;
     }
 
-    @media (max-width: 768px) {
-       .interactive-orb-inner { width: 80vw; height: 80vw; left: -40vw; top: -40vw; filter: blur(60px); }
+    /* Hide the old orb background elements as they clash with Linear design */
+    .ambient-stage, .interactive-orb-wrapper, #pointsCanvas, .ambient-glass-shield {
+      display: none;
     }
 
-    @keyframes orbSpin {
-      0% { transform: rotate(0deg) scale(1); }
-      50% { transform: rotate(180deg) scale(1.18); }
-      100% { transform: rotate(360deg) scale(1); }
-    }
-
-    #pointsCanvas {
-      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-      pointer-events: none; z-index: 1; opacity: 0.5; transform: translateZ(0);
-    }
-
-    .ambient-glass-shield {
-      position: fixed; inset: 0;
-      background: rgba(17, 17, 17, 0.6);
-      backdrop-filter: blur(2px); /* Add slight blur to blend background */
-      pointer-events: none; z-index: 2; transform: translateZ(0);
-    }
-
-    ::-webkit-scrollbar { width: 6px; height: 6px; }
-    ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 4px; }
-    ::-webkit-scrollbar-thumb:hover { background: var(--accent-primary); }
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: #222; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #444; }
 
     .layout-grid {
       width: 100%;
-      max-width: 1100px; /* Slightly wider for Bento Grid */
+      max-width: 1000px;
       display: flex;
       flex-direction: column;
       gap: 2rem;
       position: relative;
       z-index: 3;
       margin-top: calc(max(2rem, env(safe-area-inset-top)));
+    }
+
+    /* Stealthy Navbar */
+    nav {
+      position: fixed;
+      top: 0; left: 0; width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      background: var(--bg-panel);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border-subtle);
+      border-radius: 0; /* Override old rounded nav */
+      box-shadow: none;
+      z-index: 50;
+    }
+
+    .logo {
+      font-weight: 700;
+      font-size: 1.1rem;
+      letter-spacing: -0.02em;
+      color: var(--text-100);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      background: none;
+      -webkit-text-fill-color: var(--text-100);
+    }
+
+    .nav-actions {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    /* Flat Linear Buttons */
+    .nav-cta {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 500;
+      text-decoration: none;
+      color: var(--bg);
+      background: var(--text-100);
+      border: 1px solid var(--text-100);
+      padding: 0.5rem 1.25rem;
+      border-radius: var(--radius-sm);
+      transition: all 0.15s ease;
+      cursor: pointer;
+    }
+
+    .nav-cta:hover { background: #d4d4d4; transform: none; }
+
+    .nav-cta.secondary {
+      background: rgba(255, 255, 255, 0.02);
+      color: var(--text-100);
+      border-color: var(--border-subtle);
+    }
+
+    .nav-cta.secondary:hover {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: var(--border-hover);
     }
 
     .hero {
@@ -161,309 +181,337 @@
       text-align: center;
       gap: 0.5rem;
       width: 100%;
-      margin-top: 4rem;
+      margin-top: 8rem;
     }
 
     .mesh-title {
-      font-size: clamp(3.5rem, 11vw, 6.5rem);
-      font-weight: 900;
+      font-size: clamp(3rem, 8vw, 5.5rem);
+      font-weight: 800;
       line-height: 1.05;
       letter-spacing: -0.04em;
-      text-transform: uppercase;
-      background: linear-gradient(135deg, #ffffff 40%, #a1a1aa 100%);
+      background: linear-gradient(180deg, #FFFFFF 0%, #777777 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      margin: 0;
-    }
-
-    .hero-desc {
-      font-size: 1.1rem;
-      color: var(--text-200);
-      max-width: 600px;
-      line-height: 1.6;
-      font-weight: 500;
       margin-bottom: 1rem;
     }
 
+    .hero-desc {
+      font-size: 1.15rem;
+      color: var(--text-200);
+      max-width: 600px;
+      line-height: 1.6;
+      font-weight: 400;
+      margin-bottom: 2rem;
+    }
+    .hero-desc b { color: var(--text-100); font-weight: 600; }
+
     .hero-devices-img {
-      width: 100%; max-width: 750px; height: auto;
-      object-fit: contain; filter: drop-shadow(0 25px 40px rgba(0, 0, 0, 0.8));
-      user-select: none; pointer-events: none; margin: 1rem 0;
-    }
-
-    /* Bento Pill Navigation */
-    nav {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0.85rem 1.5rem;
-      background: rgba(26, 26, 26, 0.6);
-      backdrop-filter: blur(24px) saturate(180%);
-      -webkit-backdrop-filter: blur(24px) saturate(180%);
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-full);
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-      transform: translateZ(0);
-      position: sticky; top: 1.5rem;
-      z-index: 50; margin-top: 1rem;
-    }
-
-    .logo {
-      font-weight: 800; font-size: 1.15rem; letter-spacing: -0.03em;
-      color: #ffffff; text-decoration: none; display: flex; align-items: center;
-    }
-
-    .nav-actions { display: flex; gap: 0.6rem; align-items: center; }
-
-    .nav-cta {
-      font-family: 'Inter', sans-serif; font-size: 0.75rem; font-weight: 700;
-      text-transform: uppercase; letter-spacing: 0.05em; text-decoration: none;
-      color: #000000; background: var(--accent-primary); border: 1px solid var(--accent-primary);
-      padding: 0.5rem 1.25rem; border-radius: var(--radius-full);
-      transition: all 0.2s ease; cursor: pointer;
-    }
-
-    .nav-cta:hover { transform: scale(0.97); opacity: 0.9; }
-
-    .nav-cta.secondary {
-      background: var(--bg-inset); color: var(--text-100); border-color: var(--border-subtle);
-    }
-
-    .nav-cta.secondary:hover { background: rgba(255, 255, 255, 0.1); border-color: rgba(255, 255, 255, 0.2); }
-
-    /* Bento Box Grid Setup */
-    .builds-container {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: var(--gap-bento);
       width: 100%;
+      max-width: 750px;
+      height: auto;
+      object-fit: contain;
+      filter: drop-shadow(0 25px 40px rgba(0, 0, 0, 0.8));
+      user-select: none;
+      pointer-events: none;
+      margin: 1rem 0;
     }
 
-    @media (min-width: 768px) {
-      .builds-container {
-        grid-template-columns: repeat(2, 1fr);
-      }
-      /* Make section labels span full width */
-      .section-label { grid-column: 1 / -1; }
-      /* Force single-child categories or specific layouts to span if needed, but flex wrap works too */
+    .builds-container {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      width: 100%;
+      margin-top: 2rem;
     }
 
     .reveal-element {
-      opacity: 0; transform: translateY(30px);
+      opacity: 0;
+      transform: translateY(20px);
       transition: opacity 0.6s var(--ease-out), transform 0.6s var(--ease-spring);
       will-change: opacity, transform;
     }
 
-    .reveal-element.is-visible { opacity: 1; transform: translateY(0); }
-
-    .section-label {
-      font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; font-weight: 700;
-      color: var(--text-200); text-transform: uppercase; letter-spacing: 0.1em;
-      border-bottom: 1px solid var(--border-subtle); padding-bottom: 0.5rem;
-      margin-top: 1.5rem; display: flex; justify-content: space-between;
+    .reveal-element.is-visible {
+      opacity: 1;
+      transform: translateY(0);
     }
 
-    /* Bento Box Card Styles */
+    .section-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--text-200);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 0.5rem;
+      margin-top: 1.5rem;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    /* Linear Specific Spotlight Card */
     .rom-card {
       background: var(--bg-card);
       border: 1px solid var(--border-subtle);
       border-radius: var(--radius-md);
-      padding: 1.75rem;
+      padding: 1.5rem;
       position: relative;
       display: flex;
       flex-direction: column;
       gap: 1.5rem;
-      transition: all 0.3s var(--ease-spring);
       overflow: hidden;
+      text-align: left;
+      transition: border-color 0.2s ease;
     }
 
-    .rom-card:hover {
-      background: var(--bg-card-hover);
-      border-color: var(--border-hover);
-      transform: translateY(-2px);
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    /* Magic Spotlight Hover Effect */
+    .rom-card::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; width: 100%; height: 100%;
+      background: radial-gradient(600px circle at var(--mouse-x) var(--mouse-y), rgba(255,255,255,0.06), transparent 40%);
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .builds-container:hover .rom-card::before { opacity: 1; }
+
+    .card-top, .card-middle, .card-footer {
+      position: relative;
+      z-index: 2;
+    }
+
+    @media (min-width: 768px) {
+      .rom-card { padding: 2rem; }
     }
 
     .card-top {
-      display: flex; justify-content: space-between; align-items: flex-start;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 1.25rem;
       gap: 0.75rem;
     }
 
-    .card-title-group { display: flex; flex-direction: column; gap: 0.35rem; }
+    .card-title-group { display: flex; flex-direction: column; gap: 0.25rem; }
 
     .build-name {
-      font-size: 1.5rem; font-weight: 800; letter-spacing: -0.02em; line-height: 1.2;
+      font-size: 1.1rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      line-height: 1.2;
+      color: var(--text-100);
     }
 
     .build-meta {
-      font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; font-weight: 500;
-      color: var(--text-300); display: flex; gap: 0.75rem; flex-wrap: wrap;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      font-weight: 500;
+      color: var(--text-200);
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
     }
-    .build-meta span { color: var(--text-200); }
 
     .badge {
-      font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; padding: 0.35rem 0.75rem;
-      border-radius: var(--radius-full); text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em;
-      background: var(--bg-inset); border: 1px solid var(--border-subtle); color: var(--text-200);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      padding: 0.2rem 0.5rem;
+      border-radius: var(--radius-sm);
+      text-transform: uppercase;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-200);
     }
-
-    /* Colored Badges for Bento Highlighting */
-    .badge-rom { color: var(--accent-primary); border-color: rgba(204, 255, 0, 0.3); background: rgba(204, 255, 0, 0.05); }
-    .badge-kernel { color: var(--accent-secondary); border-color: rgba(0, 240, 255, 0.3); background: rgba(0, 240, 255, 0.05); }
 
     .flavor-pill {
-      font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; font-weight: 700;
-      padding: 0.25rem 0.6rem; border-radius: var(--radius-sm); text-transform: uppercase; letter-spacing: 0.04em;
-      display: inline-flex; align-items: center; background: var(--bg-inset); border: 1px solid var(--border-subtle); color: var(--text-200);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      font-weight: 500;
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      display: inline-flex;
+      align-items: center;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-100);
     }
-    .flavor-gapps { color: var(--accent-primary); border-color: rgba(204, 255, 0, 0.25); }
-    .flavor-eol { color: #f87171; border-color: rgba(239, 68, 68, 0.25); }
 
-    /* Bento inner layout adjustments */
     .card-middle {
-      display: flex; flex-direction: column; gap: 1rem; flex-grow: 1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
     }
 
-    .data-grid-bento {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;
-      background: var(--bg-inset); padding: 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);
-    }
+    .card-middle.full-width { grid-template-columns: 1fr; }
+
+    @media (max-width: 768px) { .card-middle { grid-template-columns: 1fr; gap: 1.5rem; } }
 
     .data-block { display: flex; flex-direction: column; gap: 0.25rem; }
 
     .data-label {
-      font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: var(--text-300);
-      text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--text-300);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
     }
 
-    .data-value { font-size: 0.9rem; color: var(--text-100); line-height: 1.4; font-weight: 600; }
+    .data-value { 
+      font-size: 0.85rem; 
+      color: var(--text-100); 
+      font-weight: 500; 
+      font-family: 'JetBrains Mono', monospace; 
+    }
 
     .changelog-header {
-      display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
     }
 
     .copy-btn {
-      background: var(--bg-inset); border: 1px solid var(--border-subtle); color: var(--text-200);
-      font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; font-weight: 600;
-      padding: 0.25rem 0.6rem; border-radius: var(--radius-sm); cursor: pointer;
-      display: inline-flex; align-items: center; gap: 0.35rem; transition: all 0.15s ease;
+      background: transparent;
+      border: 1px solid var(--border-subtle);
+      color: var(--text-200);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      padding: 0.25rem 0.6rem;
+      border-radius: 4px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      transition: all 0.15s ease;
     }
-    .copy-btn:hover { color: var(--text-100); border-color: var(--border-hover); background: rgba(255, 255, 255, 0.1); }
+
+    .copy-btn:hover {
+      color: var(--text-100);
+      border-color: var(--border-hover);
+      background: rgba(255, 255, 255, 0.05);
+    }
 
     .changelog-box {
-      font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; font-weight: 500;
-      color: var(--text-200); white-space: pre-line; max-height: 120px; overflow-y: auto; line-height: 1.6;
-      padding-right: 0.5rem;
+      background: var(--bg-base);
+      border: 1px solid var(--border-subtle);
+      padding: 1rem;
+      border-radius: var(--radius-sm);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      font-weight: 400;
+      color: var(--text-200);
+      white-space: pre-line;
+      max-height: 150px;
+      overflow-y: auto;
+      line-height: 1.6;
     }
-    .changelog-box::-webkit-scrollbar { width: 4px; }
-    .changelog-box::-webkit-scrollbar-thumb { background: var(--border-subtle); border-radius: 4px; }
-    .changelog-box b { color: var(--text-100); font-weight: 700; }
+    .changelog-box b { color: var(--text-100); font-weight: 600; }
 
     .notice-box {
-      background: rgba(204, 255, 0, 0.05); color: var(--accent-primary);
-      font-family: 'JetBrains Mono', monospace; font-size: 0.76rem; font-weight: 600;
-      border-left: 2px solid var(--accent-primary); padding: 0.75rem 1rem; border-radius: 0 8px 8px 0; line-height: 1.6;
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--text-200);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      border-left: 2px solid var(--text-200);
+      padding: 0.75rem 1rem;
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      margin: 0.5rem 0;
+      line-height: 1.6;
     }
 
-    .gallery-container { width: 100%; position: relative; overflow: hidden; display: flex; flex-direction: column; gap: 0.5rem; }
-    .gallery-track { display: flex; gap: 0.75rem; overflow-x: auto; padding-bottom: 0.5rem; scrollbar-width: none; max-width: 100%; }
+    .gallery-container { display: flex; flex-direction: column; gap: 0.5rem; overflow: hidden; position: relative; z-index: 2;}
+    .gallery-track { display: flex; gap: 0.75rem; overflow-x: auto; padding-bottom: 0.5rem; scrollbar-width: none; }
     .gallery-track::-webkit-scrollbar { display: none; }
 
     .img-thumb {
-      height: 140px !important; width: auto !important; max-height: 140px !important;
-      border-radius: var(--radius-sm); cursor: pointer; border: 1px solid var(--border-subtle);
-      object-fit: contain; flex-shrink: 0; transition: border-color 0.2s ease, filter 0.2s ease; background: var(--bg-inset);
+      height: 140px !important; width: auto !important;
+      border-radius: var(--radius-sm); cursor: pointer;
+      border: 1px solid var(--border-subtle); object-fit: contain; flex-shrink: 0;
+      background: var(--bg-base); transition: border-color 0.15s ease;
     }
-    .img-thumb:hover { border-color: var(--accent-primary); filter: brightness(1.1); }
+    .img-thumb:hover { border-color: var(--text-200); }
 
     .card-footer {
-      display: flex; justify-content: flex-end; margin-top: auto; padding-top: 1.5rem;
+      display: flex; justify-content: flex-end;
+      padding-top: 1.5rem; border-top: 1px solid var(--border-subtle);
     }
 
     .download-btn {
-      display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; width: 100%;
-      background: var(--text-100); color: #000000; font-family: 'Inter', sans-serif; font-weight: 700;
-      font-size: 0.85rem; padding: 0.75rem 1.5rem; border-radius: var(--radius-sm);
-      text-decoration: none; transition: transform 0.15s ease, background 0.15s ease;
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: var(--text-100); color: var(--bg-base);
+      font-family: 'Inter', sans-serif; font-weight: 600; font-size: 0.8rem;
+      padding: 0.5rem 1.5rem; border-radius: var(--radius-sm);
+      text-decoration: none; transition: background 0.15s ease;
     }
-    .download-btn:hover { background: var(--accent-primary); transform: translateY(-2px); }
+    .download-btn:hover { background: #d4d4d4; transform: none;}
 
-    /* Modals & Overlays (Bento Style) */
+    /* Modals & Lightbox (Vercel Minimalist Style) */
     .overlay {
       position: fixed; inset: 0; background: rgba(0, 0, 0, 0.8);
-      backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+      backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px);
       z-index: 2000; display: flex; justify-content: center; align-items: center;
-      opacity: 0; pointer-events: none; transition: opacity 0.25s ease; padding: 1rem;
+      opacity: 0; pointer-events: none; transition: opacity 0.2s ease; padding: 1rem;
     }
     .overlay.active { opacity: 1; pointer-events: all; }
 
     .modal-content {
-      background: var(--bg-card); border: 1px solid var(--border-subtle); padding: 2.5rem;
-      border-radius: var(--radius-md); max-width: 540px; width: 100%; position: relative;
-      transform: scale(0.96) translateY(10px); transition: transform 0.3s var(--ease-spring); box-shadow: 0 24px 50px rgba(0,0,0,0.8);
+      background: var(--bg-base); border: 1px solid var(--border-hover);
+      padding: 2rem; border-radius: var(--radius-md); max-width: 500px; width: 100%;
+      transform: scale(0.98) translateY(10px); transition: transform 0.2s ease;
+      box-shadow: 0 20px 50px rgba(0,0,0,1);
     }
     .overlay.active .modal-content { transform: scale(1) translateY(0); }
 
-    .modal-title { font-size: 1.25rem; font-weight: 800; margin-bottom: 1.25rem; border-bottom: 1px solid var(--border-subtle); padding-bottom: 0.75rem; color: var(--text-100); }
-    .guide-step-title { color: var(--accent-primary); font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; font-weight: 700; margin-bottom: 0.5rem; margin-top: 1.25rem; }
-    .guide-list { list-style-type: decimal; padding-left: 1.25rem; color: var(--text-200); line-height: 1.8; font-size: 0.9rem; }
+    .modal-title { font-size: 1rem; font-weight: 600; margin-bottom: 1.25rem; border-bottom: 1px solid var(--border-subtle); padding-bottom: 0.75rem; color: var(--text-100); }
+    .guide-step-title { color: var(--text-200); font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; margin-bottom: 0.5rem; margin-top: 1.25rem; }
+    .guide-list { list-style-type: decimal; padding-left: 1.25rem; color: var(--text-200); line-height: 1.6; font-size: 0.85rem; font-family: 'JetBrains Mono', monospace; }
 
     .lightbox-overlay {
-      position: fixed; inset: 0; background: rgba(0, 0, 0, 0.9); z-index: 99999;
-      display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden;
-      pointer-events: none; transition: opacity 0.25s ease, visibility 0s linear 0.25s;
+      position: fixed; inset: 0; background: rgba(0, 0, 0, 0.9);
+      z-index: 99999; display: flex; align-items: center; justify-content: center;
+      opacity: 0; visibility: hidden; transition: opacity 0.2s ease;
     }
-    .lightbox-overlay.active { opacity: 1; visibility: visible; pointer-events: all; transition: opacity 0.25s ease, visibility 0s; }
+    .lightbox-overlay.active { opacity: 1; visibility: visible; pointer-events: all; }
 
-    .lightbox-img-wrap { max-width: 90vw; max-height: 75vh; display: flex; align-items: center; justify-content: center; margin-top: -2rem; touch-action: pan-y; }
-    .lightbox-img { max-width: 88vw; max-height: 72vh; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle); object-fit: contain; user-select: none; box-shadow: 0 30px 90px rgba(0, 0, 0, 0.95); opacity: 0; transform: scale3d(0.95, 0.95, 1); transition: transform 0.3s var(--ease-spring), opacity 0.2s ease; }
+    .lightbox-img-wrap { max-width: 90vw; max-height: 75vh; display: flex; align-items: center; justify-content: center; margin-top: -2rem; }
+    .lightbox-img { max-width: 88vw; max-height: 72vh; border-radius: 8px; border: 1px solid var(--border-subtle); object-fit: contain; box-shadow: 0 20px 50px rgba(0, 0, 0, 1); opacity: 0; transform: scale3d(0.98, 0.98, 1); transition: transform 0.2s ease, opacity 0.2s; }
     .lightbox-overlay.active .lightbox-img { opacity: 1; transform: scale3d(1, 1, 1); }
 
-    .lb-close {
-      position: fixed; top: max(1.25rem, calc(env(safe-area-inset-top) + 0.5rem)); right: max(1.25rem, calc(env(safe-area-inset-right) + 0.5rem));
-      width: 44px; height: 44px; border-radius: var(--radius-sm); background: var(--bg-inset); border: 1px solid var(--border-subtle);
-      color: var(--text-100); display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 100000; opacity: 0; transform: scale(0.8); transition: transform 0.3s var(--ease-spring), opacity 0.2s ease, background 0.2s;
-    }
-    .lightbox-overlay.active .lb-close { opacity: 1; transform: scale(1); }
-    .lb-close:hover { background: rgba(255, 255, 255, 0.1); }
-    .lb-close svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; pointer-events: none; }
+    .lb-close { position: fixed; top: 1.5rem; right: 1.5rem; width: 40px; height: 40px; border-radius: 6px; background: rgba(255,255,255,0.05); border: 1px solid var(--border-subtle); color: var(--text-100); display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 100000; transition: background 0.2s; }
+    .lb-close:hover { background: rgba(255,255,255,0.1); }
+    .lb-close svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; }
 
-    .lb-toolbar {
-      position: fixed; bottom: max(1.5rem, calc(env(safe-area-inset-bottom) + 1rem)); left: 50%; transform: translateX(-50%) translateY(20px);
-      display: flex; align-items: center; gap: 0.5rem; background: rgba(20, 20, 25, 0.9); backdrop-filter: blur(12px); border: 1px solid var(--border-subtle);
-      padding: 0.4rem 0.75rem; border-radius: var(--radius-sm); z-index: 100000; opacity: 0; box-shadow: 0 12px 36px rgba(0, 0, 0, 0.85); transition: transform 0.3s var(--ease-spring), opacity 0.2s ease;
-    }
-    .lightbox-overlay.active .lb-toolbar { opacity: 1; transform: translateX(-50%) translateY(0); }
+    .lb-toolbar { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 0.5rem; background: rgba(10, 10, 10, 0.9); border: 1px solid var(--border-subtle); padding: 0.4rem 0.75rem; border-radius: var(--radius-sm); z-index: 100000; }
+    .lb-nav-btn { width: 36px; height: 36px; border-radius: 4px; background: transparent; border: none; color: var(--text-200); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: color 0.15s ease; }
+    .lb-nav-btn:hover { color: var(--text-100); background: rgba(255,255,255,0.05); }
+    .lb-nav-btn svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; }
+    .lb-counter { font-family: 'JetBrains Mono', monospace; color: var(--text-200); font-size: 0.8rem; padding: 0 0.5rem; min-width: 60px; text-align: center; }
 
-    .lb-nav-btn { width: 40px; height: 40px; border-radius: var(--radius-sm); background: transparent; border: none; color: var(--text-200); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: color 0.15s ease; }
-    .lb-nav-btn:hover { color: var(--text-100); background: var(--bg-inset);}
-    .lb-nav-btn svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2; pointer-events: none; }
-
-    .lb-counter { font-family: 'JetBrains Mono', monospace; color: var(--text-200); font-size: 0.85rem; font-weight: 600; padding: 0 0.5rem; user-select: none; min-width: 65px; text-align: center; }
   </style>
 </head>
 <body>
 
   <div class="ambient-top-glow"></div>
-  <div class="ambient-stage">
-    <div id="interactiveOrb" class="interactive-orb-wrapper">
-      <div class="interactive-orb-inner"></div>
-    </div>
-  </div>
-
-  <canvas id="pointsCanvas"></canvas>
-
-  <div class="ambient-glass-shield"></div>
 
   <div class="layout-grid">
 
     <section class="hero">
       <h1 class="mesh-title" id="meshTitle">EXYNOS 9611</h1>
-      <p class="hero-desc"><b>THE ROMS WHICH GIVE YOUR PHONE A ANOTHER LEVEL OF OPTIMISATION AND PERFORMANCE</b> welcome to project exyroms</p>
+      <p class="hero-desc"><b>THE ROMS WHICH GIVE YOUR PHONE ANOTHER LEVEL OF OPTIMISATION AND PERFORMANCE</b> welcome to project exyroms</p>
 
       <img src="devices.png" alt="Devices" class="hero-devices-img" loading="eager" decoding="async" onerror="this.style.display='none'">
     </section>
 
+    <!-- Navbar moved down in DOM, visually sticky via CSS -->
     <nav>
       <a href="#" class="logo">EXYROMS</a>
       <div class="nav-actions">
@@ -476,9 +524,9 @@
 
   </div>
 
-  <div class="overlay" id="guideModal">
+  <div class="overlay" id="guideModal" onclick="if(event.target===this)toggleGuideModal()">
     <div class="modal-content">
-      <button class="lb-close" style="position: absolute; top: 1.25rem; right: 1.25rem; width: 40px; height: 40px; opacity: 1; transform: scale(1);" onclick="toggleGuideModal()" aria-label="Close">
+      <button class="lb-close" style="position: absolute; top: 1rem; right: 1rem; width: 32px; height: 32px; opacity: 1; transform: scale(1);" onclick="toggleGuideModal()" aria-label="Close">
         <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
       </button>
       <h2 class="modal-title">Deployment Protocol</h2>
@@ -513,7 +561,7 @@
       <img class="lightbox-img" id="lightboxImg" src="" alt="Preview" decoding="async">
     </div>
 
-    <div class="lb-toolbar" id="lbToolbar">
+    <div class="lb-toolbar" id="lbToolbar" onclick="event.stopPropagation()">
       <button id="lbPrevBtn" class="lb-nav-btn" aria-label="Previous Image">
         <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg>
       </button>
@@ -1327,7 +1375,7 @@
 
       container.innerHTML = htmlBuffer;
 
-      // Spotlight Hover Logic integrated with DOM generation
+      // Linear Style Spotlight Tracker
       document.getElementById("buildsList").onmousemove = e => {
         for(const card of document.getElementsByClassName("rom-card")) {
           const rect = card.getBoundingClientRect(),
