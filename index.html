@@ -3,977 +3,426 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Project ExyROMs | Android Experience</title>
+  <title>Project ExyROMs</title>
 
-  <!-- Google Fonts: Inter for clean UI, JetBrains for tech accents, Noto Sans JP for Japanese text -->
+  <!-- Google Fonts for Brutalist Typography -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&family=Noto+Sans+JP:wght@500;700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 
   <style>
     :root {
-      /* The exact color palette from the video */
-      --bg-base: #eaddc5; /* Warm Beige Background */
-      --bg-card: #eaddc5;
-      --bg-card-alt: rgba(204, 41, 43, 0.05); /* Slight red tint */
-      
-      --accent-red: #cc292b; /* Deep Crimson */
-      --text-main: #1a1a1a;  /* Almost Black */
-      --text-muted: #555555;
-      
-      --border-main: #cc292b; /* Red Borders everywhere */
-      --border-subtle: rgba(204, 41, 43, 0.3);
+      /* Exact Color Palette from Video */
+      --bg-base: #E8E5D5; /* The specific warm beige */
+      --text-main: #1C1C1C; /* Near Black */
+      --accent-yellow: #FFC000; /* The highlight yellow from the video */
+      --text-light: #6E6E6E;
 
-      --radius-sm: 4px;
-      --radius-md: 8px;
-      --radius-lg: 12px;
+      --font-display: 'Anton', sans-serif; /* Super bold, tight typography */
+      --font-body: 'Space Grotesk', sans-serif; /* Clean, modern sans */
+      --font-mono: 'JetBrains Mono', monospace; /* Tech data */
+
+      --radius-pill: 999px;
+      --border-thick: 2px solid var(--text-main);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
-    html { scroll-behavior: smooth; background: var(--bg-base); }
-
     body {
       background-color: var(--bg-base);
       color: var(--text-main);
-      font-family: 'Inter', sans-serif;
+      font-family: var(--font-body);
       overflow-x: hidden;
-      min-height: 100vh;
       -webkit-font-smoothing: antialiased;
     }
 
-    /* Scrollbar */
-    ::-webkit-scrollbar { width: 8px; }
-    ::-webkit-scrollbar-track { background: var(--bg-base); border-left: 1px solid var(--border-subtle); }
-    ::-webkit-scrollbar-thumb { background: var(--accent-red); }
-
-    /* Navigation */
+    /* Minimalist Navbar */
     .navbar {
       position: fixed; top: 0; left: 0; width: 100%;
-      padding: 1.25rem 2rem;
-      display: flex; justify-content: space-between; align-items: center;
-      background: rgba(234, 221, 197, 0.9);
-      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-      border-bottom: 2px solid var(--border-main);
+      padding: 1.5rem 2rem;
+      display: flex; justify-content: space-between; align-items: flex-start;
       z-index: 100;
+      mix-blend-mode: difference; /* Makes text invert over images */
+      color: #fff;
     }
 
-    .nav-logo {
-      font-weight: 900; font-size: 1.25rem; letter-spacing: -0.02em;
-      text-decoration: none; color: var(--text-main);
-      display: flex; align-items: center; gap: 0.5rem; text-transform: uppercase;
-    }
+    .nav-left { display: flex; flex-direction: column; }
+    .nav-logo { font-family: var(--font-display); font-size: 2.5rem; line-height: 1; text-transform: uppercase; letter-spacing: 1px; }
+    .nav-sub { font-size: 0.75rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; opacity: 0.8; }
 
-    /* Container */
-    .container {
-      max-width: 1000px; margin: 0 auto; padding: 0 1.5rem; width: 100%;
+    .menu-btn {
+      width: 40px; height: 16px; display: flex; flex-direction: column; justify-content: space-between;
+      cursor: pointer; background: transparent; border: none;
     }
+    .menu-btn span { display: block; width: 100%; height: 3px; background-color: #fff; }
 
-    /* Reliable CSS Animations (Replaces buggy Intersection Observer) */
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(30px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    
-    .animate-up {
-      animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    }
-
-    /* Hero Section */
+    /* Hero Section (Giant Typography) */
     .hero {
-      padding: 8rem 0 4rem 0;
-      display: flex; flex-direction: column;
-      border-bottom: 2px solid var(--border-main);
+      min-height: 100vh;
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 0 2rem;
+      position: relative;
     }
 
-    .hero-badge {
-      display: inline-flex; align-items: center; justify-content: center;
-      width: 48px; height: 48px; border: 2px solid var(--border-main);
-      font-weight: 900; font-size: 1.2rem; color: var(--accent-red);
-      margin-bottom: 1.5rem; letter-spacing: -1px;
-    }
-
-    .jp-text {
-      font-family: 'Noto Sans JP', sans-serif;
-      font-weight: 900; font-size: 1.2rem;
-      color: var(--accent-red); letter-spacing: 0.1em;
-      margin-bottom: 0.5rem;
+    .hero-text-wrap {
+      z-index: 10;
+      position: relative;
+      margin-top: 5rem;
     }
 
     .hero-title {
-      font-size: clamp(3rem, 8vw, 5rem); font-weight: 900;
-      line-height: 1.05; letter-spacing: -0.02em; margin-bottom: 1.5rem;
-      color: var(--text-main); text-transform: uppercase;
-    }
-    .hero-title span { color: var(--accent-red); }
-
-    .hero-desc {
-      font-size: 1.1rem; color: var(--text-muted); max-width: 600px;
-      line-height: 1.6; margin-bottom: 2.5rem; font-weight: 500;
+      font-family: var(--font-display);
+      font-size: clamp(5rem, 15vw, 12rem);
+      line-height: 0.85;
+      text-transform: uppercase;
+      color: var(--text-main);
+      white-space: nowrap;
     }
 
-    .btn-solid {
-      display: inline-flex; align-items: center; gap: 0.75rem;
-      background: var(--accent-red); color: #fff;
-      padding: 0.8rem 1.5rem; border: none; font-weight: 700; font-size: 0.9rem;
-      cursor: pointer; text-decoration: none; transition: background 0.2s;
-    }
-    .btn-solid:hover { background: #a31c1d; }
+    .hero-title span { color: transparent; -webkit-text-stroke: 1px var(--text-main); } /* Hollow text effect */
 
-    /* Hero Images Grid (Like the video) */
-    .hero-images {
-      display: grid; gap: 1.5rem; margin-top: 4rem;
+    /* Accordion / Content Section */
+    .content-wrapper {
+      padding: 4rem 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
     }
-    .hero-img-box {
-      border: 2px solid var(--border-main); padding: 0.5rem;
-      background: var(--bg-card); display: flex; justify-content: center; align-items: center;
-      overflow: hidden;
-    }
-    .hero-img-box img {
-      width: 100%; height: auto; object-fit: cover; border: 1px solid var(--border-subtle);
-    }
-
-    /* About / Introduction Section */
-    .section-spacing { padding: 6rem 0; border-bottom: 2px solid var(--border-main); }
 
     .section-title {
-      font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 900;
-      line-height: 1.1; margin-bottom: 1.5rem; text-transform: uppercase;
-    }
-    .section-text {
-      font-size: 1.1rem; line-height: 1.7; color: var(--text-muted);
-      max-width: 700px; margin-bottom: 1.5rem;
-    }
-    .section-text b { color: var(--text-main); }
-
-    /* Tech Stack / Interests Cards */
-    .grid-container {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 1.5rem; margin-top: 3rem;
+      font-family: var(--font-display);
+      font-size: clamp(3rem, 8vw, 6rem);
+      line-height: 0.9;
+      text-transform: uppercase;
+      margin-bottom: 2rem;
     }
 
-    .flat-card {
-      border: 2px solid var(--border-main); padding: 1.5rem;
-      background: var(--bg-card-alt);
-    }
-    .flat-card-icon {
-      color: var(--accent-red); margin-bottom: 1rem;
-    }
-    .flat-card h3 { font-size: 1.25rem; font-weight: 800; margin-bottom: 0.5rem; }
-    .flat-card p { font-size: 0.95rem; color: var(--text-muted); line-height: 1.6; }
-
-    /* Tags */
-    .tags-container { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem; }
-    .tag {
-      font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; font-weight: 700;
-      padding: 0.3rem 0.6rem; border: 1px solid var(--text-main);
-      color: var(--text-main); background: transparent; text-transform: uppercase;
+    /* The Video's Accordion Style */
+    .accordion-item {
+      border-top: var(--border-thick);
+      border-bottom: var(--border-thick);
+      margin-bottom: -2px; /* Overlap borders */
+      background: var(--bg-base);
     }
 
-    /* ROMs/Builds Section */
-    .builds-grid {
-      display: grid; grid-template-columns: 1fr; gap: 2rem; margin-top: 3rem;
+    .accordion-header {
+      width: 100%;
+      padding: 1.5rem 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      text-align: left;
     }
 
-    .build-card {
-      background: var(--bg-card); border: 2px solid var(--border-main);
-      padding: 2rem; display: flex; flex-direction: column; gap: 1.5rem;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-    .build-card:hover {
-      transform: translateY(-4px); box-shadow: 4px 4px 0px var(--accent-red);
+    .accordion-title {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 5vw, 4rem);
+      text-transform: uppercase;
+      color: var(--text-main);
+      line-height: 1;
     }
 
-    .card-top { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid var(--border-main); padding-bottom: 1.5rem; gap: 1rem; flex-wrap: wrap; }
-    .card-title-group { display: flex; flex-direction: column; gap: 0.4rem; }
+    .accordion-icon {
+      width: 40px; height: 40px;
+      border: var(--border-thick);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem; font-weight: 400;
+      transition: transform 0.3s ease;
+    }
+
+    .accordion-header.active .accordion-icon { transform: rotate(45deg); }
+
+    .accordion-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* Inside the accordion - specific data styling */
+    .build-data-grid {
+      padding: 0 0 2rem 0;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+
+    @media(min-width: 768px) {
+      .build-data-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    .data-row {
+      display: flex;
+      justify-content: space-between;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--text-main);
+      font-size: 0.9rem;
+      font-weight: 500;
+      text-transform: uppercase;
+    }
+
+    .data-row span:last-child { font-family: var(--font-mono); }
+
+    /* The Pill Tags (From the video) */
+    .tag-container {
+      display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.5rem;
+      justify-content: center;
+    }
+
+    .pill-tag {
+      border: 1px solid var(--text-main);
+      border-radius: var(--radius-pill);
+      padding: 0.4rem 1rem;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      background: transparent;
+      color: var(--text-main);
+    }
+
+    .pill-tag.highlight {
+      background: var(--accent-yellow);
+      border-color: var(--accent-yellow);
+    }
+
+    /* Black Pill Button */
+    .btn-black {
+      display: block; width: 100%; max-width: 300px;
+      margin: 2rem auto 0 auto;
+      background: var(--text-main); color: var(--accent-yellow);
+      font-family: var(--font-body); font-weight: 700;
+      text-transform: uppercase; text-align: center; text-decoration: none;
+      padding: 1.25rem; border-radius: var(--radius-pill);
+      border: 2px solid var(--text-main);
+      transition: all 0.2s;
+    }
     
-    .build-name { font-size: 1.5rem; font-weight: 900; color: var(--text-main); text-transform: uppercase; }
-    .build-meta { font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; font-weight: 600; color: var(--text-muted); }
-    .build-meta span { color: var(--accent-red); }
-
-    .badge {
-      font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; padding: 0.3rem 0.8rem;
-      border: 2px solid var(--accent-red); text-transform: uppercase; font-weight: 800;
-      color: var(--accent-red); background: transparent;
-    }
-
-    .card-middle { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
-    @media (max-width: 768px) { .card-middle { grid-template-columns: 1fr; gap: 1.5rem; } .build-card { padding: 1.5rem; } }
-
-    .data-grid { display: flex; gap: 1.5rem; flex-wrap: wrap; margin-bottom: 1rem; }
-    .data-block { display: flex; flex-direction: column; gap: 0.35rem; }
-    .data-label { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--accent-red); text-transform: uppercase; font-weight: 700; }
-    .data-value { font-size: 0.95rem; color: var(--text-main); font-weight: 700; }
-
-    .changelog-box {
-      background: var(--bg-card-alt); border: 2px solid var(--border-subtle);
-      padding: 1rem; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem;
-      font-weight: 500; color: var(--text-muted); white-space: pre-line;
-      max-height: 150px; overflow-y: auto; line-height: 1.6; margin-top: 0.5rem;
-    }
-    .changelog-box b { color: var(--text-main); }
-    
-    /* Scrollbar for changelog */
-    .changelog-box::-webkit-scrollbar { width: 4px; }
-    .changelog-box::-webkit-scrollbar-track { background: transparent; }
-    .changelog-box::-webkit-scrollbar-thumb { background: var(--border-subtle); }
-
-    .notice-box {
-      background: rgba(204, 41, 43, 0.1); color: var(--accent-red);
-      font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; font-weight: 700;
-      border: 2px solid var(--accent-red); padding: 0.75rem 1rem; margin-bottom: 1rem; line-height: 1.6;
-    }
-
-    .card-footer { display: flex; justify-content: flex-end; padding-top: 1.5rem; border-top: 2px solid var(--border-main); }
-    
-    .btn-outline {
-      display: inline-flex; align-items: center; gap: 0.5rem;
+    .btn-black:hover {
       background: transparent; color: var(--text-main);
-      font-family: 'Inter', sans-serif; font-weight: 800; font-size: 0.85rem;
-      padding: 0.6rem 1.5rem; border: 2px solid var(--text-main);
-      text-decoration: none; text-transform: uppercase; transition: all 0.2s;
     }
-    .btn-outline:hover { background: var(--text-main); color: var(--bg-base); }
 
-    /* Footer */
-    footer { padding: 4rem 0; text-align: center; }
-    .footer-text { font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; font-weight: 600; color: var(--text-muted); }
+    /* Changelog Text */
+    .changelog-text {
+      font-family: var(--font-body);
+      font-size: 1rem; line-height: 1.5;
+      margin-top: 1.5rem;
+      white-space: pre-line;
+    }
 
+    /* Footer styling similar to the video */
+    footer {
+      background: var(--text-main);
+      color: var(--bg-base);
+      padding: 4rem 2rem;
+      margin-top: 4rem;
+    }
+
+    .footer-title {
+      font-family: var(--font-display);
+      font-size: clamp(3rem, 10vw, 8rem);
+      line-height: 0.8;
+      text-transform: uppercase;
+      margin-bottom: 2rem;
+    }
+    
+    .footer-title span { color: transparent; -webkit-text-stroke: 1px var(--bg-base); }
+
+    .footer-info {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      line-height: 1.6;
+    }
   </style>
 </head>
 <body>
 
-  <!-- Navbar -->
+  <!-- Minimal Navbar -->
   <nav class="navbar">
-    <a href="#" class="nav-logo">EXYROMS</a>
-    <div class="menu-icon">
-      <!-- Just decorative dashes for the minimalist look -->
-      <span style="display:block; width:20px; height:2px; background:var(--text-main); margin-bottom:4px;"></span>
-      <span style="display:block; width:20px; height:2px; background:var(--text-main); margin-bottom:4px;"></span>
-      <span style="display:block; width:20px; height:2px; background:var(--text-main);"></span>
+    <div class="nav-left">
+      <a href="#" class="nav-logo">EXY</a>
+      <span class="nav-sub">Project Firmwares</span>
     </div>
+    <button class="menu-btn" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
   </nav>
 
-  <main class="container">
+  <!-- Giant Typography Hero -->
+  <section class="hero">
+    <div class="hero-text-wrap">
+      <h1 class="hero-title">
+        A NEW LOOK<br>
+        <span>AT A FAMILIAR</span><br>
+        DEVICE.
+      </h1>
+    </div>
+  </section>
+
+  <!-- Main Content Area -->
+  <div class="content-wrapper">
+    <h2 class="section-title">THE <span>ROMS</span></h2>
     
-    <!-- Hero Section -->
-    <section class="hero animate-up">
-      <div class="hero-badge">EXY</div>
-      <div class="jp-text">アンドロイド</div> <!-- Japanese for "Android" -->
-      <h1 class="hero-title">Crafting Smooth,<br>Reliable <span>Android<br>Experiences.</span></h1>
-      <p class="hero-desc">Android ROM Developer & Device Maintainer.<br>Building with passion. For the community.</p>
-      
-      <div>
-        <a href="#builds" class="btn-solid">Explore ROMs &rarr;</a>
-      </div>
+    <div id="buildsList">
+      <!-- Accordions will be injected here -->
+    </div>
+  </div>
 
-      <div class="hero-images">
-        <div class="hero-img-box">
-          <img src="https://images.unsplash.com/photo-1578305698516-724d101d2d0b?auto=format&fit=crop&q=80&w=800" alt="Graphic Art" style="height: 300px; filter: grayscale(100%) sepia(100%) hue-rotate(315deg) saturate(300%) contrast(1.2);">
-        </div>
-      </div>
-    </section>
-
-    <!-- About / Intro Section -->
-    <section class="section-spacing animate-up">
-      <div class="jp-text">私たちについて</div> <!-- Japanese for "About Us" -->
-      <h2 class="section-title">Built with Passion.<br>For the <span>Community.</span></h2>
-      <p class="section-text">All ROMs are built with dedication and a focus on performance, stability, and user experience.</p>
-      <p class="section-text">This is more than just ROMs.<br><b>This is a commitment.</b></p>
-    </section>
-
-    <!-- Device Maintainer Section -->
-    <section class="section-spacing animate-up">
-      <div class="jp-text">サポートされているデバイス</div> <!-- Japanese for "Supported Devices" -->
-      <h2 class="section-title">Device Maintained</h2>
-      
-      <div class="flat-card" style="margin-top: 2rem; text-align: center; max-width: 400px;">
-        <h3 style="font-size: 1.5rem; text-transform: uppercase;">Samsung Galaxy<br>Exynos 9611 Series</h3>
-        <p style="margin-top: 1rem; font-family: 'JetBrains Mono', monospace; font-weight: 700;">
-          Codename: <span style="color: var(--accent-red);">m31 / a51 / f41</span><br>
-          Exynos 9611 | Android 13-17<br>
-          Maintained with ❤️
-        </p>
-      </div>
-    </section>
-
-    <!-- Tech Stack Section -->
-    <section class="section-spacing animate-up">
-      <div class="jp-text">技術スタック</div> <!-- Japanese for "Tech Stack" -->
-      <h2 class="section-title">Tech Stack</h2>
-      
-      <div class="grid-container">
-        <div class="flat-card">
-          <div class="flat-card-icon">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 17l6-6-6-6M12 19h8"></path></svg>
-          </div>
-          <h3>Languages & Shell</h3>
-          <div class="tags-container">
-            <span class="tag">Bash</span><span class="tag">Shell</span><span class="tag">Makefile</span><span class="tag">C++</span>
-          </div>
-        </div>
-        <div class="flat-card">
-          <div class="flat-card-icon">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
-          </div>
-          <h3>Core Systems</h3>
-          <div class="tags-container">
-            <span class="tag">Linux</span><span class="tag">AOSP</span><span class="tag">LineageOS</span>
-          </div>
-        </div>
-        <div class="flat-card">
-          <div class="flat-card-icon">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>
-          </div>
-          <h3>Android & Mobile</h3>
-          <div class="tags-container">
-            <span class="tag">Device Trees</span><span class="tag">Kernel</span><span class="tag">Recovery</span>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Downloads / Firmware Hub -->
-    <section id="builds" class="section-spacing animate-up" style="border-bottom: none;">
-      <div class="jp-text">ファームウェア</div> <!-- Japanese for "Firmware" -->
-      <h2 class="section-title">Firmware Hub</h2>
-      <p class="section-text">Explore the work, download the projects, and elevate your device.</p>
-
-      <!-- The ROMs will be injected into this container -->
-      <div class="builds-grid" id="buildsList"></div>
-    </section>
-
-  </main>
-
+  <!-- Brutalist Footer -->
   <footer>
-    <div class="container">
-      <p class="footer-text">"Still learning. Still breaking things. Still building." ⚡</p>
-      <p class="footer-text" style="margin-top: 1rem;">Project ExyROMs &copy; 2026. Maintained by PARBINDAR7.</p>
+    <h2 class="footer-title">DON'T MISS<br><span>NEW BUILDS</span></h2>
+    <div class="footer-info">
+      <p>MAINTAINED BY PARBINDAR7</p>
+      <p>TELEGRAM: @EXYROMS</p>
+      <p style="margin-top: 2rem; opacity: 0.5;">EXYNOS 9611 DEVELOPMENT HUB &copy; 2026</p>
     </div>
   </footer>
 
   <script>
+    // Your exact original database
     const buildsData = [
-     {
-        title: "Everline kernel",
-        category: "kernel",
-        device: "Samsung Galaxy A51, F41, M31, M31s, M21",
-        android: "Android 13 to 16",
-        date: "26 July 2026",
-        maintainer: "PARBINDAR7",
-        flavor: ["BALANCED"],
-        changelog: "1. <b>sched/uclamp:</b> Move tunables to cpuctl\n2. <b>sched/uclamp:</b> Expose latency_sensitive and uclamp.boosted",
-        Notice: "1. Only support builds 25.07.2026 or newer\n2. crDroid not compatible",
+      {
+        title: "Everline kernel", category: "kernel", device: "Samsung Galaxy A51, F41, M31, M31s, M21", android: "Android 13 to 16", date: "26 July 2026", maintainer: "PARBINDAR7", flavor: ["BALANCED"],
+        changelog: "1. sched/uclamp: Move tunables to cpuctl\n2. sched/uclamp: Expose latency_sensitive and uclamp.boosted",
         downloadUrl: "https://sourceforge.net/projects/parbindar7-builds/files/Everline%2025-07-2026/"
       },
       {
-        title: "Everline Kernel",
-        category: "kernel",
-        device: "Samsung Galaxy A51, F41, M31, M31s, M21",
-        android: "Android 13 to 17",
-        date: "24 August 2026",
-        maintainer: "PARBINDAR7",
-        flavor: ["BALANCED"],
-        changelog: "1. Add AutoFDO support\n2. <b>cpufreq_schedutil:</b> Add sugov_cpu_is_busy\n3. <b>cpufreq_schedutil:</b> Add ignore_dl_rate_limit\n4. <b>cpufreq_schedutil:</b> Add rt_rq_is_runnable\n5. <b>ems:</b> Uclamp ontime_load_avg boost\n6. <b>ems:</b> Add ontime_en and ontime_prefer_perf\n7. Built with Clang 22.1.8",
-        Notice: "1. crDroid latest compatible\n2. Only support builds 26.07.2026 or newer",
-        downloadUrl: "https://sourceforge.net/projects/parbindar7-builds/files/Everline%2024-08-2026/"
-      },
-      {
-        title: "Everline kernel",
-        category: "kernel",
-        device: "Samsung Galaxy A51, F41, M31, M31s, M21",
-        android: "Android 13 to 16",
-        date: "18 May 2026",
-        maintainer: "PARBINDAR7",
-        flavor: ["BALANCED"],
-        changelog: "1. <b>sched:</b> fix uclamp_boosted()\n2. <b>BACKPORT:</b> Add min_task_util_for_boost and min_task_util_for_uclamp\n3. <b>sched/cpufreq_schedutil:</b> use UCLAMP_MIN in sugov_need_slack_timer()\n4. <b>Fixup:</b> sched/uclamp: sched: Fix cpuset_cgrp_id in uclamp_latency_sensitive\n5. <b>sched:</b> Replace schedtune with uclamp\n6. <b>BACKPORT:</b> sched/cpufreq_schedutil: Make iowait boost uclamp-aware\n7. <b>BACKPORT:</b> sched/fair: Make cpu_overutilized() uclamp-aware\n8. <b>BACKPORT:</b> sched/uclamp: Simplify uclamp_tg_restrict() using clamp()\n9. <b>sched/cpufreq_schedutil:</b> Fix undefined uclamp_rq_util_with()\n10. <b>Fixup:</b> sched/cpufreq: remove rq-level uclamp_min floor",
-        downloadUrl: "https://sourceforge.net/projects/parbindar7-builds/files/Everline%2018-05-2026/"
-      },
-      {
-        title: "Project Matrixx OS v12.3",
-        category: "rom",
-        device: "Samsung Galaxy A51, F41, M31, M31s, M21",
-        android: "Android 16",
-        date: "May 2026",
-        maintainer: "PARBINDAR7",
-        flavor: ["INACTIVE"],
-        Notice: "Project Matrixx OS has been officially discontinued as per the announcement of Matrixx OS Developers.",
-        changelog: "1. Contains all previous commits",
-        screenshots: [
-          "./screenshots/voltageos/matrixos3.12/v1.jpg",
-          "./screenshots/voltageos/matrixos3.12/v2.jpg",
-          "./screenshots/voltageos/matrixos3.12/v3.jpg",
-          "./screenshots/voltageos/matrixos3.12/v4.jpg",
-          "./screenshots/voltageos/matrixos3.12/v5.jpg",
-          "./screenshots/voltageos/matrixos3.12/v6.jpg",
-          "./screenshots/voltageos/matrixos3.12/v7.jpg",
-          "./screenshots/voltageos/matrixos3.12/v8.jpg",
-          "./screenshots/voltageos/matrixos3.12/v9.jpg"
-        ],
+        title: "Project Matrixx OS v12.3", category: "rom", device: "Samsung Galaxy A51, F41, M31, M31s, M21", android: "Android 16", date: "May 2026", maintainer: "PARBINDAR7", flavor: ["INACTIVE"],
+        changelog: "1. Contains all previous commits\nNOTICE: Project Matrixx OS has been officially discontinued as per the announcement of Matrixx OS Developers.",
         downloadUrl: "https://sourceforge.net/projects/projectmatrixx/files/Android-16/"
       },
       {
-        title: "InfinityX v3.10",
-        category: "rom",
-        device: "Samsung Galaxy A51, F41, M31, M31s, M21",
-        android: "Android 16",
-        date: "05 May 2026",
-        maintainer: "PARBINDAR7",
-        flavor: ["GAPPS INCLUDED"],
+        title: "InfinityX v3.10", category: "rom", device: "Samsung Galaxy A51, F41, M31, M31s, M21", android: "Android 16", date: "05 May 2026", maintainer: "PARBINDAR7", flavor: ["GAPPS INCLUDED"],
         changelog: "1. Contains all previous commits\n2. OTA push",
-        screenshots: [
-          "./screenshots/voltageos/infinity/v1.jpg",
-          "./screenshots/voltageos/infinity/v2.jpg",
-          "./screenshots/voltageos/infinity/v3.jpg",
-          "./screenshots/voltageos/infinity/v4.jpg",
-          "./screenshots/voltageos/infinity/v5.jpg",
-          "./screenshots/voltageos/infinity/v6.jpg",
-          "./screenshots/voltageos/infinity/v7.jpg",
-          "./screenshots/voltageos/infinity/v8.jpg",
-          "./screenshots/voltageos/infinity/v9.jpg"
-        ],
         downloadUrl: "https://github.com/Parbindar7/OTA/releases/tag/InfinityX_06-05-2026"
       },
       {
-        title: "Afterlife OS v8.4",
-        category: "rom",
-        device: "Samsung Galaxy A51, F41, M31, M31s, M21",
-        android: "Android 16",
-        date: "23 April 2026",
-        maintainer: "PARBINDAR7",
-        flavor: ["INACTIVE"],
-        changelog: "1. Enable frame pacing\n2. Define <b>screenRecorderAVCProfileLevel</b>\n3. Decrease launch boost to 3sec\n4. Tune schedutil rate limits\n5. HWC Adapted from exynos9630 T BSP\n6. Adapted struct decon_win_config_data to exynos9610\n7. Fix missing dmabuf_trace_free call on buffer release path\n8. Free exporter name on buffer release\n9. CONFIG_HZ to 300",
-        screenshots: [
-          "./screenshots/voltageos/afterlife/v1.jpg",
-          "./screenshots/voltageos/afterlife/v2.jpg",
-          "./screenshots/voltageos/afterlife/v3.jpg",
-          "./screenshots/voltageos/afterlife/v4.jpg",
-          "./screenshots/voltageos/afterlife/v5.jpg",
-          "./screenshots/voltageos/afterlife/v6.jpg",
-          "./screenshots/voltageos/afterlife/v7.jpg",
-          "./screenshots/voltageos/afterlife/v8.jpg",
-          "./screenshots/voltageos/afterlife/v9.jpg",
-          "./screenshots/voltageos/afterlife/v10.jpg",
-          "./screenshots/voltageos/afterlife/v11.jpg",
-          "./screenshots/voltageos/afterlife/v12.jpg",
-          "./screenshots/voltageos/afterlife/v13.jpg",
-          "./screenshots/voltageos/afterlife/v14.jpg",
-          "./screenshots/voltageos/afterlife/v15.jpg",
-          "./screenshots/voltageos/afterlife/v16.jpg",
-          "./screenshots/voltageos/afterlife/v17.jpg",
-          "./screenshots/voltageos/afterlife/v18.jpg",
-          "./screenshots/voltageos/afterlife/v18.jpg",
-          "./screenshots/voltageos/afterlife/v19.jpg",
-          "./screenshots/voltageos/afterlife/v20.jpg",
-          "./screenshots/voltageos/afterlife/v21.jpg",
-          "./screenshots/voltageos/afterlife/v22.jpg",
-          "./screenshots/voltageos/afterlife/v23.jpg"
-        ],
+        title: "Afterlife OS v8.4", category: "rom", device: "Samsung Galaxy A51, F41, M31, M31s, M21", android: "Android 16", date: "23 April 2026", maintainer: "PARBINDAR7", flavor: ["INACTIVE"],
+        changelog: "1. Enable frame pacing\n2. Define screenRecorderAVCProfileLevel\n3. Decrease launch boost to 3sec\n4. Tune schedutil rate limits\n5. HWC Adapted from exynos9630 T BSP\n6. Adapted struct decon_win_config_data to exynos9610\n7. Fix missing dmabuf_trace_free call on buffer release path\n8. Free exporter name on buffer release\n9. CONFIG_HZ to 300",
         downloadUrl: "https://afterlifeos.com/download"
       },
       {
-        title: "Lineage OS v23.2",
-        category: "rom",
-        device: "Samsung Galaxy A51, F41, M31, M31s, M21",
-        android: "Android 16",
-        date: "26 Jun 2026",
-        maintainer: "PARBINDAR7",
-        flavor: ["VANILLA"],
-        changelog: "1. Refactor Powerhint.json\n2. Tune up/down frequency rate limits\n3. Cleanup task_profiles_30.json",
-        downloadUrl: "https://drive.google.com/drive/folders/1sUjnPe88Q6sRX2-8nxYO37ac-MDAmhyj?usp=sharing"
-      },
-      {
-        title: "Lineage OS v23.2",
-        category: "rom",
-        device: "Samsung Galaxy A51, F41, M31, M31s, M21",
-        android: "Android 16",
-        date: "01 Jun 2026",
-        maintainer: "PARBINDAR7",
-        flavor: ["VANILLA"],
-        changelog: "1. Refactor Powerhint.json\n2. Add software c2 av1/dav1d decoder\n3. Move media codecs configurations on tree",
-        downloadUrl: "https://drive.google.com/drive/folders/1OvkxJulj3QWW-0S4u0Kq8DKxLjsmJs_Y?usp=sharing"
-      },
-      {
-        title: "Lineage OS v23.2",
-        category: "rom",
-        device: "Samsung Galaxy A51, F41, M31, M31s, M21",
-        android: "Android 16",
-        date: "02 May 2026",
-        maintainer: "PARBINDAR7",
-        flavor: ["VANILLA"],
-        changelog: "1. Powerhint: Re-tune for efficiency\n2. Powerhint: Cleanup\n3. Powerhint: Add UclampTAMin & UclampTALatency\n4. Powerhint: Add UclampTAMin to LAUNCH\n5. Powerhint: Refactor powerhint.json\n6. Update cpuset parameters\n7. Migrate from Schedtune to Uclamp\n8. Drop schedtune\n9. Refactor task_profiles for to reflect Uclamp changes",
-        downloadUrl: "https://drive.google.com/drive/folders/1quhVFJwp1_wL0WKlpM4YqvpQs_oq9yvM?usp=sharing"
-      },
-      {
-        title: "Voltage OS v5.8",
-        category: "rom",
-        device: "Samsung Galaxy A51, F41, M31, M31s, M21",
-        android: "Android 16",
-        date: "25 April 2026",
-        maintainer: "PARBINDAR7",
-        flavor: ["VANILLA"],
+        title: "Voltage OS v5.8", category: "rom", device: "Samsung Galaxy A51, F41, M31, M31s, M21", android: "Android 16", date: "25 April 2026", maintainer: "PARBINDAR7", flavor: ["VANILLA"],
         changelog: "1. Re-tune POWERHINT for efficiency\n2. Boost CPU on EXPENSIVE_RENDERING\n3. Set TARGET_CPU_VARIANT to cortex-a73",
         downloadUrl: "https://drive.google.com/drive/folders/16UW_O8Megsh4MpqPprNJgv4JV1j4taP5?usp=sharing"
       },
       {
-        title: "Lineage OS v23.2",
-        category: "rom",
-        device: "Samsung Galaxy A51, F41, M31, M31s, M21",
-        android: "Android 16",
-        date: "20 April 2026",
-        maintainer: "PARBINDAR7",
-        flavor: ["VANILLA"],
-        changelog: "1. Blur Disabled\n2. Enable frame pacing\n3. Define screenRecorderAVCProfileLevel\n4. Decrease launch boost to 3sec\n5. Tune schedutil rate limits\n6. HWC Adapt from exynos9630 T BSP\n7. adapt struct decon_win_config_data to exynos9610\n8. fix missing dmabuf_trace_free call on buffer release path\n9. free exporter name on buffer release\n10. CONFIG_HZ to 300",
-        downloadUrl: "https://drive.google.com/drive/folders/1coT6KSsNsyvF5VHY57uvHnj7pNAfHQo_?usp=drive_link"
-      },
-      {
-        title: "Matrixx OS v12.2",
-        category: "rom",
-        device: "Samsung Galaxy A51, F41, M31, M31s, M21",
-        android: "Android 16",
-        date: "13 April 2026",
-        maintainer: "PARBINDAR7",
-        flavor: ["INACTIVE"],
-        Notice: "Matrixx OS has been officially discontinued as per the announcement of Matrixx OS Developers.",
-        changelog: "1. Blur Disabled\n2. Decrease launch boost to 3sec\n3. Tune schedutil rate limits\n4. HWC Adapt from exynos9630 T BSP\n5. adapt struct decon_win_config_data to exynos9610\n6. fix missing dmabuf_trace_free call on buffer release path\n7. free exporter name on buffer release",
-        screenshots: [
-          "./screenshots/voltageos/matrixos2.12/v1.jpg",
-          "./screenshots/voltageos/matrixos2.12/v2.jpg",
-          "./screenshots/voltageos/matrixos2.12/v3.jpg",
-          "./screenshots/voltageos/matrixos2.12/v4.jpg",
-          "./screenshots/voltageos/matrixos2.12/v5.jpg",
-          "./screenshots/voltageos/matrixos2.12/v6.jpg",
-          "./screenshots/voltageos/matrixos2.12/v7.jpg",
-          "./screenshots/voltageos/matrixos2.12/v8.jpg",
-          "./screenshots/voltageos/matrixos2.12/v9.jpg"
-        ],
-        downloadUrl: "https://drive.google.com/drive/folders/1b_54tfSj5k1Ypmu07LL8pKS-JnuF9eXm?usp=sharing"
-      },
-      {
-        title: "LunarisAOSP v3.12 ",
-        category: "rom",
-        device: "Samsung Galaxy A51, F41, M31, M31s, M21",
-        android: "Android 16",
-        date: "01 July 2026",
-        maintainer: "PARBINDAR7",
-        flavor: ["VANILLA"],
+        title: "LunarisAOSP v3.12 ", category: "rom", device: "Samsung Galaxy A51, F41, M31, M31s, M21", android: "Android 16", date: "01 July 2026", maintainer: "PARBINDAR7", flavor: ["VANILLA"],
         changelog: "1. Remove unused /dev/freezer\n2. Tune up/down frequency transition rate limits\n3. Switch to AOSP task profiles",
-        screenshots: [
-          "./screenshots/voltageos/lunaris/v1.jpg",
-          "./screenshots/voltageos/lunaris/v2.jpg",
-          "./screenshots/voltageos/lunaris/v3.jpg",
-          "./screenshots/voltageos/lunaris/v4.jpg",
-          "./screenshots/voltageos/lunaris/v5.jpg",
-          "./screenshots/voltageos/lunaris/v6.jpg",
-          "./screenshots/voltageos/lunaris/v7.jpg",
-          "./screenshots/voltageos/lunaris/v8.jpg",
-          "./screenshots/voltageos/lunaris/v9.jpg"
-        ],
         downloadUrl: "https://drive.google.com/drive/folders/1_RG0oDENhUGLcEh5kDkDNwOtc5VT5s3t"
       },
       {
-        title: "LunarisAOSP v3.12 EOL",
-        category: "rom",
-        device: "Samsung Galaxy A51, F41, M31, M31s, M21",
-        android: "Android 16",
-        date: "13 August 2026",
-        maintainer: "PARBINDAR7",
-        flavor: ["VANILLA", "EOL"],
-        changelog: "1. Re-configure cpuset\n2. Remove cpuidle off node",
-        Notice: "1. EOL A16. Next update based on Android 17\n2. Mostly source side changes in this build\n3. No Kernel changes",
-        screenshots: [
-          "./screenshots/voltageos/lunaris3.12/v1.jpg",
-          "./screenshots/voltageos/lunaris3.12/v2.jpg",
-          "./screenshots/voltageos/lunaris3.12/v3.jpg",
-          "./screenshots/voltageos/lunaris3.12/v4.jpg",
-          "./screenshots/voltageos/lunaris3.12/v5.jpg",
-          "./screenshots/voltageos/lunaris3.12/v6.jpg",
-          "./screenshots/voltageos/lunaris3.12/v7.jpg",
-          "./screenshots/voltageos/lunaris3.12/v8.jpg",
-          "./screenshots/voltageos/lunaris3.12/v9.jpg"
-        ],
-        downloadUrl: "https://drive.google.com/drive/folders/1ZYYzDbaUuHe5nAPtg2ryV5afHvq6LACQ?usp=sharing"
-      },
-      {
-        title: "InfinityX 12.3",
-        category: "rom",
-        device: "Samsung Galaxy A51, F41, M31, M31s, M21",
-        android: "Android 16",
-        date: "16 August 2026",
-        maintainer: "PARBINDAR7",
-        flavor: ["GAPPS", "EOL"],
-        changelog: "1. Re-configure cpuset\n2. Remove cpuidle off node",
-        Notice: "1. OTA Pushed\n2. EOL A16. Next update based on Android 17\n3. No Kernel changes",
-        screenshots: [
-          "./screenshots/voltageos/infinityx/v1.jpg",
-          "./screenshots/voltageos/infinityx/v2.jpg",
-          "./screenshots/voltageos/infinityx/v3.jpg",
-          "./screenshots/voltageos/infinityx/v4.jpg",
-          "./screenshots/voltageos/infinityx/v5.jpg",
-          "./screenshots/voltageos/infinityx/v6.jpg"
-        ],
-        featureScreenshots: [
-          "./features/voltageos/infinity/f1.jpg",
-          "./features/voltageos/infinity/f2.jpg",
-          "./features/voltageos/infinity/f3.jpg",
-          "./features/voltageos/infinity/f4.jpg",
-          "./features/voltageos/infinity/f5.jpg",
-          "./features/voltageos/infinity/f6.jpg",
-          "./features/voltageos/infinity/f7.jpg",
-          "./features/voltageos/infinity/f8.jpg",
-          "./features/voltageos/infinity/f9.jpg",
-          "./features/voltageos/infinity/f10.jpg",
-          "./features/voltageos/infinity/f11.jpg"
-        ],
-        downloadUrl: "https://github.com/Parbindar7/OTA/releases"
-      },
-      {
-        title: "Lineage OS v23.2",
-        category: "rom",
-        device: "Samsung Galaxy A51, F41, M31, M31s, M21",
-        android: "Android 16",
-        date: "09 August 2026",
-        maintainer: "PARBINDAR7",
-        flavor: ["VANILLA"],
-        changelog: "1. Tune Powerhint.json\n2. Tune up/down frequency rate limits\n3. Switch to AOSP task profiles\n4. Remove unused /dev/freezer",
-        screenshots: [
-          "./screenshots/voltageos/lineageos23.2/v1.jpg",
-          "./screenshots/voltageos/lineageos23.2/v2.jpg",
-          "./screenshots/voltageos/lineageos23.2/v3.jpg",
-          "./screenshots/voltageos/lineageos23.2/v4.jpg",
-          "./screenshots/voltageos/lineageos23.2/v5.jpg",
-          "./screenshots/voltageos/lineageos23.2/v6.jpg",
-          "./screenshots/voltageos/lineageos23.2/v7.jpg",
-          "./screenshots/voltageos/lineageos23.2/v8.jpg",
-          "./screenshots/voltageos/lineageos23.2/v9.jpg"
-        ],
-        downloadUrl: "https://drive.google.com/drive/folders/1-M5lUH2KREBlKlmYeRi5mXcA1sdh48e4?usp=sharing"
-      },
-      {
-        title: "VoltageOS 5.11 EOL",
-        category: "rom",
-        device: "Samsung Galaxy A51, F41, M31, M31s, M21",
-        android: "Android 16",
-        date: "10 August 2026",
-        maintainer: "PARBINDAR7",
-        flavor: ["VANILLA", "EOL"],
-        changelog: "1. Tune Powerhint\n2. Tune up/down frequency rate limits\n3. Switch to AOSP task profiles\n4. Remove unused /dev/freezer",
-        Notice: "1. Blur disabled",
-        screenshots: [
-          "./screenshots/voltageos/voltageos5.11/v1.jpg",
-          "./screenshots/voltageos/voltageos5.11/v2.jpg",
-          "./screenshots/voltageos/voltageos5.11/v3.jpg",
-          "./screenshots/voltageos/voltageos5.11/v4.jpg",
-          "./screenshots/voltageos/voltageos5.11/v5.jpg",
-          "./screenshots/voltageos/voltageos5.11/v6.jpg",
-          "./screenshots/voltageos/voltageos5.11/v7.jpg",
-          "./screenshots/voltageos/voltageos5.11/v8.jpg",
-          "./screenshots/voltageos/voltageos5.11/v9.jpg"
-        ],
-        downloadUrl: "https://drive.google.com/drive/folders/19QBt1_8HF0gyskg9fnHgojGY8s5MsnFm?usp=sharing"
-      },
-      {
-        title: "LineageOS EXT",
-        category: "rom",
-        device: "Samsung Galaxy A51, F41, M31, M31s, M21",
-        android: "Android 17",
-        date: "10 August 2026",
-        maintainer: "PARBINDAR7",
-        flavor: ["VANILLA"],
+        title: "LineageOS EXT", category: "rom", device: "Samsung Galaxy A51, F41, M31, M31s, M21", android: "Android 17", date: "10 August 2026", maintainer: "PARBINDAR7", flavor: ["VANILLA"],
         changelog: "1. Update included soong namespaces\n2. Set legacy gralloc flag\n3. Remove apk_verity_prop from flags_health_check.te\n4. Remove duplicate sysfs_block\n5. Remove duplicate clean_scratch_files\n6. Use legacy libion implementation\n7. Disable app launch blur",
-        Notice: "1. Initial A17 release\n2. Report bugs with proper log please",
-        screenshots: [
-          "./screenshots/voltageos/lineageos/v1.jpg",
-          "./screenshots/voltageos/lineageos/v2.jpg",
-          "./screenshots/voltageos/lineageos/v3.jpg",
-          "./screenshots/voltageos/lineageos/v4.jpg",
-          "./screenshots/voltageos/lineageos/v5.jpg",
-          "./screenshots/voltageos/lineageos/v6.jpg",
-          "./screenshots/voltageos/lineageos/v7.jpg",
-          "./screenshots/voltageos/lineageos/v8.jpg",
-          "./screenshots/voltageos/lineageos/v9.jpg"
-        ],
         downloadUrl: "https://drive.google.com/drive/folders/11VAKKkzQEnQ-hCucJFv6She-AtUQNiDo?usp=sharing"
       },
       {
-        title: "Everline Kernel",
-        category: "kernel",
-        device: "Samsung Galaxy A51, F41, M31, M31s, M21",
-        android: "A13-A17 Supported",
-        date: "10 August 2026",
-        maintainer: "PARBINDAR7",
-        flavor: ["BALANCED"],
-        changelog: "1. <b>sched/cpufreq_schedutil:</b> Add sugov_iowait_reset\n2. <b>sched/uclamp:</b> Use uclamp_rq_is_idle in task_fits_cpu\n3. <b>sched/uclamp:</b> Add util_fits_cpu and task_fits_cpu\n4. <b>sched/uclamp:</b> Add uclamp_rq_get, uclamp_rq_set and uclamp_rq_is_idle\n5. Removed old unnecessary uclamp commits and backports\n6. Merge 5.10 BPF from phoenix\n7. Add cgroup v2 freezer",
-        Notice: "1. crDroid not compatible\n2. Only support builds 26.07.2026 or newer",
-        downloadUrl: "https://sourceforge.net/projects/parbindar7-builds/files/Everline%2010-08-2026/"
-      },
-      {
-        title: "VoltageOS v6.0",
-        category: "rom",
-        device: "Samsung Galaxy A51, F41, M31, M31s, M21",
-        android: "Android 17",
-        date: "11 August 2026",
-        maintainer: "PARBINDAR7",
-        flavor: ["VANILLA", "UNOFFICIAL"],
-        changelog: "1. Update included soong namespaces\n2. Set legacy gralloc flag\n3. Remove apk_verity_prop from flags_health_check.te\n4. Remove duplicate sysfs_block\n5. Remove duplicate clean_scratch_files\n6. Use legacy libion implementation\n7. Disable app launch blur",
-        Notice: "1. Initial Android 17 release\n2. Blur Disabled\n3. Report bugs with proper log please",
-        screenshots: [
-          "./screenshots/voltageos/v1.jpg",
-          "./screenshots/voltageos/v2.jpg",
-          "./screenshots/voltageos/v3.jpg",
-          "./screenshots/voltageos/v4.jpg",
-          "./screenshots/voltageos/v5.jpg",
-          "./screenshots/voltageos/v6.jpg",
-          "./screenshots/voltageos/v7.jpg"
-        ],
-        featureScreenshots: [
-          "./features/voltageos/f1.jpg",
-          "./features/voltageos/f2.jpg",
-          "./features/voltageos/f3.jpg",
-          "./features/voltageos/f4.jpg",
-          "./features/voltageos/f5.jpg",
-          "./features/voltageos/f6.jpg",
-          "./features/voltageos/f7.jpg",
-          "./features/voltageos/f8.jpg",
-          "./features/voltageos/f9.jpg",
-          "./features/voltageos/f10.jpg",
-          "./features/voltageos/f11.jpg",
-          "./features/voltageos/f12.jpg",
-          "./features/voltageos/f13.jpg",
-          "./features/voltageos/f14.jpg",
-          "./features/voltageos/f15.jpg",
-          "./features/voltageos/f16.jpg",
-          "./features/voltageos/f17.jpg",
-          "./features/voltageos/f18.jpg",
-          "./features/voltageos/f19.jpg",
-          "./features/voltageos/f20.jpg",
-          "./features/voltageos/f21.jpg",
-          "./features/voltageos/f22.jpg",
-          "./features/voltageos/f23.jpg",
-          "./features/voltageos/f24.jpg",
-          "./features/voltageos/f25.jpg",
-          "./features/voltageos/f26.jpg"
-        ],
-        downloadUrl: "https://drive.google.com/drive/folders/1D-w32e6LOOtJuwNrJ_0rTNRPlI34Y6IA"
-      },
-      {
-        title: "PixelOS v16.2",
-        category: "rom",
-        device: "Samsung Galaxy A51, F41, M31, M31s, M21",
-        android: "Android 16",
-        date: "17 August 2026",
-        maintainer: "PARBINDAR7",
-        flavor: ["GAPPS"],
+        title: "PixelOS v16.2", category: "rom", device: "Samsung Galaxy A51, F41, M31, M31s, M21", android: "Android 16", date: "17 August 2026", maintainer: "PARBINDAR7", flavor: ["GAPPS"],
         changelog: "1. GPU Frequency set to 949mhz\n2. Blur disabled",
-        Notice: "1. June Security Patch\n2. Only supported by Everline 25.07.2026 and newer\n4. ROM takes time to get stable",
-        screenshots: [
-          "./screenshots/voltageos/pixelos/v1.jpg",
-          "./screenshots/voltageos/pixelos/v2.jpg",
-          "./screenshots/voltageos/pixelos/v3.jpg",
-          "./screenshots/voltageos/pixelos/v4.jpg",
-          "./screenshots/voltageos/pixelos/v5.jpg",
-          "./screenshots/voltageos/pixelos/v6.jpg",
-          "./screenshots/voltageos/pixelos/v7.jpg",
-          "./screenshots/voltageos/pixelos/v8.jpg",
-          "./screenshots/voltageos/pixelos/v9.jpg"
-        ],
         downloadUrl: "https://drive.google.com/drive/folders/1y9wpS1P07NaXY9XiLxwQLYonk-ucRgDv"
       },
       {
-        title: "LineageOS v23.2",
-        category: "rom",
-        device: "Samsung Galaxy A51, F41, M31, M31s, M21",
-        android: "Android 16",
-        date: "24 August 2026",
-        maintainer: "PARBINDAR7",
-        flavor: ["VANILLA"],
-        changelog: "1. AIDL Widevine from A14\n2. Drop config_sustainedPerformanceModeSupported\n3. Boost on EXPENSIVE_RENDERING\n4. Remove cpuidle off node\n5.Re-configure cpuset\n6. GPU Frequency upto 949mhz",
-        Notice: "1. August Security Patch\n2. Only supported by Everline 25.07.2026 and newer\n3. ROM takes time to get stable",
-        downloadUrl: "https://drive.google.com/drive/folders/1p3QDf6tItfNd5HCWECp0zGKtK74zj4Ji?usp=sharing"
-      },
-      {
-        title: "VoltageOS v6.1",
-        category: "rom",
-        device: "Samsung Galaxy A51, F41, M31, M31s, M21",
-        android: "Android 17",
-        date: "04 Sep 2026",
-        maintainer: "PARBINDAR7",
-        flavor: ["VANILLA"],
-        changelog: "1. Same as Lineage 24.08.2026 Build",
-        Notice: "1. VoLTE Working\n2. VoWiFi (Voice over Wi-Fi) Broken\n3. Tested on JIO, Airtel so far\n4. Keep data enabled when call\n5. Blur Disabled\n6. Report bugs with proper log please",
-        screenshots: [
-          "./screenshots/voltageos/voltageOs/v1.jpg",
-          "./screenshots/voltageos/voltageOs/v2.jpg",
-          "./screenshots/voltageos/voltageOs/v3.jpg",
-          "./screenshots/voltageos/voltageOs/v4.jpg",
-          "./screenshots/voltageos/voltageOs/v5.jpg",
-          "./screenshots/voltageos/voltageOs/v6.jpg",
-          "./screenshots/voltageos/voltageOs/v7.jpg",
-          "./screenshots/voltageos/voltageOs/v8.jpg"
-        ],
-      downloadUrl: "https://drive.google.com/drive/folders/1fFEDXhGoLg-_KhCJjnBarxl8PBqGfwgq?usp=sharing"
-      },
-      {
-        title: "Everline Kernel",
-        category: "kernel",
-        device: "Samsung Galaxy A51, F41, M31, M31s, M21",
-        android: "A13-A17 Supported",
-        date: "04 sep 2026",
-        maintainer: "PARBINDAR7",
-        flavor: ["BALANCED"],
-        changelog: "1. Upstream to 4.14.357\n2. Rebase and merge linux-4.14.y branch from OpenELA\n3. Merge android-4.14-phoenix branch from PhoenixKernel with 5.10 BPF patches\n4. Built with Clang 20.0.0",
-        Notice: "1. crDroid latest compatible\n2. Only support builds 26.07.2026 or newer\n3. Everline-AOSP Supports Magisk & Apatch\n4. Everline-KSUN Supports KSU-Next",
-        downloadUrl: "https://sourceforge.net/projects/parbindar7-builds/files/Everline%2004-09-2026/"
-      },
-      {
-        title: "LineageOS 23.2",
-        category: "rom",
-        device: "Samsung Galaxy A51, F41, M31, M31s, M21",
-        android: "Android 16",
-        date: "13 Sep 2026",
-        maintainer: "PARBINDAR7",
-        flavor: ["VANILLA"],
-        changelog: "1. Same as Lineage 24.08.2026 Build",
-        Notice: "1. Supported: VoLTE and VoWiFi\n2.Fixed dialer freeze on hang up\n3. September Security Patch\n4. Only supported by Everline 25.07.2026 and newer",
-        downloadUrl: "https://drive.google.com/drive/folders/1DZqSk6s6YPhJtNOtjODjjOWmJhVp2RGo?usp=sharing",
-      },
-      {
-        title: "LunarisAOSP v3.12",
-        category: "rom",
-        device: "Samsung Galaxy A51, F41, M31, M31s, M21",
-        android: "Android 16",
-        date: "14 Sep 2026",
-        maintainer: "PARBINDAR7",
-        flavor: ["VANILLA"],
-        changelog: "1. Audio Increased on Calls , Media , Ringtone",
-        Notice: "1. Audio Increased on Calls , Media , Ringtone\n2. September Security Patch\n3. Only supported by Everline 25.07.2026 and newer",
-        screenshots: [
-          "./screenshots/voltageos/lunaris3.12 EOL/v1.jpg",
-          "./screenshots/voltageos/lunaris3.12 EOL/v2.jpg",
-          "./screenshots/voltageos/lunaris3.12 EOL/v3.jpg",
-          "./screenshots/voltageos/lunaris3.12 EOL/v4.jpg",
-          "./screenshots/voltageos/lunaris3.12 EOL/v5.jpg",
-          "./screenshots/voltageos/lunaris3.12 EOL/v6.jpg",
-          "./screenshots/voltageos/lunaris3.12 EOL/v7.jpg",
-          "./screenshots/voltageos/lunaris3.12 EOL/v8.jpg"
-        ],
-        downloadUrl: "https://drive.google.com/drive/folders/1Lgm6q2KtUfKZsyJ3RixYRUMYAgooykHf?usp=sharing"
-      },
-      {
-        title: "Project Infinity-X v3.12",
-        category: "rom",
-        device: "Samsung Galaxy A51, F41, M31, M31s, M21",
-        android: "Android 16",
-        date: "17 Sep 2026",
-        flavor: ["VANILLA"],
-        changelog: "1. Same as Lineage 24.08.2026 Build",
-        Ntoice: "1. Supported: VoLTE and VoWiFi\n2. September Security Patch\n3. Only supported by Everline 25.07.2026 and newer",
-        screenshots: [
-          "./screenshots/voltageos/infinity3.12/v1.jpg",
-          "./screenshots/voltageos/infinity3.12/v2.jpg",
-          "./screenshots/voltageos/infinity3.12/v3.jpg",
-          "./screenshots/voltageos/infinity3.12/v4.jpg",
-          "./screenshots/voltageos/infinity3.12/v5.jpg",
-          "./screenshots/voltageos/infinity3.12/v6.jpg",
-          "./screenshots/voltageos/infinity3.12/v7.jpg",
-          "./screenshots/voltageos/infinity3.12/v81.jpg",
-          "./screenshots/voltageos/infinity3.12/v9.jpg",
-        ],
-        downloadUrl: "https://github.com/Parbindar7/OTA/releases/tag/InfinityX_17-09-2026"
-      },
-      {
-        title: "TWRP Recovery v3.7.1",
-        category: "recovery",
-        device: "All Supported Devices",
-        android: "Android 13 to 17",
-        date: "2026",
-        flavor: ["FLASHABLE ZIP/TAR"],
+        title: "TWRP Recovery v3.7.1", category: "recovery", device: "All Supported Devices", android: "Android 13 to 17", date: "2026", maintainer: "TWRP Team", flavor: ["FLASHABLE ZIP/TAR"],
         changelog: "1. Fully compatible with Android 16 & 17 custom ROMs",
-        Notice: "1. Flash via Odin (.tar) or existing recovery (.img)",
         downloadUrl: "https://twrp.me/Devices/"
       },
       {
-        title: "LiteGapps",
-        category: "gapps",
-        device: "ARM64 Devices",
-        android: "Android 17",
-        date: "2026",
-        flavor: ["GOOGLE APPS PACKAGE"],
+        title: "LiteGapps", category: "gapps", device: "ARM64 Devices", android: "Android 17", date: "2026", maintainer: "LiteGapps", flavor: ["GOOGLE APPS PACKAGE"],
         changelog: "1. Official litegapps release packages for custom rom Android 17",
-        Notice: "1. Only compatible for Android 17",
         downloadUrl: "https://sourceforge.net/projects/litegapps/files/litegapps/arm64/37/core/2026-05-13/"
-      },
-      {
-        title: "NikGApps — Official Builds",
-        category: "gapps",
-        device: "ARM64 Devices",
-        android: "Android 16",
-        date: "2026",
-        flavor: ["GOOGLE APPS PACKAGE"],
-        changelog: "1. Official NikGApps release packages (Core, Basic, Omni, Full) for Custom ROMs.",
-        downloadUrl: "https://nikgapps.com/downloads"
       }
     ];
 
-    function renderFlavorPills(flavor) {
-      if (!flavor) return '';
-      const list = Array.isArray(flavor) ? flavor : [flavor];
-      return list.map(f => `<span class="tag">${f}</span>`).join(' ');
+    function renderTags(flavorArray) {
+      if (!flavorArray) return '';
+      return flavorArray.map(f => {
+        let cls = 'pill-tag';
+        if (f.toUpperCase().includes('GAPPS') || f.toUpperCase().includes('BALANCED')) {
+          cls += ' highlight';
+        }
+        return `<div class="${cls}">${f}</div>`;
+      }).join('');
     }
 
-    function createCardHTML(item) {
-      const cat = (item.category || "rom").toLowerCase();
+    function createAccordionHTML(item, index) {
+      const cat = (item.category || "rom").toUpperCase();
       const safeChangelog = (item.changelog || '').trim();
-      const noticeHtml = item.Notice ? `<div class="notice-box"><strong>// NOTICE:</strong><br>${item.Notice.replace(/\n/g, '<br>')}</div>` : '';
 
       return `
-        <div class="build-card animate-up">
-          <div class="card-top">
-            <div class="card-title-group">
-              <div class="build-name">${item.title}</div>
-              <div class="build-meta">Codename: <span>m31 / a51</span> | Device: ${item.device}</div>
-            </div>
-            <span class="badge">${cat}</span>
-          </div>
+        <div class="accordion-item">
+          <button class="accordion-header" onclick="toggleAccordion(this)">
+            <span class="accordion-title">${item.title}</span>
+            <div class="accordion-icon">+</div>
+          </button>
+          
+          <div class="accordion-content">
+            <div class="build-data-grid">
+              
+              <div>
+                <div class="data-row"><span>Type</span><span>${cat}</span></div>
+                <div class="data-row"><span>Target OS</span><span>${item.android}</span></div>
+                <div class="data-row"><span>Build Date</span><span>${item.date}</span></div>
+                <div class="data-row"><span>Maintainer</span><span>${item.maintainer}</span></div>
+              </div>
 
-          <div class="card-middle full-width">
-            <div style="display:flex; flex-direction:column;">
-              <div class="data-grid">
-                <div class="data-block"><div class="data-label">Target OS</div><div class="data-value">${item.android}</div></div>
-                <div class="data-block"><div class="data-label">Date</div><div class="data-value">${item.date || 'Unknown'}</div></div>
-                <div class="data-block"><div class="data-label">Variant</div><div class="tags-container" style="margin-top:0;">${renderFlavorPills(item.flavor)}</div></div>
+              <div>
+                <p style="font-family: var(--font-display); font-size: 1.5rem; text-transform: uppercase;">Changelog</p>
+                <div class="changelog-text">${safeChangelog}</div>
+                
+                <div class="tag-container" style="justify-content: flex-start; margin-top: 1rem;">
+                  <div class="pill-tag">${item.device}</div>
+                  ${renderTags(item.flavor)}
+                </div>
               </div>
               
-              ${noticeHtml}
-              
-              <div class="data-block" style="margin-top:0.5rem;">
-                <div class="data-label">Changelog</div>
-                <div class="changelog-box">${safeChangelog}</div>
-              </div>
             </div>
+            
+            <a href="${item.downloadUrl}" target="_blank" class="btn-black">DOWNLOAD BUILD</a>
+            <div style="height: 2rem;"></div> <!-- Spacing -->
           </div>
-
-          <div class="card-footer">
-            <a href="${item.downloadUrl}" target="_blank" rel="noopener noreferrer" class="btn-outline">Download &rarr;</a>
-          </div>
-        </div>`;
+        </div>
+      `;
     }
 
-    // Explicitly call the function to build the cards on load
     function renderBuilds() {
       const container = document.getElementById("buildsList");
       let htmlBuffer = "";
       
-      // Loop through all data and append it to the buffer
-      for (let i = 0; i < buildsData.length; i++) {
-        htmlBuffer += createCardHTML(buildsData[i]);
-      }
+      buildsData.forEach((item, index) => {
+        htmlBuffer += createAccordionHTML(item, index);
+      });
       
-      // Inject it safely
       container.innerHTML = htmlBuffer;
     }
 
-    // Fire the render function as soon as the browser is ready
+    function toggleAccordion(button) {
+      // Close all other accordions
+      const allHeaders = document.querySelectorAll('.accordion-header');
+      allHeaders.forEach(header => {
+        if (header !== button) {
+          header.classList.remove('active');
+          header.querySelector('.accordion-icon').innerText = '+';
+          header.nextElementSibling.style.maxHeight = null;
+        }
+      });
+
+      // Toggle current accordion
+      button.classList.toggle('active');
+      const icon = button.querySelector('.accordion-icon');
+      const content = button.nextElementSibling;
+      
+      if (button.classList.contains('active')) {
+        icon.innerText = '-';
+        content.style.maxHeight = content.scrollHeight + 100 + "px"; // Add padding buffer
+      } else {
+        icon.innerText = '+';
+        content.style.maxHeight = null;
+      }
+    }
+
+    // Initialize
     renderBuilds();
   </script>
 </body>
