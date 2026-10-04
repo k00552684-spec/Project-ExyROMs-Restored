@@ -20,18 +20,18 @@
       --text-muted: #888888;
       --text-subtle: #444444;
       
-      --border-color: #1A1A1A;
-      --border-hover: #333333;
+      --border-color: rgba(255, 255, 255, 0.1);
+      --border-hover: rgba(255, 255, 255, 0.2);
       
-      --accent-primary: #FFFFFF;
-      --accent-glow: rgba(255, 255, 255, 0.1);
+      --accent-cyan: #06b6d4;
+      --accent-violet: #8b5cf6;
 
       --radius-sm: 6px;
       --radius-md: 8px;
       --radius-lg: 12px;
       --radius-pill: 9999px;
 
-      --font-sans: 'Inter', -apple-system, sans-serif;
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       --font-mono: 'JetBrains Mono', monospace;
 
       --transition-fast: 0.15s ease;
@@ -48,11 +48,11 @@
       overflow-x: hidden;
       min-height: 100vh;
       -webkit-font-smoothing: antialiased;
-      /* Subtle Grid Background characteristic of dev tools */
+      /* Subtle Dev Grid Background */
       background-image: 
         linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
         linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-      background-size: 60px 60px;
+      background-size: 40px 40px;
       background-position: center top;
     }
 
@@ -62,16 +62,16 @@
     ::-webkit-scrollbar-thumb { background: #222; border-radius: 4px; }
     ::-webkit-scrollbar-thumb:hover { background: #444; }
 
-    /* Ambient Glow (Subtle Conical Gradient behind Hero) */
+    /* Ambient Glow behind Hero */
     .ambient-glow {
       position: absolute;
       top: -20%; left: 50%;
       transform: translateX(-50%);
-      width: 80vw; height: 600px;
-      background: radial-gradient(ellipse at top, rgba(255,255,255,0.08), transparent 60%);
+      width: 70vw; height: 600px;
+      background: radial-gradient(ellipse at center, rgba(139, 92, 246, 0.15) 0%, rgba(6, 182, 212, 0.1) 40%, transparent 70%);
       pointer-events: none;
       z-index: -1;
-      filter: blur(60px);
+      filter: blur(80px);
     }
 
     /* Navbar */
@@ -79,8 +79,8 @@
       position: fixed; top: 0; left: 0; width: 100%;
       padding: 1rem 2rem;
       display: flex; justify-content: space-between; align-items: center;
-      background: rgba(0, 0, 0, 0.6);
-      backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
       border-bottom: 1px solid var(--border-color);
       z-index: 100;
     }
@@ -90,7 +90,6 @@
       text-decoration: none; color: var(--text-main);
       display: flex; align-items: center; gap: 0.5rem;
     }
-    .nav-logo svg { fill: var(--text-main); }
 
     .nav-links { display: flex; gap: 2rem; align-items: center; }
     .nav-link {
@@ -99,7 +98,7 @@
     }
     .nav-link:hover { color: var(--text-main); }
 
-    /* Buttons */
+    /* Flat Developer Buttons */
     .btn {
       display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
       padding: 0.6rem 1.25rem; border-radius: var(--radius-sm);
@@ -116,30 +115,40 @@
       background: rgba(255,255,255,0.02); color: var(--text-main);
       border: 1px solid var(--border-color);
     }
-    .btn-secondary:hover { background: rgba(255,255,255,0.05); border-color: var(--border-hover); }
+    .btn-secondary:hover { background: rgba(255,255,255,0.06); border-color: var(--border-hover); }
 
-    .container { max-width: 1080px; margin: 0 auto; padding: 0 1.5rem; width: 100%; }
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 1.5rem; width: 100%; }
 
     /* Hero Section */
     .hero {
       padding: 12rem 0 6rem 0; text-align: center;
       display: flex; flex-direction: column; align-items: center;
+      animation: fadeUp 0.8s var(--transition-fast) forwards;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     .hero-badge {
       display: inline-flex; align-items: center; gap: 0.5rem;
       padding: 0.35rem 0.8rem; border-radius: var(--radius-pill);
-      border: 1px solid var(--border-color); background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border-color); background: rgba(255, 255, 255, 0.02);
       font-size: 0.75rem; color: var(--text-muted); font-weight: 500;
       margin-bottom: 2rem; letter-spacing: 0.02em;
     }
-    .hero-badge span { color: var(--text-main); font-weight: 600; }
+    .pulse-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--accent-cyan);
+      box-shadow: 0 0 10px var(--accent-cyan);
+    }
 
     .hero-title {
-      font-size: clamp(3rem, 7vw, 5.5rem); font-weight: 700;
+      font-size: clamp(3rem, 7vw, 5.5rem); font-weight: 800;
       line-height: 1.05; letter-spacing: -0.04em; margin-bottom: 1.5rem;
       color: var(--text-main);
-      background: linear-gradient(180deg, #FFFFFF 0%, #888888 100%);
+      background: linear-gradient(180deg, #FFFFFF 0%, #777777 100%);
       -webkit-background-clip: text; -webkit-text-fill-color: transparent;
     }
 
@@ -148,57 +157,47 @@
       line-height: 1.6; margin-bottom: 2.5rem;
     }
 
-    /* Hardware Specs Bar (Like Vercel's Infrastructure blocks) */
+    /* Specs Bar (Vercel Infrastructure Vibe) */
     .specs-bar {
-      display: flex; gap: 2rem; padding: 1.5rem 3rem;
+      display: flex; gap: 3rem; padding: 1.5rem 3rem;
       border: 1px solid var(--border-color); border-radius: var(--radius-md);
-      background: var(--bg-surface); margin: 3rem auto;
-      justify-content: center; flex-wrap: wrap;
+      background: rgba(10, 10, 10, 0.6); backdrop-filter: blur(12px);
+      margin: 2rem auto; justify-content: center; flex-wrap: wrap;
     }
-    .spec-item { display: flex; flex-direction: column; align-items: center; gap: 0.25rem; }
+    .spec-item { display: flex; flex-direction: column; align-items: center; gap: 0.35rem; }
     .spec-label { font-family: var(--font-mono); font-size: 0.7rem; color: var(--text-subtle); text-transform: uppercase; letter-spacing: 0.1em; }
-    .spec-value { font-size: 0.95rem; font-weight: 600; color: var(--text-main); }
+    .spec-value { font-size: 0.95rem; font-weight: 500; color: var(--text-main); }
 
-    /* The "Linear" Grid & Hover Spotlight Effect */
+    /* The "Linear" Spotlight Grid */
     .builds-grid {
-      display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-      gap: 1.5rem; margin-top: 4rem; position: relative;
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 1.5rem; margin-top: 2rem; position: relative;
     }
 
-    /* Spotlight Wrapper */
-    #buildsList:hover .build-card::after { opacity: 1; }
+    #buildsList:hover .build-card::before { opacity: 1; }
 
     .build-card {
-      background: var(--bg-surface); border: 1px solid var(--border-color);
-      border-radius: var(--radius-md); padding: 1.5rem;
-      display: flex; flex-direction: column; position: relative;
-      overflow: hidden; text-align: left;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 1.5rem;
+      display: flex; flex-direction: column;
+      position: relative; overflow: hidden;
+      text-align: left;
     }
 
-    /* Spotlight Effect Logic */
-    .build-card::before, .build-card::after {
-      content: ''; position: absolute; left: 0; top: 0; width: 100%; height: 100%;
-      pointer-events: none; transition: opacity 0.5s ease;
-    }
-    
-    /* Subtle inner glow */
+    /* Magic Spotlight Hover Effect */
     .build-card::before {
-      background: radial-gradient(800px circle at var(--mouse-x) var(--mouse-y), rgba(255,255,255,0.04), transparent 40%);
-      z-index: 1; opacity: 0;
-    }
-    .build-card:hover::before { opacity: 1; }
-    
-    /* Glowing Border illusion via overlay */
-    .build-card::after {
-      background: radial-gradient(400px circle at var(--mouse-x) var(--mouse-y), rgba(255,255,255,0.1), transparent 40%);
-      z-index: 3; opacity: 0; mix-blend-mode: overlay;
+      content: ''; position: absolute; left: 0; top: 0; width: 100%; height: 100%;
+      background: radial-gradient(600px circle at var(--mouse-x) var(--mouse-y), rgba(255,255,255,0.06), transparent 40%);
+      opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 1;
     }
 
     .card-content { position: relative; z-index: 2; display: flex; flex-direction: column; height: 100%; }
 
     .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem; }
     .card-title-box { display: flex; flex-direction: column; gap: 0.25rem; }
-    .card-title { font-size: 1.15rem; font-weight: 600; color: var(--text-main); letter-spacing: -0.01em; }
+    .card-title { font-size: 1.1rem; font-weight: 600; color: var(--text-main); letter-spacing: -0.01em; }
     .card-device { font-family: var(--font-mono); font-size: 0.7rem; color: var(--text-muted); }
     
     .card-badge {
@@ -207,9 +206,13 @@
       font-family: var(--font-mono); font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase;
     }
 
-    .card-details { display: grid; grid-template-columns: 1fr; gap: 0.75rem; margin-bottom: 2rem; border-top: 1px solid var(--border-color); padding-top: 1rem; }
-    .detail-row { display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem; }
-    .detail-label { color: var(--text-muted); }
+    .card-details { 
+      display: grid; grid-template-columns: 1fr; gap: 0.75rem; 
+      margin-bottom: 1.5rem; border-top: 1px solid var(--border-color); 
+      padding-top: 1rem; flex-grow: 1;
+    }
+    .detail-row { display: flex; justify-content: space-between; align-items: center; }
+    .detail-label { color: var(--text-muted); font-size: 0.8rem; }
     .detail-value { color: var(--text-main); font-weight: 500; font-family: var(--font-mono); font-size: 0.75rem; }
 
     .flavor-tag {
@@ -218,36 +221,37 @@
     }
 
     .card-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-top: auto; }
-    
     .card-actions .btn { font-size: 0.75rem; padding: 0.5rem; }
 
-    /* Modal (Vercel Style) */
+    /* Developer Terminal Style Modal */
     .modal-overlay {
       position: fixed; inset: 0; background: rgba(0, 0, 0, 0.8);
-      backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px);
+      backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
       display: flex; justify-content: center; align-items: center;
       z-index: 1000; opacity: 0; pointer-events: none; transition: opacity 0.2s ease;
     }
     .modal-overlay.active { opacity: 1; pointer-events: all; }
 
     .modal-box {
-      background: #000; border: 1px solid var(--border-hover);
+      background: var(--bg-base); border: 1px solid var(--border-hover);
       border-radius: var(--radius-md); width: 100%; max-width: 500px;
       padding: 1.5rem; transform: scale(0.98) translateY(10px);
-      transition: transform 0.2s ease; box-shadow: 0 20px 40px rgba(0,0,0,1);
+      transition: transform 0.2s ease; box-shadow: 0 20px 50px rgba(0,0,0,1);
     }
     .modal-overlay.active .modal-box { transform: scale(1) translateY(0); }
 
     .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
-    .modal-title { font-size: 1rem; font-weight: 600; color: var(--text-main); }
+    .modal-title { font-size: 0.9rem; font-weight: 600; color: var(--text-main); }
     .modal-close { background: none; border: none; color: var(--text-muted); cursor: pointer; }
     .modal-close:hover { color: var(--text-main); }
 
     .modal-content-area {
-      font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted);
+      font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-muted);
       line-height: 1.6; max-height: 60vh; overflow-y: auto; padding-right: 0.5rem; white-space: pre-line;
       background: var(--bg-surface); border: 1px solid var(--border-color); padding: 1rem; border-radius: var(--radius-sm);
     }
+    .modal-content-area::-webkit-scrollbar { width: 4px; }
+    .modal-content-area::-webkit-scrollbar-thumb { background: var(--border-hover); border-radius: 4px; }
     .modal-content-area b { color: var(--text-main); font-weight: 600; }
 
     /* Footer */
@@ -262,7 +266,7 @@
   <!-- Navbar -->
   <nav class="navbar">
     <a href="#" class="nav-logo">
-      <svg width="20" height="20" viewBox="0 0 24 24"><path d="M12 2L2 22h20L12 2z"/></svg>
+      <svg width="16" height="16" viewBox="0 0 24 24"><path d="M12 2L2 22h20L12 2z"/></svg>
       ExyROMs
     </a>
     <div class="nav-links">
@@ -275,13 +279,13 @@
     
     <!-- Hero Section -->
     <section class="hero">
-      <div class="hero-badge">Project ExyROMs <span>v2.0</span></div>
-      <h1 class="hero-title">High-Performance<br>Custom Firmware.</h1>
+      <div class="hero-badge"><div class="pulse-dot"></div> System Active <span>v2.0</span></div>
+      <h1 class="hero-title">High-Performance<br>Firmware.</h1>
       <p class="hero-desc">Engineered for precision. Maintained for stability. The ultimate aftermarket development hub for the Samsung Galaxy Exynos 9611 series.</p>
       
       <div style="display: flex; gap: 1rem; justify-content: center; margin-bottom: 2rem;">
         <a href="#downloads" class="btn btn-primary">Browse Builds</a>
-        <a href="https://t.me/ExyROMs" target="_blank" class="btn btn-secondary">Join Community</a>
+        <a href="https://t.me/ExyROMs" target="_blank" class="btn btn-secondary">Source Code</a>
       </div>
 
       <!-- Infrastructure / Hardware Specs Bar -->
@@ -289,13 +293,15 @@
         <div class="spec-item"><span class="spec-label">Architecture</span><span class="spec-value">Exynos 9611</span></div>
         <div class="spec-item"><span class="spec-label">Supported Nodes</span><span class="spec-value">M31, A51, F41, M21</span></div>
         <div class="spec-item"><span class="spec-label">Maintainer</span><span class="spec-value">PARBINDAR7</span></div>
-        <div class="spec-item"><span class="spec-label">Status</span><span class="spec-value" style="color: #10B981; display:flex; align-items:center; gap:4px;"><span style="width:6px;height:6px;background:#10B981;border-radius:50%;display:inline-block;"></span> Active</span></div>
       </div>
     </section>
 
     <!-- Downloads Section -->
     <section id="downloads">
-      <h2 style="font-size: 1.5rem; font-weight: 600; letter-spacing: -0.02em; border-bottom: 1px solid var(--border-color); padding-bottom: 1rem; margin-bottom: 1rem;">Firmware Repository</h2>
+      <div style="display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 1px solid var(--border-color); padding-bottom: 1rem; margin-bottom: 1rem;">
+        <h2 style="font-size: 1.25rem; font-weight: 500; letter-spacing: -0.02em; color: var(--text-main);">Firmware Repository</h2>
+        <span style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-subtle);">v2.0 / stable</span>
+      </div>
       
       <div class="builds-grid" id="buildsList">
         <!-- Cards will be injected here via JavaScript -->
@@ -306,7 +312,7 @@
 
   <footer>
     <div class="container">
-      <p class="footer-text">Project ExyROMs &copy; 2026. Code and infrastructure.</p>
+      <p class="footer-text">Project ExyROMs &copy; 2026. Maintained by PARBINDAR7.</p>
     </div>
   </footer>
 
@@ -328,7 +334,7 @@
     const buildsData = [
       {
         title: "Everline kernel", category: "kernel", device: "Samsung Galaxy A51, F41, M31, M31s, M21", android: "Android 13 - 16", date: "26 July 2026", maintainer: "PARBINDAR7", flavor: ["BALANCED"],
-        changelog: "1. sched/uclamp: Move tunables to cpuctl\n2. sched/uclamp: Expose latency_sensitive and uclamp.boosted",
+        changelog: "1. sched/uclamp: Move tunables to cpuctl\n2. sched/uclamp: Expose latency_sensitive and uclamp.boosted\n\n[INFO] Only support builds 25.07.2026 or newer. crDroid not compatible.",
         downloadUrl: "https://sourceforge.net/projects/parbindar7-builds/files/Everline%2025-07-2026/"
       },
       {
@@ -561,7 +567,7 @@
       if (e.key === "Escape") closeModal(e, true);
     });
 
-    // Spotlight Hover Logic
+    // Spotlight Effect Tracking Logic
     document.getElementById("buildsList").onmousemove = e => {
       for(const card of document.getElementsByClassName("build-card")) {
         const rect = card.getBoundingClientRect(),
