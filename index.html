@@ -31,7 +31,14 @@
       --radius-full: 9999px;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * { 
+      box-sizing: border-box; 
+      margin: 0; 
+      padding: 0; 
+      /* Fix 1: Removes the white/gray blinking circle when tapping cards on mobile */
+      -webkit-tap-highlight-color: transparent; 
+    }
+    
     html { scroll-behavior: smooth; background: var(--bg-base); }
     body { color: var(--text-main); font-family: 'Inter', sans-serif; overflow-x: hidden; background: transparent; }
 
@@ -82,7 +89,6 @@
       padding: 10rem 0 6rem 0; min-height: 80vh; justify-content: center; background: transparent;
     }
     
-    /* SaaS Pill */
     .hero-pill {
       display: inline-flex; align-items: center; gap: 0.5rem;
       background: rgba(255,255,255,0.05); border: 1px solid var(--border-color);
@@ -139,7 +145,7 @@
        4. VERTICAL STICKY IMAGE STACK GALLERY
        ========================================= */
     .stack-wrapper { position: relative; padding-bottom: 10rem; }
-    .stack-container { display: flex; flex-direction: column; gap: 4rem; position: relative; }
+    .stack-container { display: flex; flex-direction: column; gap: 4rem; position: relative; max-width: 800px; margin: 0 auto;}
     
     .stack-card {
       position: sticky; top: 15vh;
@@ -156,39 +162,38 @@
     .stack-card:nth-child(3) { top: 16vh; }
     .stack-card:nth-child(4) { top: 19vh; }
 
-    .stack-img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(50%); transition: 0.5s; }
+    .stack-img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(30%); transition: 0.5s; }
     .stack-card:hover .stack-img { filter: grayscale(0%); transform: scale(1.02); }
 
     /* =========================================
-       5. CONTINUOUS BORDER BEAM (Fixed Center Blink)
+       5. CONTINUOUS BORDER BEAM (Fixed Blinking)
        ========================================= */
     .rom-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 1.5rem; padding-bottom: 8rem;}
 
     .border-beam-card {
       position: relative; border-radius: var(--radius-md);
       padding: 1px; /* The gap for the animated border */
-      overflow: hidden; 
-      /* Fix for Webkit center blinking bug */
-      transform: translateZ(0); 
-      isolation: isolate;
-      background: var(--border-color); /* Fallback */
+      z-index: 1;
     }
 
-    .border-beam-card::before {
+    /* Fix 2: Isolated Spinner Background avoids the center dot glitch entirely */
+    .beam-spinner {
+      position: absolute; inset: 0; border-radius: var(--radius-md);
+      overflow: hidden; z-index: -1; background: var(--border-color);
+    }
+
+    .beam-spinner::before {
       content: ""; position: absolute;
-      /* Making the gradient massive pushes the center far outside the card to prevent the blink */
       top: -100%; left: -100%; width: 300%; height: 300%; 
       background: conic-gradient(from 0deg, transparent 80%, rgba(255,255,255,0.8) 100%);
       animation: beam-spin 4s linear infinite;
-      z-index: -1; 
     }
-
     @keyframes beam-spin { 100% { transform: rotate(360deg); } }
 
+    /* Solid inner card completely covers the center of the beam to stop blinking */
     .rom-card-inner {
-      background: var(--bg-surface); width: 100%; height: 100%; 
-      border-radius: calc(var(--radius-md) - 1px);
-      padding: 2rem; position: relative; z-index: 1; display: flex; flex-direction: column; gap: 1.5rem;
+      background: var(--bg-surface); height: 100%; border-radius: calc(var(--radius-md) - 1px);
+      padding: 2rem; position: relative; z-index: 2; display: flex; flex-direction: column; gap: 1.5rem;
     }
 
     .card-header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px solid var(--border-color); padding-bottom: 1rem; }
@@ -236,9 +241,10 @@
       align-items: flex-end; /* Critical for scaling up from the bottom */
     }
     .dock-item {
-      width: 50px; height: 50px; border-radius: 12px; background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: center; align-items: center;
-      color: var(--text-main); cursor: pointer; text-decoration: none; position: relative;
+      width: 50px; height: 50px; border-radius: 12px;
+      background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+      display: flex; justify-content: center; align-items: center; color: var(--text-main);
+      cursor: pointer; text-decoration: none; position: relative;
       /* Physics transitions */
       transition: width 0.15s ease, height 0.15s ease, margin 0.15s ease;
     }
@@ -678,6 +684,7 @@
 
         html += `
           <div class="border-beam-card reveal-up">
+            <div class="beam-spinner"></div>
             <div class="rom-card-inner">
               <div class="card-header">
                 <div>
