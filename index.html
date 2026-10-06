@@ -11,13 +11,12 @@
 
   <style>
     :root {
-      /* Core Palette - Pure Black & White */
+      /* Core Palette - Pure Black & White (Nothing OS Vibe) */
       --bg-base: #000000;
       --bg-surface: #0a0a0a;
       --bg-elevated: #111111;
       
-      --accent: #ffffff; /* Reverted to white */
-      --accent-glow: rgba(255, 255, 255, 0.4);
+      --accent: #ffffff; /* Pure White Accent */
       --text-main: #ffffff;
       --text-muted: #888888;
       --border-color: rgba(255, 255, 255, 0.1);
@@ -32,32 +31,52 @@
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; background: var(--bg-base); }
-    body { color: var(--text-main); font-family: 'Inter', sans-serif; overflow-x: hidden; }
+    body { color: var(--text-main); font-family: 'Inter', sans-serif; overflow-x: hidden; background: transparent; }
 
-    /* 1. SONAR GRID ANIMATION (Canvas Based for visibility) */
+    /* --- 1. SONAR GRID BACKGROUND --- */
+    /* Fixed at back */
     .sonar-wrapper {
-      position: fixed; inset: 0; z-index: -2; background: var(--bg-base);
+      position: fixed; inset: 0; z-index: 0; background: var(--bg-base);
       overflow: hidden; pointer-events: none;
     }
     #sonarCanvas {
       position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-      opacity: 0.4; /* Adjusted visibility */
+      opacity: 0.5;
     }
 
-    /* Main Content Wrapper (For Scroll Animation) */
+    /* --- 6. MOTION FOOTER SETUP --- */
+    /* Fixed behind content */
+    .motion-footer {
+      position: fixed; bottom: 0; left: 0; width: 100%; height: 350px;
+      background: #050505; border-top: 1px solid var(--border-color);
+      z-index: 1; /* Above sonar, below content */
+      display: flex; flex-direction: column; justify-content: center; align-items: center;
+    }
+    .footer-content { text-align: center; }
+    .footer-title { font-size: 3rem; font-weight: 900; letter-spacing: -0.04em; margin-bottom: 1rem;}
+    .footer-links { display: flex; gap: 2rem; justify-content: center; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; }
+    .footer-links a { color: var(--text-muted); text-decoration: none; transition: 0.2s;}
+    .footer-links a:hover { color: var(--text-main); }
+
+    /* Main Content Layer */
     .content-layer {
-      background: var(--bg-base); min-height: 100vh; position: relative; z-index: 1;
-      padding-bottom: 6rem;
-      /* Scroll animation shadow to separate from footer */
-      box-shadow: 0 20px 50px rgba(0,0,0,1);
+      position: relative; z-index: 2; /* Sits above footer */
+      /* margin-bottom is set by JS to reveal footer */
+    }
+    /* Solid background wraps everything BELOW the hero to mask out the Sonar */
+    .solid-wrapper {
+      background: var(--bg-base);
+      box-shadow: 0 -40px 40px var(--bg-base); /* Soft blend into hero */
+      padding-bottom: 4rem;
+      position: relative; z-index: 3;
     }
     
     .container { max-width: 1100px; margin: 0 auto; padding: 0 1.5rem; }
 
-    /* 2. HERO ANNOUNCEMENT */
+    /* --- 2. HERO ANNOUNCEMENT --- */
     .hero {
       display: flex; flex-direction: column; align-items: center; text-align: center;
-      padding: 10rem 0 6rem 0;
+      padding: 10rem 0 6rem 0; background: transparent; /* Allows Sonar to show */
     }
     .announcement-pill {
       display: inline-flex; align-items: center; gap: 0.5rem;
@@ -71,10 +90,17 @@
     .hero h1 { font-size: clamp(3.5rem, 8vw, 6rem); font-weight: 900; letter-spacing: -0.04em; line-height: 1.1; margin-bottom: 1.5rem; }
     .hero p { font-size: 1.15rem; color: var(--text-muted); max-width: 600px; line-height: 1.6; }
 
-    /* 3. FEATURES CARD */
+    /* --- SCROLL REVEAL ANIMATION CLASSES --- */
+    .reveal-up {
+      opacity: 0; transform: translateY(40px);
+      transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+    .reveal-up.is-visible { opacity: 1; transform: translateY(0); }
+
+    /* --- 3. FEATURES CARD --- */
     .features-grid {
       display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;
-      margin: 4rem 0;
+      margin: 2rem 0 4rem 0;
     }
     .feature-card {
       background: var(--bg-surface); border: 1px solid var(--border-color);
@@ -85,7 +111,7 @@
     .feature-card h3 { font-size: 1.2rem; margin-bottom: 0.5rem; font-weight: 700; }
     .feature-card p { font-size: 0.9rem; color: var(--text-muted); line-height: 1.5; }
 
-    /* 4. GALLERY (Replace image URLs here) */
+    /* --- 4. GALLERY --- */
     .section-title { font-size: 2.5rem; font-weight: 800; margin: 6rem 0 2rem 0; letter-spacing: -0.02em; text-align: center;}
     .fan-gallery-wrapper {
       display: flex; justify-content: center; align-items: center; height: 400px; margin: 2rem 0 6rem 0;
@@ -110,26 +136,29 @@
     .fan-container:hover .fan-card:nth-child(2) { transform: rotate(0deg) translateY(-20px) scale(1.05); z-index: 3; filter: brightness(1);}
     .fan-container:hover .fan-card:nth-child(3) { transform: rotate(25deg) translateX(60px) translateY(20px) scale(0.9); filter: brightness(0.8);}
 
-    /* 5. BORDER BEAM ANIMATION */
+    /* --- 5. BORDER BEAM ANIMATION --- */
     .rom-grid {
       display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 1.5rem;
     }
 
     .border-beam-card {
       position: relative; border-radius: var(--radius-md);
-      overflow: hidden; padding: 2px; /* Increased padding for thicker border */
+      overflow: hidden; padding: 2px; /* Inner card mask */
       background: var(--bg-surface);
     }
     
-    /* The animated gradient border */
+    /* The animated gradient border - Fixed to be always visible (opacity: 1) */
     .border-beam-card::before {
       content: ""; position: absolute;
       top: -50%; left: -50%; width: 200%; height: 200%;
       background: conic-gradient(from 0deg, transparent 70%, rgba(255,255,255,0.8) 100%);
       animation: beam-spin 4s linear infinite;
-      z-index: 0; opacity: 0; transition: opacity 0.3s ease;
+      z-index: 0; opacity: 1; 
     }
-    .border-beam-card:hover::before { opacity: 1; }
+    /* Glows brighter on hover */
+    .border-beam-card:hover::before {
+      background: conic-gradient(from 0deg, transparent 60%, #ffffff 100%);
+    }
     
     @keyframes beam-spin { 100% { transform: rotate(360deg); } }
 
@@ -148,32 +177,23 @@
     .data-label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.2rem;}
     .data-value { font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; font-weight: 500; }
 
-    .flavor-tag { font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; padding: 0.2rem 0.5rem; border-radius: 4px; background: rgba(255,255,255, 0.1); border: 1px solid rgba(255,255,255, 0.3); display: inline-block; margin-right: 0.3rem; text-transform: uppercase;}
+    .flavor-tag { font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; padding: 0.2rem 0.5rem; border-radius: 4px; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.3); color: var(--text-main); display: inline-block; margin-right: 0.3rem; text-transform: uppercase;}
     .changelog-box { background: rgba(0,0,0,0.5); border: 1px solid var(--border-color); padding: 1rem; border-radius: 8px; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--text-muted); white-space: pre-line; max-height: 100px; overflow-y: auto; }
     
+    /* Clickable Maintainer GitHub Link */
+    .maintainer-link { color: var(--text-muted); text-decoration: none; transition: 0.2s; }
+    .maintainer-link:hover { color: var(--text-main); text-decoration: underline; }
+
     .btn-download {
       margin-top: auto; display: block; width: 100%; text-align: center; background: var(--text-main); color: #000;
       padding: 0.7rem; border-radius: 8px; font-weight: 600; text-decoration: none; transition: 0.2s;
     }
     .btn-download:hover { opacity: 0.8; }
 
-    /* 6. SCROLL ANIMATION (Motion Footer) */
-    .motion-footer {
-      position: fixed; bottom: 0; left: 0; width: 100%; height: 350px;
-      background: #050505; border-top: 1px solid var(--border-color);
-      z-index: 0; /* Sits behind the main content layer */
-      display: flex; flex-direction: column; justify-content: center; align-items: center;
-      /* Animation properties updated via JS */
-      transform: translateY(50px); opacity: 0; transition: transform 0.5s ease-out, opacity 0.5s ease-out;
-    }
-    .motion-footer.visible { transform: translateY(0); opacity: 1; }
-    
-    .footer-content { text-align: center; }
-    .footer-title { font-size: 3rem; font-weight: 900; letter-spacing: -0.04em; margin-bottom: 1rem;}
-    .footer-links { display: flex; gap: 2rem; justify-content: center; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; }
-    .footer-links a { color: var(--text-muted); text-decoration: none; transition: 0.2s;}
-    .footer-links a:hover { color: var(--text-main); }
-
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.15); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #fff; }
 
     /* 7. MAC DOCK ANIMATION */
     .dock-container {
@@ -184,14 +204,13 @@
       display: flex; gap: 8px; padding: 10px; border-radius: 20px;
       background: var(--dock-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
       border: 1px solid var(--dock-border); box-shadow: 0 10px 40px rgba(0,0,0,0.5);
-      align-items: flex-end; /* Align to bottom so scaling goes upwards */
+      align-items: flex-end;
     }
     .dock-item {
       width: 48px; height: 48px; border-radius: 12px;
       background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
       display: flex; justify-content: center; align-items: center; color: var(--text-main);
       cursor: pointer; text-decoration: none; position: relative;
-      /* Physics transitions */
       transition: width 0.2s, height 0.2s, transform 0.2s, margin 0.2s;
     }
     .dock-item svg { width: 24px; height: 24px; transition: width 0.2s, height 0.2s; pointer-events: none;}
@@ -208,15 +227,28 @@
 </head>
 <body>
 
-  <!-- Sonar Grid Container -->
+  <!-- 1. Sonar Grid Background (Fixed to back) -->
   <div class="sonar-wrapper">
     <canvas id="sonarCanvas"></canvas>
   </div>
 
-  <!-- Content Layer masks footer -->
+  <!-- 6. Motion Footer (Fixed to back, below content) -->
+  <footer class="motion-footer" id="motionFooter">
+    <div class="footer-content">
+      <h2 class="footer-title">PROJECT EXYROMS</h2>
+      <div class="footer-links">
+        <a href="https://t.me/ExyROMs" target="_blank">Telegram</a>
+        <a href="https://github.com/parbindar7" target="_blank">Maintainer Code</a>
+      </div>
+      <p style="color: var(--text-muted); font-size: 0.8rem; margin-top: 2rem;">&copy; 2026. Built with high-performance components.</p>
+    </div>
+  </footer>
+
+  <!-- Content Layer (Scrolls over footer to reveal it) -->
   <div class="content-layer" id="mainContent">
     <div class="container">
       
+      <!-- 2. Hero 3 -->
       <section class="hero" id="home">
         <a href="#downloads" class="announcement-pill">
           <span class="new">New</span> ExyROMs v3.0 Database Live &rarr;
@@ -224,62 +256,56 @@
         <h1>Engineering the perfect<br>Android Ecosystem.</h1>
         <p>The premium aftermarket firmware hub for the Samsung Galaxy Exynos 9611 series. Explore custom ROMs, performance kernels, and recovery tools.</p>
       </section>
+    </div>
 
-      <section class="features-grid">
-        <div class="feature-card">
-          <div class="feature-icon">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+    <!-- Solid Wrapper masks out the Sonar background as you scroll down -->
+    <div class="solid-wrapper">
+      <div class="container">
+        <!-- 3. Features Cards with Reveal Animation -->
+        <section class="features-grid">
+          <div class="feature-card reveal-up">
+            <div class="feature-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+            </div>
+            <h3>Optimized Performance</h3>
+            <p>Kernels built with bleeding-edge Clang compilers and aggressive CPU schedulers for maximum frame rates.</p>
           </div>
-          <h3>Optimized Performance</h3>
-          <p>Kernels built with bleeding-edge Clang compilers and aggressive CPU schedulers for maximum frame rates.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+          <div class="feature-card reveal-up">
+            <div class="feature-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+            </div>
+            <h3>Secure & Stable</h3>
+            <p>Firmware passing Play Integrity out of the box with built-in KernelSU support for safe root access.</p>
           </div>
-          <h3>Secure & Stable</h3>
-          <p>Firmware passing Play Integrity out of the box with built-in KernelSU support for safe root access.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
+          <div class="feature-card reveal-up">
+            <div class="feature-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
+            </div>
+            <h3>Vast Repository</h3>
+            <p>From LineageOS to Project Matrixx. Every major Android 13 through 17 release documented and preserved.</p>
           </div>
-          <h3>Vast Repository</h3>
-          <p>From LineageOS to Project Matrixx. Every major Android 13 through 17 release documented and preserved.</p>
-        </div>
-      </section>
+        </section>
 
-      <!-- 4. REPLACE THESE IMAGE URLS -->
-      <h2 class="section-title">Interface Gallery</h2>
-      <div class="fan-gallery-wrapper">
-        <div class="fan-container">
-          <div class="fan-card" style="background-image: url('https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&q=80&w=400');"></div>
-          <div class="fan-card" style="background-image: url('https://images.unsplash.com/photo-1607252656733-fd74200d5a34?auto=format&fit=crop&q=80&w=400');"></div>
-          <div class="fan-card" style="background-image: url('https://images.unsplash.com/photo-1618331835717-801e976710b2?auto=format&fit=crop&q=80&w=400');"></div>
+        <!-- 4. GALLERY (Dark Tech Placeholders) -->
+        <h2 class="section-title reveal-up">Interface Gallery</h2>
+        <div class="fan-gallery-wrapper reveal-up">
+          <div class="fan-container">
+            <!-- Swap these URLs when you have your exact images -->
+            <div class="fan-card" style="background-image: url('https://images.unsplash.com/photo-1614624532983-4ce03382d63d?auto=format&fit=crop&q=80&w=400');"></div>
+            <div class="fan-card" style="background-image: url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=400');"></div>
+            <div class="fan-card" style="background-image: url('https://images.unsplash.com/photo-1607252656733-fd74200d5a34?auto=format&fit=crop&q=80&w=400');"></div>
+          </div>
         </div>
+
+        <section id="downloads" style="padding-top: 2rem;">
+          <h2 class="section-title reveal-up">Firmware Database</h2>
+          <div class="rom-grid" id="buildsList"></div>
+        </section>
       </div>
-
-      <section id="downloads" style="padding-top: 2rem;">
-        <h2 class="section-title">Firmware Database</h2>
-        <div class="rom-grid" id="buildsList"></div>
-      </section>
-
     </div>
   </div>
 
-  <!-- Scroll Animation Footer -->
-  <footer class="motion-footer" id="motionFooter">
-    <div class="footer-content">
-      <h2 class="footer-title">PROJECT EXYROMS</h2>
-      <div class="footer-links">
-        <a href="https://t.me/ExyROMs" target="_blank">Telegram</a>
-        <a href="#">Source Code</a>
-        <a href="#">Maintainer</a>
-      </div>
-    </div>
-  </footer>
-
-  <!-- Mac Dock Animation -->
+  <!-- 7. Mac Dock -->
   <div class="dock-container">
     <div class="dock" id="macDock">
       <a href="#home" class="dock-item" data-tooltip="Home">
@@ -357,30 +383,17 @@
     }
     drawSonar();
 
-    // --- 3. Motion Footer Scroll Animation ---
+    // --- 6. Motion Footer Scroll Setup ---
     function setupMotionFooter() {
       const footer = document.getElementById('motionFooter');
       const content = document.getElementById('mainContent');
-      // Create space for the footer to be revealed
+      // Pushes the bottom of the body up, allowing the fixed footer to be revealed beneath it
       content.style.marginBottom = footer.offsetHeight + 'px';
-      
-      // Observer to animate footer items when scrolling near bottom
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if(entry.isIntersecting) {
-            footer.classList.add('visible');
-          } else {
-            footer.classList.remove('visible');
-          }
-        });
-      }, { threshold: 0.1 });
-      
-      observer.observe(footer);
     }
-    setupMotionFooter();
     window.addEventListener('resize', setupMotionFooter);
+    setupMotionFooter();
 
-    // --- 2. Mac Dock Animation (Fixed Scaling) ---
+    // --- 7. Mac Dock Hover Physics ---
     const dockItems = document.querySelectorAll('.dock-item');
     const maxScale = 1.5;
     const baseSize = 48;
@@ -397,13 +410,11 @@
           scale = 1 + (maxScale - 1) * (1 - distance / proximity);
         }
         
-        // Scale the physical width/height so items push each other
         const newSize = baseSize * scale;
         item.style.width = `${newSize}px`;
         item.style.height = `${newSize}px`;
         item.style.margin = `0 ${(scale - 1) * 5}px`;
         
-        // Scale icon inside
         const svg = item.querySelector('svg');
         svg.style.width = `${24 * scale}px`;
         svg.style.height = `${24 * scale}px`;
@@ -421,26 +432,25 @@
       });
     });
 
-
     // --- Database Render ---
     const buildsData = [
       {
-        title: "Everline kernel", category: "kernel", device: "A51, F41, M31", android: "Android 13 to 16", date: "26 July 2026", maintainer: "PARBINDAR7", flavor: ["BALANCED"],
+        title: "Everline kernel", category: "kernel", device: "A51, F41, M31", android: "Android 13 to 16", date: "26 July 2026", maintainer: "Parbindar", github: "https://github.com/parbindar7", flavor: ["BALANCED"],
         changelog: "1. sched/uclamp: Move tunables\n2. sched/uclamp: Expose latency",
         downloadUrl: "#"
       },
       {
-        title: "Project Matrixx", category: "rom", device: "A51, F41, M31", andrroid: "Android 16", date: "May 2026", maintainer: "PARBINDAR7", flavor: ["INACTIVE"],
+        title: "Project Matrixx", category: "rom", device: "A51, F41, M31", android: "Android 16", date: "May 2026", maintainer: "Parbindar", github: "https://github.com/parbindar7", flavor: ["INACTIVE"],
         changelog: "1. Contains all previous commits",
         downloadUrl: "#"
       },
       {
-        title: "InfinityX v3.10", category: "rom", device: "A51, F41, M31", android: "Android 16", date: "05 May 2026", maintainer: "PARBINDAR7", flavor: ["GAPPS"],
+        title: "InfinityX v3.10", category: "rom", device: "A51, F41, M31", android: "Android 16", date: "05 May 2026", maintainer: "Parbindar", github: "https://github.com/parbindar7", flavor: ["GAPPS"],
         changelog: "1. OTA push enabled\n2. Performance tuned",
         downloadUrl: "#"
       },
       {
-        title: "LineageOS EXT", category: "rom", device: "A51, F41, M31", android: "Android 17", date: "10 Aug 2026", maintainer: "PARBINDAR7", flavor: ["VANILLA"],
+        title: "LineageOS EXT", category: "rom", device: "A51, F41, M31", android: "Android 17", date: "10 Aug 2026", maintainer: "Parbindar", github: "https://github.com/parbindar7", flavor: ["VANILLA"],
         changelog: "1. Initial A17 release\n2. Set legacy gralloc flag",
         downloadUrl: "#"
       }
@@ -458,7 +468,7 @@
       buildsData.forEach(item => {
         const cat = (item.category || "rom").toLowerCase();
         html += `
-          <div class="border-beam-card">
+          <div class="border-beam-card reveal-up">
             <div class="card-inner">
               <div class="card-header">
                 <div>
@@ -467,19 +477,39 @@
                 </div>
                 <div class="card-badge">${cat}</div>
               </div>
+
               <div class="data-grid">
                 <div class="data-block"><span class="data-label">OS</span><span class="data-value">${item.android}</span></div>
                 <div class="data-block"><span class="data-label">Date</span><span class="data-value">${item.date}</span></div>
               </div>
-              <div>${renderTags(item.flavor)}</div>
+
+              <div>
+                ${renderTags(item.flavor)}
+                <a href="${item.github}" target="_blank" class="maintainer-link">@${item.maintainer}</a>
+              </div>
+
               <div class="changelog-box">${item.changelog}</div>
+              
               <a href="${item.downloadUrl}" class="btn-download">Deploy Firmware</a>
             </div>
           </div>
         `;
       });
       container.innerHTML = html;
+
+      // Initialize Scroll Reveal Animations after cards are rendered
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.1 });
+
+      document.querySelectorAll('.reveal-up').forEach(el => observer.observe(el));
     }
+
     renderBuilds();
   </script>
 </body>
