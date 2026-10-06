@@ -35,7 +35,7 @@
     }
 
     /* =========================================
-       1. APPLE HELLO EFFECT (ncdai) - FIXED TO SVG DRAW
+       1. APPLE HELLO EFFECT (xubohuah - Layered Text)
        ========================================= */
     #hello-screen {
       position: fixed; inset: 0; z-index: 9999;
@@ -45,33 +45,65 @@
     }
     #hello-screen.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
     
-    #hello-svg { width: 100%; max-width: 800px; height: 300px; }
-    
-    #hello-text-svg {
+    .layered-text-container {
+      position: relative;
       font-family: 'Caveat', cursive;
-      font-size: 120px;
-      font-weight: 500;
-      fill: transparent;
-      stroke: var(--text-main);
-      stroke-width: 2px;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-      stroke-dasharray: 1000;
-      stroke-dashoffset: 1000;
+      font-size: 8rem;
+      font-weight: 700;
+      line-height: 1;
+      height: 1.2em; /* Ensure container height accommodates the cursive ascenders/descenders */
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
-    @media (max-width: 768px) { #hello-text-svg { font-size: 80px; } }
+    .layered-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      white-space: nowrap;
+      clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0% 100%);
+      opacity: 0;
+    }
 
-    @keyframes drawText {
-      0% { stroke-dashoffset: 1000; fill: transparent; stroke-width: 2px; }
-      50% { stroke-dashoffset: 0; fill: transparent; stroke-width: 2px; }
-      100% { stroke-dashoffset: 0; fill: var(--text-main); stroke-width: 0px; }
+    .layered-text.active {
+      animation: revealText 2.5s cubic-bezier(0.77, 0, 0.175, 1) forwards;
     }
-    
-    @keyframes fadeOutText {
-      0% { opacity: 1; transform: scale(1); }
-      100% { opacity: 0; transform: scale(0.95); }
+
+    /* Standard Apple colors for the layers */
+    .layered-text:nth-child(1) { color: #f9d86b; z-index: 1; }
+    .layered-text:nth-child(2) { color: #f07b5a; z-index: 2; animation-delay: 0.1s; }
+    .layered-text:nth-child(3) { color: #c35c91; z-index: 3; animation-delay: 0.2s; }
+    .layered-text:nth-child(4) { color: #8e62ad; z-index: 4; animation-delay: 0.3s; }
+    .layered-text:nth-child(5) { color: var(--text-main); z-index: 5; animation-delay: 0.4s; }
+
+    @keyframes revealText {
+      0% {
+        clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0% 100%);
+        transform: translate(-50%, -10%);
+        opacity: 0;
+      }
+      20% {
+        opacity: 1;
+      }
+      50% {
+        clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+        transform: translate(-50%, -50%);
+        opacity: 1;
+      }
+      80% {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+      }
+      100% {
+        opacity: 0;
+        transform: translate(-50%, -60%);
+        clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
+      }
     }
+
+    @media (max-width: 768px) { .layered-text-container { font-size: 5rem; } }
 
     /* =========================================
        2. BACKGROUND ANIMATION (coming-soon-02)
@@ -238,11 +270,11 @@
 </head>
 <body>
 
-  <!-- 1. Apple Hello Effect Overlay (SVG Path Animation) -->
+  <!-- 1. Layered Text Apple Hello Effect -->
   <div id="hello-screen">
-    <svg id="hello-svg" viewBox="0 0 600 200">
-      <text id="hello-text-svg" x="50%" y="60%" text-anchor="middle">hello</text>
-    </svg>
+    <div class="layered-text-container" id="layeredTextContainer">
+      <!-- The 5 layers will be injected here by JS -->
+    </div>
   </div>
 
   <!-- 2. Background Animation -->
@@ -339,11 +371,11 @@
 
   <script>
     /* =========================================
-       1. APPLE HELLO EFFECT LOGIC (FIXED)
+       1. LAYERED TEXT HELLO LOGIC
        ========================================= */
     const greetings = ["hello"];
     let currentGreeting = 0;
-    const textElement = document.getElementById("hello-text-svg");
+    const textContainer = document.getElementById("layeredTextContainer");
     const screenElement = document.getElementById("hello-screen");
 
     function playHelloSequence() {
@@ -353,19 +385,28 @@
         return;
       }
 
-      textElement.textContent = greetings[currentGreeting];
-      textElement.style.animation = 'none';
-      void textElement.offsetWidth; 
+      // Clear previous text
+      textContainer.innerHTML = '';
       
-      textElement.style.animation = `drawText 2s cubic-bezier(0.25, 1, 0.5, 1) forwards`;
+      // Inject the 5 layers for the current greeting
+      for(let i=0; i<5; i++) {
+        const span = document.createElement('div');
+        span.className = 'layered-text';
+        span.innerText = greetings[currentGreeting];
+        textContainer.appendChild(span);
+      }
 
+      // Force reflow and apply animation
+      void textContainer.offsetWidth; 
+      
+      const layers = document.querySelectorAll('.layered-text');
+      layers.forEach(layer => layer.classList.add('active'));
+
+      // Wait for the animation to finish (2.5s) plus a small buffer, then loop
       setTimeout(() => {
-        textElement.style.animation = `fadeOutText 0.4s ease forwards`;
-        setTimeout(() => {
-          currentGreeting++;
-          playHelloSequence();
-        }, 400);
-      }, 2000);
+        currentGreeting++;
+        playHelloSequence();
+      }, 2600);
     }
 
     document.body.style.overflow = "hidden";
