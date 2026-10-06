@@ -85,22 +85,24 @@
       display: flex;
       justify-content: center;
       width: 100%;
-      /* 100% FIXED OVERLAP: Added huge bottom margin to prevent text from bleeding into paragraph */
-      margin: 2rem 0 6rem 0; 
+      /* MASSIVE gap below to completely prevent the slant from hitting the paragraph */
+      margin: 2rem 0 10rem 0; 
     }
     .layered-hero-text {
       display: flex;
       flex-direction: column;
       align-items: flex-start;
-      /* Exactly matching the slant of your 2nd image */
+      /* Slant matching your 2nd image */
       transform: rotate(-8deg) skewX(-12deg); 
+      /* Absorbs the physical drop of the bottom-right corner */
+      padding-bottom: 3rem; 
     }
     .layered-hero-text span {
-      font-size: clamp(3rem, 8vw, 7.5rem); /* Resized slightly to ensure it fits mobile/desktop perfectly */
+      font-size: clamp(3rem, 8vw, 7.5rem); 
       font-weight: 900;
-      font-style: italic; /* Forces the aggressive, forward-leaning look */
+      font-style: italic; 
       text-transform: uppercase;
-      line-height: 0.85; /* Tightly stacked */
+      line-height: 0.85; 
       letter-spacing: -0.03em;
       color: var(--text-main);
       white-space: nowrap;
@@ -123,6 +125,10 @@
 
     .hero p {
       font-size: 1.15rem; color: var(--text-muted); max-width: 600px; line-height: 1.6;
+      /* Extra margin to guarantee clearance */
+      margin-top: 2rem;
+      position: relative;
+      z-index: 10;
     }
 
     /* =========================================
@@ -230,7 +236,7 @@
     .dock-tab:hover { background: rgba(255,255,255,0.1); color: var(--text-main); }
     .dock-tab:hover .dock-label { max-width: 100px; opacity: 1; margin-left: 0.6rem; }
     
-    /* Active state (optional, for demo) */
+    /* Active state */
     .dock-tab.active { background: rgba(255,255,255,0.15); color: var(--text-main); }
 
   </style>
@@ -296,7 +302,7 @@
       </div>
     </section>
 
-    <!-- 4. Formation Tilt/Ring Gallery (uicapsule) -->
+    <!-- 4. Formation 3D Gallery -->
     <h2 class="section-title">Interface Formation</h2>
     <div class="gallery-container-main" id="galleryScene">
       <div class="formation-scene" id="formationWrap">
