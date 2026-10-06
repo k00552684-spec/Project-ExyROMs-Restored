@@ -3,219 +3,220 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Project ExyROMs</title>
+  <title>Project ExyROMs | 21st Edition</title>
   
+  <!-- Fonts: Inter for UI, JetBrains Mono for Code/Data -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 
   <style>
     :root {
-      /* Core Palette - Pure Black & White (Nothing OS Vibe) */
+      /* Deep Dark SaaS Palette */
       --bg-base: #000000;
       --bg-surface: #0a0a0a;
       --bg-elevated: #111111;
       
-      --accent: #ffffff; /* Pure White Accent */
+      --accent: #ffffff;
       --text-main: #ffffff;
       --text-muted: #888888;
       --border-color: rgba(255, 255, 255, 0.1);
-      
-      --dock-bg: rgba(255, 255, 255, 0.05);
-      --dock-border: rgba(255, 255, 255, 0.1);
+      --border-glow: rgba(255, 255, 255, 0.4);
       
       --radius-sm: 8px;
       --radius-md: 16px;
       --radius-lg: 24px;
+      --radius-full: 9999px;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; background: var(--bg-base); }
     body { color: var(--text-main); font-family: 'Inter', sans-serif; overflow-x: hidden; background: transparent; }
 
-    /* --- 1. SONAR GRID BACKGROUND --- */
-    /* Fixed at back */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #fff; }
+
+    /* =========================================
+       1. SONAR GRID BACKGROUND
+       ========================================= */
     .sonar-wrapper {
-      position: fixed; inset: 0; z-index: 0; background: var(--bg-base);
-      overflow: hidden; pointer-events: none;
+      position: fixed; inset: 0; z-index: -1; background: var(--bg-base); overflow: hidden; pointer-events: none;
     }
-    #sonarCanvas {
-      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-      opacity: 0.5;
+    .sonar-grid {
+      position: absolute; inset: 0;
+      background-image: 
+        linear-gradient(to right, rgba(255,255,255,0.05) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255,255,255,0.05) 1px, transparent 1px);
+      background-size: 60px 60px;
+      mask-image: radial-gradient(circle at center, black 30%, transparent 80%);
+      -webkit-mask-image: radial-gradient(circle at center, black 30%, transparent 80%);
     }
+    .sonar-sweep {
+      position: absolute; top: 50%; left: 50%; width: 200vw; height: 200vw;
+      background: conic-gradient(from 0deg at 50% 50%, transparent 0deg, transparent 270deg, rgba(255,255,255,0.15) 360deg);
+      border-radius: 50%; transform-origin: center center;
+      animation: sweep 4s linear infinite; margin-left: -100vw; margin-top: -100vw;
+    }
+    @keyframes sweep { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-    /* --- 6. MOTION FOOTER SETUP --- */
-    /* Fixed behind content */
-    .motion-footer {
-      position: fixed; bottom: 0; left: 0; width: 100%; height: 350px;
-      background: #050505; border-top: 1px solid var(--border-color);
-      z-index: 1; /* Above sonar, below content */
-      display: flex; flex-direction: column; justify-content: center; align-items: center;
-    }
-    .footer-content { text-align: center; }
-    .footer-title { font-size: 3rem; font-weight: 900; letter-spacing: -0.04em; margin-bottom: 1rem;}
-    .footer-links { display: flex; gap: 2rem; justify-content: center; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; }
-    .footer-links a { color: var(--text-muted); text-decoration: none; transition: 0.2s;}
-    .footer-links a:hover { color: var(--text-main); }
+    /* Content Wrapper */
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; position: relative; z-index: 10; }
 
-    /* Main Content Layer */
-    .content-layer {
-      position: relative; z-index: 2; /* Sits above footer */
-      /* margin-bottom is set by JS to reveal footer */
-    }
-    /* Solid background wraps everything BELOW the hero to mask out the Sonar */
-    .solid-wrapper {
-      background: var(--bg-base);
-      box-shadow: 0 -40px 40px var(--bg-base); /* Soft blend into hero */
-      padding-bottom: 4rem;
-      position: relative; z-index: 3;
-    }
-    
-    .container { max-width: 1100px; margin: 0 auto; padding: 0 1.5rem; }
-
-    /* --- 2. HERO ANNOUNCEMENT --- */
+    /* =========================================
+       2. SAAS ANNOUNCEMENT HERO & TEXT ROLL
+       ========================================= */
     .hero {
       display: flex; flex-direction: column; align-items: center; text-align: center;
-      padding: 10rem 0 6rem 0; background: transparent; /* Allows Sonar to show */
+      padding: 10rem 0 6rem 0; min-height: 80vh; justify-content: center;
     }
-    .announcement-pill {
+    
+    /* SaaS Pill */
+    .hero-pill {
       display: inline-flex; align-items: center; gap: 0.5rem;
-      background: rgba(255,255,255,0.03); border: 1px solid var(--border-color);
-      padding: 0.4rem 1rem; border-radius: 999px; font-size: 0.8rem; font-weight: 500;
-      color: var(--text-main); margin-bottom: 2rem; cursor: pointer; transition: 0.2s;
+      background: rgba(255,255,255,0.05); border: 1px solid var(--border-color);
+      padding: 0.4rem 1.2rem; border-radius: var(--radius-full); font-size: 0.85rem; font-weight: 500;
+      backdrop-filter: blur(10px); cursor: pointer; transition: 0.3s; margin-bottom: 2rem;
+      text-decoration: none; color: var(--text-main);
     }
-    .announcement-pill:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.2); }
-    .announcement-pill span.new { color: var(--bg-base); background: var(--text-main); padding: 0.1rem 0.4rem; border-radius: 4px; font-weight: 700; font-family: 'JetBrains Mono', monospace; }
+    .hero-pill:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.3); transform: translateY(-2px); }
+    .hero-pill .badge { background: #fff; color: #000; padding: 0.1rem 0.5rem; border-radius: 100px; font-weight: 700; font-size: 0.75rem;}
+
+    .hero-title { font-size: clamp(3rem, 8vw, 6.5rem); font-weight: 900; letter-spacing: -0.04em; line-height: 1.1; margin-bottom: 1.5rem; }
+    .hero-desc { font-size: 1.25rem; color: var(--text-muted); max-width: 650px; line-height: 1.6; font-weight: 400; margin-bottom: 2.5rem; }
+
+    /* Text Roll Animation */
+    .roll-word { display: inline-flex; overflow: hidden; vertical-align: bottom; }
+    .roll-char {
+      display: inline-flex; flex-direction: column; transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+      height: 1em; /* exactly one line height */
+    }
+    .hero-title:hover .roll-char { transform: translateY(-100%); }
+    .roll-char span { height: 1em; line-height: 1; display: flex; align-items: center; }
+    .roll-char span:last-child { color: var(--text-muted); } /* the second text is muted on hover */
+
+    .hero-buttons { display: flex; gap: 1rem; }
+    .btn-primary { background: #fff; color: #000; padding: 0.8rem 2rem; border-radius: var(--radius-full); font-weight: 600; text-decoration: none; transition: 0.2s; }
+    .btn-primary:hover { opacity: 0.8; transform: scale(0.98); }
+    .btn-secondary { background: transparent; color: #fff; padding: 0.8rem 2rem; border-radius: var(--radius-full); font-weight: 600; text-decoration: none; border: 1px solid var(--border-color); transition: 0.2s; }
+    .btn-secondary:hover { background: rgba(255,255,255,0.05); }
+
+    /* =========================================
+       3. FEATURES-8 BENTO BOX
+       ========================================= */
+    .section-header { font-size: 2.5rem; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 3rem; text-align: center; margin-top: 6rem;}
     
-    .hero h1 { font-size: clamp(3.5rem, 8vw, 6rem); font-weight: 900; letter-spacing: -0.04em; line-height: 1.1; margin-bottom: 1.5rem; }
-    .hero p { font-size: 1.15rem; color: var(--text-muted); max-width: 600px; line-height: 1.6; }
-
-    /* --- SCROLL REVEAL ANIMATION CLASSES --- */
-    .reveal-up {
-      opacity: 0; transform: translateY(40px);
-      transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+    .features-bento {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-bottom: 6rem;
     }
-    .reveal-up.is-visible { opacity: 1; transform: translateY(0); }
+    @media (max-width: 900px) { .features-bento { grid-template-columns: 1fr; } }
 
-    /* --- 3. FEATURES CARD --- */
-    .features-grid {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;
-      margin: 2rem 0 4rem 0;
-    }
-    .feature-card {
+    .bento-card {
       background: var(--bg-surface); border: 1px solid var(--border-color);
-      border-radius: var(--radius-md); padding: 2rem; transition: transform 0.3s;
+      border-radius: var(--radius-lg); padding: 2rem; display: flex; flex-direction: column; gap: 1rem;
+      transition: 0.3s; position: relative; overflow: hidden;
     }
-    .feature-card:hover { transform: translateY(-5px); border-color: rgba(255,255,255,0.2); }
-    .feature-icon { width: 40px; height: 40px; border-radius: 10px; background: rgba(255, 255, 255, 0.1); display: flex; justify-content: center; align-items: center; margin-bottom: 1rem; }
-    .feature-card h3 { font-size: 1.2rem; margin-bottom: 0.5rem; font-weight: 700; }
-    .feature-card p { font-size: 0.9rem; color: var(--text-muted); line-height: 1.5; }
+    .bento-card:hover { border-color: rgba(255,255,255,0.3); background: var(--bg-elevated); transform: translateY(-5px); }
+    .bento-large { grid-column: span 2; }
+    @media (max-width: 900px) { .bento-large { grid-column: span 1; } }
 
-    /* --- 4. GALLERY --- */
-    .section-title { font-size: 2.5rem; font-weight: 800; margin: 6rem 0 2rem 0; letter-spacing: -0.02em; text-align: center;}
-    .fan-gallery-wrapper {
-      display: flex; justify-content: center; align-items: center; height: 400px; margin: 2rem 0 6rem 0;
-      perspective: 1000px;
-    }
-    .fan-container { position: relative; width: 280px; height: 350px; cursor: pointer; }
+    .bento-icon { width: 48px; height: 48px; border-radius: 12px; background: rgba(255,255,255,0.1); display: flex; justify-content: center; align-items: center; border: 1px solid rgba(255,255,255,0.2); }
+    .bento-card h3 { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.02em; }
+    .bento-card p { font-size: 1rem; color: var(--text-muted); line-height: 1.6; }
+
+    /* =========================================
+       4. VERTICAL STICKY IMAGE STACK GALLERY
+       ========================================= */
+    .stack-wrapper { position: relative; padding-bottom: 10rem; }
+    .stack-container { display: flex; flex-direction: column; gap: 4rem; position: relative; }
     
-    .fan-card {
-      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-      border-radius: var(--radius-md); border: 1px solid var(--border-color); background: var(--bg-surface);
-      background-size: cover; background-position: center;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.8);
-      transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      transform-origin: bottom center;
+    .stack-card {
+      position: sticky; top: 15vh; /* This creates the sticky stacking effect */
+      height: 70vh; width: 100%; border-radius: var(--radius-lg);
+      border: 1px solid var(--border-color); overflow: hidden;
+      background: var(--bg-base); box-shadow: 0 -20px 40px rgba(0,0,0,0.8);
+      display: flex; flex-direction: column;
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      transform-origin: top center;
     }
-    
-    .fan-card:nth-child(1) { transform: rotate(-10deg) translateY(0) scale(0.95); z-index: 1; filter: brightness(0.6);}
-    .fan-card:nth-child(2) { transform: rotate(0deg) translateY(-10px) scale(1); z-index: 2; }
-    .fan-card:nth-child(3) { transform: rotate(10deg) translateY(0) scale(0.95); z-index: 1; filter: brightness(0.6);}
+    /* We offset top slightly so they stack visually */
+    .stack-card:nth-child(1) { top: 10vh; }
+    .stack-card:nth-child(2) { top: 13vh; }
+    .stack-card:nth-child(3) { top: 16vh; }
+    .stack-card:nth-child(4) { top: 19vh; }
 
-    .fan-container:hover .fan-card:nth-child(1) { transform: rotate(-25deg) translateX(-60px) translateY(20px) scale(0.9); filter: brightness(0.8);}
-    .fan-container:hover .fan-card:nth-child(2) { transform: rotate(0deg) translateY(-20px) scale(1.05); z-index: 3; filter: brightness(1);}
-    .fan-container:hover .fan-card:nth-child(3) { transform: rotate(25deg) translateX(60px) translateY(20px) scale(0.9); filter: brightness(0.8);}
+    .stack-img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(50%); transition: 0.5s; }
+    .stack-card:hover .stack-img { filter: grayscale(0%); transform: scale(1.02); }
 
-    /* --- 5. BORDER BEAM ANIMATION --- */
-    .rom-grid {
-      display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 1.5rem;
-    }
+    /* =========================================
+       5. BORDER BEAM ROM CARDS
+       ========================================= */
+    .rom-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 1.5rem; padding-bottom: 8rem;}
 
     .border-beam-card {
-      position: relative; border-radius: var(--radius-md);
-      overflow: hidden; padding: 2px; /* Inner card mask gap */
-      background: var(--bg-surface);
+      position: relative; border-radius: var(--radius-lg);
+      padding: 1px; /* Thinner border mask */
+      background: var(--bg-surface); overflow: hidden;
     }
     
-    /* The animated gradient border - Fixed to be always visible (opacity: 1) */
+    /* The continuous rotating beam */
     .border-beam-card::before {
-      content: ""; position: absolute;
-      top: -50%; left: -50%; width: 200%; height: 200%;
-      background: conic-gradient(from 0deg, transparent 70%, rgba(255,255,255,0.8) 100%);
-      animation: beam-spin 4s linear infinite;
-      z-index: 0; opacity: 1; /* <--- FIXED: Now constantly visible */
+      content: ""; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+      background: conic-gradient(from 0deg, transparent 70%, #ffffff 100%);
+      animation: beam-spin 3s linear infinite; z-index: 0;
     }
-    
     @keyframes beam-spin { 100% { transform: rotate(360deg); } }
 
-    /* The inner content area that masks the middle of the gradient */
-    .card-inner {
-      background: var(--bg-surface); height: 100%; border-radius: calc(var(--radius-md) - 2px);
-      padding: 1.5rem; position: relative; z-index: 1; display: flex; flex-direction: column; gap: 1rem;
+    .rom-card-inner {
+      background: var(--bg-surface); height: 100%; border-radius: calc(var(--radius-lg) - 1px);
+      padding: 2rem; position: relative; z-index: 1; display: flex; flex-direction: column; gap: 1.5rem;
     }
 
     .card-header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px solid var(--border-color); padding-bottom: 1rem; }
-    .card-title { font-size: 1.25rem; font-weight: 700; }
-    .card-device { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem; }
-    .card-badge { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); padding: 0.2rem 0.6rem; border-radius: 99px; text-transform: uppercase; color: var(--text-main); }
+    .card-title { font-size: 1.35rem; font-weight: 700; letter-spacing: -0.01em;}
+    .card-device { font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--text-muted); margin-top: 0.3rem; text-transform: uppercase;}
+    .card-badge { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); padding: 0.25rem 0.75rem; border-radius: 99px; text-transform: uppercase; color: var(--text-main); }
 
     .data-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-    .data-label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.2rem;}
-    .data-value { font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; font-weight: 500; }
+    .data-label { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.2rem;}
+    .data-value { font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; font-weight: 500; }
 
-    .flavor-tag { font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; padding: 0.2rem 0.5rem; border-radius: 4px; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.3); color: var(--text-main); display: inline-block; margin-right: 0.3rem; text-transform: uppercase;}
-    .changelog-box { background: rgba(0,0,0,0.5); border: 1px solid var(--border-color); padding: 1rem; border-radius: 8px; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--text-muted); white-space: pre-line; max-height: 100px; overflow-y: auto; }
-    
-    /* Clickable Maintainer Link */
-    .maintainer-link { color: var(--text-muted); text-decoration: none; transition: 0.2s; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem;}
+    .flavor-tag { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; padding: 0.25rem 0.6rem; border-radius: 6px; background: rgba(255,255,255, 0.08); border: 1px solid rgba(255,255,255, 0.2); display: inline-block; margin-right: 0.4rem; text-transform: uppercase;}
+    .maintainer-link { color: var(--text-muted); text-decoration: none; transition: 0.2s; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem;}
     .maintainer-link:hover { color: var(--text-main); text-decoration: underline; }
 
-    .btn-download {
-      margin-top: auto; display: block; width: 100%; text-align: center; background: var(--text-main); color: #000;
-      padding: 0.7rem; border-radius: 8px; font-weight: 600; text-decoration: none; transition: 0.2s;
-    }
-    .btn-download:hover { opacity: 0.8; }
+    .changelog-box { background: var(--bg-base); border: 1px solid var(--border-color); padding: 1rem; border-radius: var(--radius-sm); font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--text-muted); white-space: pre-line; max-height: 120px; overflow-y: auto; line-height: 1.6; }
+    .btn-download { margin-top: auto; display: block; width: 100%; text-align: center; background: var(--text-main); color: #000; padding: 0.8rem; border-radius: var(--radius-sm); font-weight: 600; text-decoration: none; transition: 0.2s; }
+    .btn-download:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(255,255,255,0.2); }
 
-    ::-webkit-scrollbar { width: 6px; height: 6px; }
-    ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.15); border-radius: 4px; }
-    ::-webkit-scrollbar-thumb:hover { background: #fff; }
-
-    /* 7. MAC DOCK ANIMATION */
-    .dock-container {
-      position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-      z-index: 100;
+    /* =========================================
+       6. FLOATING MAC DOCK
+       ========================================= */
+    .dock-wrapper {
+      position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 1000;
     }
     .dock {
-      display: flex; gap: 8px; padding: 10px; border-radius: 20px;
-      background: var(--dock-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-      border: 1px solid var(--dock-border); box-shadow: 0 10px 40px rgba(0,0,0,0.5);
-      align-items: flex-end;
+      display: flex; gap: 12px; padding: 12px; border-radius: 24px;
+      background: rgba(20, 20, 20, 0.6); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+      align-items: flex-end; /* Critical for scaling up from the bottom */
     }
     .dock-item {
-      width: 48px; height: 48px; border-radius: 12px;
+      width: 50px; height: 50px; border-radius: 12px;
       background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
       display: flex; justify-content: center; align-items: center; color: var(--text-main);
       cursor: pointer; text-decoration: none; position: relative;
-      transition: width 0.2s, height 0.2s, transform 0.2s, margin 0.2s;
+      /* Physics transitions */
+      transition: width 0.15s ease, height 0.15s ease, margin 0.15s ease;
     }
-    .dock-item svg { width: 24px; height: 24px; transition: width 0.2s, height 0.2s; pointer-events: none;}
+    .dock-item svg { width: 24px; height: 24px; transition: width 0.15s, height 0.15s; pointer-events: none;}
     
     .dock-item[data-tooltip]::after {
-      content: attr(data-tooltip); position: absolute; top: -35px; left: 50%; transform: translateX(-50%);
-      background: var(--bg-surface); padding: 4px 8px; border-radius: 6px;
-      font-size: 10px; font-weight: 600; border: 1px solid var(--border-color);
-      opacity: 0; transition: 0.2s; pointer-events: none; white-space: nowrap;
+      content: attr(data-tooltip); position: absolute; top: -45px; left: 50%; transform: translateX(-50%);
+      background: #111; padding: 6px 12px; border-radius: 8px; font-family: 'Inter', sans-serif;
+      font-size: 12px; font-weight: 600; border: 1px solid var(--border-color);
+      opacity: 0; transition: 0.2s; pointer-events: none; white-space: nowrap; box-shadow: 0 4px 10px rgba(0,0,0,0.5);
     }
     .dock-item[data-tooltip]:hover::after { opacity: 1; }
 
@@ -223,93 +224,98 @@
 </head>
 <body>
 
-  <!-- 1. Sonar Grid Background (Fixed to back) -->
+  <!-- Sonar Background -->
   <div class="sonar-wrapper">
-    <canvas id="sonarCanvas"></canvas>
+    <div class="sonar-grid"></div>
+    <div class="sonar-sweep"></div>
   </div>
 
-  <!-- 6. Motion Footer (Fixed to back, below content) -->
-  <footer class="motion-footer" id="motionFooter">
-    <div class="footer-content">
-      <h2 class="footer-title">PROJECT EXYROMS</h2>
-      <div class="footer-links">
-        <a href="https://t.me/ExyROMs" target="_blank">Telegram</a>
-        <a href="https://github.com/parbindar7" target="_blank">Maintainer Code</a>
-      </div>
-      <p style="color: var(--text-muted); font-size: 0.8rem; margin-top: 2rem;">&copy; 2026. Built with high-performance components.</p>
-    </div>
-  </footer>
-
-  <!-- Main Content Layer -->
-  <div class="content-layer" id="mainContent">
-    <div class="container">
+  <div class="container">
+    
+    <!-- Hero Announcement & Text Roll -->
+    <section class="hero" id="home">
+      <a href="#downloads" class="hero-pill">
+        <span class="badge">NEW</span> ExyROMs v3.0 Database is Live &rarr;
+      </a>
       
-      <!-- 2. Hero 3 (Added reveal-up class for scroll animation) -->
-      <section class="hero reveal-up" id="home">
-        <a href="#downloads" class="announcement-pill">
-          <span class="new">New</span> ExyROMs v3.0 Database Live &rarr;
-        </a>
-        <h1>Engineering the perfect<br>Android Ecosystem.</h1>
-        <p>The premium aftermarket firmware hub for the Samsung Galaxy Exynos 9611 series. Explore custom ROMs, performance kernels, and recovery tools.</p>
-      </section>
-    </div>
-
-    <!-- Solid Wrapper masks out the Sonar background as you scroll down -->
-    <div class="solid-wrapper">
-      <div class="container">
-        
-        <!-- 3. Features Cards with Reveal Animation -->
-        <section class="features-grid">
-          <div class="feature-card reveal-up">
-            <div class="feature-icon">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-            </div>
-            <h3>Optimized Performance</h3>
-            <p>Kernels built with bleeding-edge Clang compilers and aggressive CPU schedulers for maximum frame rates.</p>
-          </div>
-          <div class="feature-card reveal-up" style="transition-delay: 0.1s;">
-            <div class="feature-icon">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-            </div>
-            <h3>Secure & Stable</h3>
-            <p>Firmware passing Play Integrity out of the box with built-in KernelSU support for safe root access.</p>
-          </div>
-          <div class="feature-card reveal-up" style="transition-delay: 0.2s;">
-            <div class="feature-icon">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
-            </div>
-            <h3>Vast Repository</h3>
-            <p>From LineageOS to Project Matrixx. Every major Android 13 through 17 release documented and preserved.</p>
-          </div>
-        </section>
-
-        <!-- 4. GALLERY (Images fixed) -->
-        <h2 class="section-title reveal-up">Interface Gallery</h2>
-        <div class="fan-gallery-wrapper reveal-up">
-          <div class="fan-container">
-            <div class="fan-card" style="background-image: url('1000021188.jpg');"></div>
-            <div class="fan-card" style="background-image: url('1000021189.jpg');"></div>
-            <div class="fan-card" style="background-image: url('1000021190.jpg');"></div>
-          </div>
-        </div>
-
-        <section id="downloads" style="padding-top: 2rem;">
-          <h2 class="section-title reveal-up">Firmware Database</h2>
-          <div class="rom-grid" id="buildsList"></div>
-        </section>
+      <!-- Text Roll Animation Target -->
+      <h1 class="hero-title" id="rollTitle">
+        Engineering the perfect <br>
+        <span style="color: #888;">Android Ecosystem.</span>
+      </h1>
+      
+      <p class="hero-desc">The ultimate aftermarket development hub for the Samsung Galaxy Exynos 9611. Featuring pure AOSP variants, customized performance kernels, and unified recovery tools.</p>
+      
+      <div class="hero-buttons">
+        <a href="#downloads" class="btn-primary">Explore Builds</a>
+        <a href="https://t.me/ExyROMs" target="_blank" class="btn-secondary">Telegram Hub</a>
       </div>
-    </div>
-  </div>
+    </section>
 
-  <!-- 7. Mac Dock -->
-  <div class="dock-container">
+    <!-- Features 8 Bento -->
+    <h2 class="section-header">Core Infrastructure</h2>
+    <section class="features-bento">
+      <div class="bento-card bento-large">
+        <div class="bento-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        </div>
+        <h3>Optimized Performance</h3>
+        <p>Custom kernels built with bleeding-edge Clang compilers. Aggressive CPU schedulers, auto-cpufreq tuned setups, and completely debloated source trees ensure maximum frame rates and zero jitter.</p>
+      </div>
+      <div class="bento-card">
+        <div class="bento-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+        </div>
+        <h3>Secure & Stable</h3>
+        <p>Firmware passing Play Integrity out of the box with KernelSU support for safe root.</p>
+      </div>
+      <div class="bento-card">
+        <div class="bento-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
+        </div>
+        <h3>Vast Repository</h3>
+        <p>From LineageOS to Project Matrixx. Every major Android 13-17 release documented.</p>
+      </div>
+    </section>
+
+    <!-- Vertical Image Stack Gallery -->
+    <h2 class="section-header">Interface Gallery</h2>
+    <section class="stack-wrapper">
+      <div class="stack-container">
+        <!-- Replaced with the images you shared -->
+        <div class="stack-card">
+          <img src="1000021188.jpg" class="stack-img" alt="UI Screenshot 1">
+        </div>
+        <div class="stack-card">
+          <img src="1000021189.jpg" class="stack-img" alt="UI Screenshot 2">
+        </div>
+        <div class="stack-card">
+          <img src="1000021190.jpg" class="stack-img" alt="UI Screenshot 3">
+        </div>
+        <div class="stack-card">
+          <img src="1000021191.jpg" class="stack-img" alt="UI Screenshot 4">
+        </div>
+      </div>
+    </section>
+
+    <!-- Border Beam Database -->
+    <h2 class="section-header" id="downloads">Firmware Database</h2>
+    <div class="rom-grid" id="buildsList"></div>
+
+  </div> <!-- End Container -->
+
+  <!-- Floating Mac Dock -->
+  <div class="dock-wrapper">
     <div class="dock" id="macDock">
-      <!-- Tooltip specifically removed from home as requested -->
+      <!-- No tooltip on Home as requested -->
       <a href="#home" class="dock-item">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>
       </a>
       <a href="#downloads" class="dock-item" data-tooltip="Downloads">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+      </a>
+      <a href="https://github.com/parbindar7" target="_blank" class="dock-item" data-tooltip="GitHub">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
       </a>
       <a href="https://t.me/ExyROMs" target="_blank" class="dock-item" data-tooltip="Telegram">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
@@ -318,93 +324,71 @@
   </div>
 
   <script>
-    // --- 1. Canvas Sonar Grid Animation ---
-    const canvas = document.getElementById('sonarCanvas');
-    const ctx = canvas.getContext('2d');
-    let angle = 0;
-
-    function resizeCanvas() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+    /* =========================================
+       1. TEXT ROLL ANIMATION SCRIPT
+       ========================================= */
+    function applyTextRoll(elementId) {
+      const el = document.getElementById(elementId);
+      if (!el) return;
+      
+      // We only want to animate "Engineering the perfect"
+      const textToAnimate = "Engineering the perfect";
+      const words = textToAnimate.split(' ');
+      
+      let html = '';
+      words.forEach(word => {
+        html += '<span style="display:inline-flex; gap: 0.1em;">';
+        word.split('').forEach((char, i) => {
+          // Delay each letter slightly for the wave effect
+          const delay = i * 0.03;
+          html += `
+            <span class="roll-word">
+              <span class="roll-char" style="transition-delay: ${delay}s">
+                <span>${char}</span>
+                <span>${char}</span>
+              </span>
+            </span>
+          `;
+        });
+        html += '</span>&nbsp;'; // Add space between words
+      });
+      
+      // Replace the original text while keeping the span below it
+      el.innerHTML = html + '<br><span style="color: #888;">Android Ecosystem.</span>';
     }
-    window.addEventListener('resize', resizeCanvas);
-    resizeCanvas();
+    
+    // Apply animation on load
+    applyTextRoll('rollTitle');
 
-    function drawSonar() {
-      const cx = canvas.width / 2;
-      const cy = canvas.height / 2;
-      const radius = Math.max(cx, cy) * 1.5;
-
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
-      ctx.lineWidth = 1;
-      const gridSize = 50;
-      for (let x = 0; x < canvas.width; x += gridSize) {
-        ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke();
-      }
-      for (let y = 0; y < canvas.height; y += gridSize) {
-        ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke();
-      }
-
-      ctx.save();
-      ctx.translate(cx, cy);
-      ctx.rotate(angle);
-      
-      const sweepGradient = ctx.createConicGradient(0, 0, 0);
-      sweepGradient.addColorStop(0, 'rgba(255, 255, 255, 0)');
-      sweepGradient.addColorStop(0.8, 'rgba(255, 255, 255, 0.05)');
-      sweepGradient.addColorStop(1, 'rgba(255, 255, 255, 0.4)');
-      
-      ctx.fillStyle = sweepGradient;
-      ctx.beginPath();
-      ctx.arc(0, 0, radius, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.restore();
-
-      const maskGradient = ctx.createRadialGradient(cx, cy, 0, cx, cy, radius * 0.8);
-      maskGradient.addColorStop(0, 'rgba(0,0,0,1)');
-      maskGradient.addColorStop(0.2, 'rgba(0,0,0,1)');
-      maskGradient.addColorStop(0.5, 'rgba(0,0,0,0)');
-      
-      ctx.globalCompositeOperation = 'destination-out';
-      ctx.fillStyle = maskGradient;
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      ctx.globalCompositeOperation = 'source-over';
-
-      angle += 0.01;
-      requestAnimationFrame(drawSonar);
-    }
-    drawSonar();
-
-    // --- SCROLL ANIMATION OBSERVER ---
-    // This triggers the .is-visible class when elements scroll into view
-    const observerOptions = { threshold: 0.1, rootMargin: "0px 0px -50px 0px" };
-    const scrollObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('is-visible');
-          scrollObserver.unobserve(entry.target); // Stop observing once revealed
+    /* =========================================
+       2. VERTICAL STICKY SCALE ANIMATION
+       ========================================= */
+    const stackCards = document.querySelectorAll('.stack-card');
+    window.addEventListener('scroll', () => {
+      stackCards.forEach((card, index) => {
+        // If it's not the last card, we scale it down slightly as we scroll past it
+        if (index < stackCards.length - 1) {
+          const rect = card.getBoundingClientRect();
+          // The card becomes sticky when its top reaches 10vh/13vh/etc.
+          // We trigger scale down when it's firmly stuck at the top of the viewport
+          if (rect.top <= window.innerHeight * 0.2) {
+            // Apply a static scale down to give depth to the next card covering it
+            card.style.transform = `scale(0.95)`;
+            card.style.filter = `brightness(0.5)`;
+          } else {
+            card.style.transform = `scale(1)`;
+            card.style.filter = `brightness(1)`;
+          }
         }
       });
-    }, observerOptions);
+    });
 
-    // Initial observer call for hardcoded HTML elements
-    document.querySelectorAll('.reveal-up').forEach(el => scrollObserver.observe(el));
-
-    // --- 6. Motion Footer Scroll Setup ---
-    function setupMotionFooter() {
-      const footer = document.getElementById('motionFooter');
-      const content = document.getElementById('mainContent');
-      content.style.marginBottom = footer.offsetHeight + 'px';
-    }
-    window.addEventListener('resize', setupMotionFooter);
-    setupMotionFooter();
-
-    // --- 7. Mac Dock Hover Physics ---
+    /* =========================================
+       3. MAC DOCK PHYSICS LOGIC
+       ========================================= */
     const dockItems = document.querySelectorAll('.dock-item');
-    const maxScale = 1.5;
-    const baseSize = 48;
+    const maxScale = 1.8; // High magnification for effect
+    const baseSize = 50;
     const proximity = 150;
 
     document.getElementById('macDock').addEventListener('mousemove', (e) => {
@@ -418,11 +402,13 @@
           scale = 1 + (maxScale - 1) * (1 - distance / proximity);
         }
         
+        // Scale the physical width/height so items push each other smoothly
         const newSize = baseSize * scale;
         item.style.width = `${newSize}px`;
         item.style.height = `${newSize}px`;
-        item.style.margin = `0 ${(scale - 1) * 5}px`;
+        item.style.margin = `0 ${(scale - 1) * 8}px`; 
         
+        // Scale icon inside proportionally
         const svg = item.querySelector('svg');
         svg.style.width = `${24 * scale}px`;
         svg.style.height = `${24 * scale}px`;
@@ -440,16 +426,20 @@
       });
     });
 
-    // --- FULL 27 ROM DATABASE ---
+    /* =========================================
+       FULL 27 ROM DATABASE
+       ========================================= */
     const buildsData = [
       {
         title: "Everline kernel", category: "kernel", device: "Samsung Galaxy A51, F41, M31, M31s, M21", android: "Android 13 to 16", date: "26 July 2026", maintainer: "parbindar7.github", flavor: ["BALANCED"],
         changelog: "1. sched/uclamp: Move tunables to cpuctl\n2. sched/uclamp: Expose latency_sensitive and uclamp.boosted",
+        Notice: "1. Only support builds 25.07.2026 or newer\n2. crDroid not compatible",
         downloadUrl: "https://sourceforge.net/projects/parbindar7-builds/files/Everline%2025-07-2026/"
       },
       {
         title: "Everline Kernel", category: "kernel", device: "Samsung Galaxy A51, F41, M31, M31s, M21", android: "Android 13 to 17", date: "24 August 2026", maintainer: "parbindar7.github", flavor: ["BALANCED"],
         changelog: "1. Add AutoFDO support\n2. cpufreq_schedutil: Add sugov_cpu_is_busy\n3. cpufreq_schedutil: Add ignore_dl_rate_limit\n4. cpufreq_schedutil: Add rt_rq_is_runnable\n5. ems: Uclamp ontime_load_avg boost\n6. ems: Add ontime_en and ontime_prefer_perf\n7. Built with Clang 22.1.8",
+        Notice: "1. crDroid latest compatible\n2. Only support builds 26.07.2026 or newer",
         downloadUrl: "https://sourceforge.net/projects/parbindar7-builds/files/Everline%2024-08-2026/"
       },
       {
@@ -459,6 +449,7 @@
       },
       {
         title: "Project Matrixx OS v12.3", category: "rom", device: "Samsung Galaxy A51, F41, M31, M31s, M21", android: "Android 16", date: "May 2026", maintainer: "parbindar7.github", flavor: ["INACTIVE"],
+        Notice: "Project Matrixx OS has been officially discontinued as per the announcement of Matrixx OS Developers.",
         changelog: "1. Contains all previous commits",
         downloadUrl: "https://sourceforge.net/projects/projectmatrixx/files/Android-16/"
       },
@@ -499,6 +490,7 @@
       },
       {
         title: "Matrixx OS v12.2", category: "rom", device: "Samsung Galaxy A51, F41, M31, M31s, M21", android: "Android 16", date: "13 April 2026", maintainer: "parbindar7.github", flavor: ["INACTIVE"],
+        Notice: "Matrixx OS has been officially discontinued as per the announcement of Matrixx OS Developers.",
         changelog: "1. Blur Disabled\n2. Decrease launch boost to 3sec\n3. Tune schedutil rate limits\n4. HWC Adapt from exynos9630 T BSP\n5. adapt struct decon_win_config_data to exynos9610\n6. fix missing dmabuf_trace_free call on buffer release path\n7. free exporter name on buffer release",
         downloadUrl: "https://drive.google.com/drive/folders/1b_54tfSj5k1Ypmu07LL8pKS-JnuF9eXm?usp=sharing"
       },
@@ -510,11 +502,13 @@
       {
         title: "LunarisAOSP v3.12 EOL", category: "rom", device: "Samsung Galaxy A51, F41, M31, M31s, M21", android: "Android 16", date: "13 August 2026", maintainer: "parbindar7.github", flavor: ["VANILLA", "EOL"],
         changelog: "1. Re-configure cpuset\n2. Remove cpuidle off node",
+        Notice: "1. EOL A16. Next update based on Android 17\n2. Mostly source side changes in this build\n3. No Kernel changes",
         downloadUrl: "https://drive.google.com/drive/folders/1ZYYzDbaUuHe5nAPtg2ryV5afHvq6LACQ?usp=sharing"
       },
       {
         title: "InfinityX 12.3", category: "rom", device: "Samsung Galaxy A51, F41, M31, M31s, M21", android: "Android 16", date: "16 August 2026", maintainer: "parbindar7.github", flavor: ["GAPPS", "EOL"],
         changelog: "1. Re-configure cpuset\n2. Remove cpuidle off node",
+        Notice: "1. OTA Pushed\n2. EOL A16. Next update based on Android 17\n3. No Kernel changes",
         downloadUrl: "https://github.com/Parbindar7/OTA/releases"
       },
       {
@@ -525,66 +519,79 @@
       {
         title: "VoltageOS 5.11 EOL", category: "rom", device: "Samsung Galaxy A51, F41, M31, M31s, M21", android: "Android 16", date: "10 August 2026", maintainer: "parbindar7.github", flavor: ["VANILLA", "EOL"],
         changelog: "1. Tune Powerhint\n2. Tune up/down frequency rate limits\n3. Switch to AOSP task profiles\n4. Remove unused /dev/freezer",
+        Notice: "1. Blur disabled",
         downloadUrl: "https://drive.google.com/drive/folders/19QBt1_8HF0gyskg9fnHgojGY8s5MsnFm?usp=sharing"
       },
       {
         title: "LineageOS EXT", category: "rom", device: "Samsung Galaxy A51, F41, M31, M31s, M21", android: "Android 17", date: "10 August 2026", maintainer: "parbindar7.github", flavor: ["VANILLA"],
         changelog: "1. Update included soong namespaces\n2. Set legacy gralloc flag\n3. Remove apk_verity_prop from flags_health_check.te\n4. Remove duplicate sysfs_block\n5. Remove duplicate clean_scratch_files\n6. Use legacy libion implementation\n7. Disable app launch blur",
+        Notice: "1. Initial A17 release\n2. Report bugs with proper log please",
         downloadUrl: "https://drive.google.com/drive/folders/11VAKKkzQEnQ-hCucJFv6She-AtUQNiDo?usp=sharing"
       },
       {
         title: "Everline Kernel", category: "kernel", device: "Samsung Galaxy A51, F41, M31, M31s, M21", android: "A13-A17 Supported", date: "10 August 2026", maintainer: "parbindar7.github", flavor: ["BALANCED"],
         changelog: "1. <b>sched/cpufreq_schedutil:</b> Add sugov_iowait_reset\n2. <b>sched/uclamp:</b> Use uclamp_rq_is_idle in task_fits_cpu\n3. <b>sched/uclamp:</b> Add util_fits_cpu and task_fits_cpu\n4. <b>sched/uclamp:</b> Add uclamp_rq_get, uclamp_rq_set and uclamp_rq_is_idle\n5. Removed old unnecessary uclamp commits and backports\n6. Merge 5.10 BPF from phoenix\n7. Add cgroup v2 freezer",
+        Notice: "1. crDroid not compatible\n2. Only support builds 26.07.2026 or newer",
         downloadUrl: "https://sourceforge.net/projects/parbindar7-builds/files/Everline%2010-08-2026/"
       },
       {
         title: "VoltageOS v6.0", category: "rom", device: "Samsung Galaxy A51, F41, M31, M31s, M21", android: "Android 17", date: "11 August 2026", maintainer: "parbindar7.github", flavor: ["VANILLA", "UNOFFICIAL"],
         changelog: "1. Update included soong namespaces\n2. Set legacy gralloc flag\n3. Remove apk_verity_prop from flags_health_check.te\n4. Remove duplicate sysfs_block\n5. Remove duplicate clean_scratch_files\n6. Use legacy libion implementation\n7. Disable app launch blur",
+        Notice: "1. Initial Android 17 release\n2. Blur Disabled\n3. Report bugs with proper log please",
         downloadUrl: "https://drive.google.com/drive/folders/1D-w32e6LOOtJuwNrJ_0rTNRPlI34Y6IA"
       },
       {
         title: "PixelOS v16.2", category: "rom", device: "Samsung Galaxy A51, F41, M31, M31s, M21", android: "Android 16", date: "17 August 2026", maintainer: "parbindar7.github", flavor: ["GAPPS"],
         changelog: "1. GPU Frequency set to 949mhz\n2. Blur disabled",
+        Notice: "1. June Security Patch\n2. Only supported by Everline 25.07.2026 and newer\n4. ROM takes time to get stable",
         downloadUrl: "https://drive.google.com/drive/folders/1y9wpS1P07NaXY9XiLxwQLYonk-ucRgDv"
       },
       {
         title: "LineageOS v23.2", category: "rom", device: "Samsung Galaxy A51, F41, M31, M31s, M21", android: "Android 16", date: "24 August 2026", maintainer: "parbindar7.github", flavor: ["VANILLA"],
         changelog: "1. AIDL Widevine from A14\n2. Drop config_sustainedPerformanceModeSupported\n3. Boost on EXPENSIVE_RENDERING\n4. Remove cpuidle off node\n5.Re-configure cpuset\n6. GPU Frequency upto 949mhz",
+        Notice: "1. August Security Patch\n2. Only supported by Everline 25.07.2026 and newer\n3. ROM takes time to get stable",
         downloadUrl: "https://drive.google.com/drive/folders/1p3QDf6tItfNd5HCWECp0zGKtK74zj4Ji?usp=sharing"
       },
       {
         title: "VoltageOS v6.1", category: "rom", device: "Samsung Galaxy A51, F41, M31, M31s, M21", android: "Android 17", date: "04 Sep 2026", maintainer: "parbindar7.github", flavor: ["VANILLA"],
         changelog: "1. Same as Lineage 24.08.2026 Build",
-        downloadUrl: "https://drive.google.com/drive/folders/1fFEDXhGoLg-_KhCJjnBarxl8PBqGfwgq?usp=sharing"
+        Notice: "1. VoLTE Working\n2. VoWiFi (Voice over Wi-Fi) Broken\n3. Tested on JIO, Airtel so far\n4. Keep data enabled when call\n5. Blur Disabled\n6. Report bugs with proper log please",
+      downloadUrl: "https://drive.google.com/drive/folders/1fFEDXhGoLg-_KhCJjnBarxl8PBqGfwgq?usp=sharing"
       },
       {
         title: "Everline Kernel", category: "kernel", device: "Samsung Galaxy A51, F41, M31, M31s, M21", android: "A13-A17 Supported", date: "04 sep 2026", maintainer: "parbindar7.github", flavor: ["BALANCED"],
         changelog: "1. Upstream to 4.14.357\n2. Rebase and merge linux-4.14.y branch from OpenELA\n3. Merge android-4.14-phoenix branch from PhoenixKernel with 5.10 BPF patches\n4. Built with Clang 20.0.0",
+        Notice: "1. crDroid latest compatible\n2. Only support builds 26.07.2026 or newer\n3. Everline-AOSP Supports Magisk & Apatch\n4. Everline-KSUN Supports KSU-Next",
         downloadUrl: "https://sourceforge.net/projects/parbindar7-builds/files/Everline%2004-09-2026/"
       },
       {
         title: "LineageOS 23.2", category: "rom", device: "Samsung Galaxy A51, F41, M31, M31s, M21", android: "Android 16", date: "13 Sep 2026", maintainer: "parbindar7.github", flavor: ["VANILLA"],
         changelog: "1. Same as Lineage 24.08.2026 Build",
+        Notice: "1. Supported: VoLTE and VoWiFi\n2.Fixed dialer freeze on hang up\n3. September Security Patch\n4. Only supported by Everline 25.07.2026 and newer",
         downloadUrl: "https://drive.google.com/drive/folders/1DZqSk6s6YPhJtNOtjODjjOWmJhVp2RGo?usp=sharing",
       },
       {
         title: "LunarisAOSP v3.12", category: "rom", device: "Samsung Galaxy A51, F41, M31, M31s, M21", android: "Android 16", date: "14 Sep 2026", maintainer: "parbindar7.github", flavor: ["VANILLA"],
         changelog: "1. Audio Increased on Calls , Media , Ringtone",
+        Notice: "1. Audio Increased on Calls , Media , Ringtone\n2. September Security Patch\n3. Only supported by Everline 25.07.2026 and newer",
         downloadUrl: "https://drive.google.com/drive/folders/1Lgm6q2KtUfKZsyJ3RixYRUMYAgooykHf?usp=sharing"
       },
       {
         title: "Project Infinity-X v3.12", category: "rom", device: "Samsung Galaxy A51, F41, M31, M31s, M21", android: "Android 16", date: "17 Sep 2026", maintainer: "parbindar7.github", flavor: ["VANILLA"],
         changelog: "1. Same as Lineage 24.08.2026 Build",
+        Notice: "1. Supported: VoLTE and VoWiFi\n2. September Security Patch\n3. Only supported by Everline 25.07.2026 and newer",
         downloadUrl: "https://github.com/Parbindar7/OTA/releases/tag/InfinityX_17-09-2026"
       },
       {
         title: "TWRP Recovery v3.7.1", category: "recovery", device: "All Supported Devices", android: "Android 13 to 17", date: "2026", maintainer: "TWRP Team", flavor: ["FLASHABLE ZIP/TAR"],
         changelog: "1. Fully compatible with Android 16 & 17 custom ROMs",
+        Notice: "1. Flash via Odin (.tar) or existing recovery (.img)",
         downloadUrl: "https://twrp.me/Devices/"
       },
       {
         title: "LiteGapps", category: "gapps", device: "ARM64 Devices", android: "Android 17", date: "2026", maintainer: "LiteGapps", flavor: ["GOOGLE APPS PACKAGE"],
         changelog: "1. Official litegapps release packages for custom rom Android 17",
+        Notice: "1. Only compatible for Android 17",
         downloadUrl: "https://sourceforge.net/projects/litegapps/files/litegapps/arm64/37/core/2026-05-13/"
       },
       {
@@ -606,12 +613,12 @@
       buildsData.forEach(item => {
         const cat = (item.category || "rom").toLowerCase();
         
-        // Correct Maintainer Link Parsing
+        // Correct Maintainer Link Parsing as requested
         const maintainerUrl = item.maintainer && item.maintainer.toLowerCase() === "parbindar7.github" ? "https://github.com/parbindar7" : "#";
         const maintainerHtml = item.maintainer ? `<a href="${maintainerUrl}" target="_blank" class="maintainer-link">${item.maintainer}</a>` : '';
 
         html += `
-          <div class="border-beam-card reveal-up">
+          <div class="border-beam-card">
             <div class="rom-card-inner">
               <div class="card-header">
                 <div>
@@ -639,9 +646,6 @@
         `;
       });
       container.innerHTML = html;
-
-      // Add scroll reveal to dynamically generated cards
-      document.querySelectorAll('.border-beam-card').forEach(el => scrollObserver.observe(el));
     }
 
     renderBuilds();
