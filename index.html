@@ -3,324 +3,393 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Project ExyROMs | Horizon</title>
-
-  <!-- Google Fonts: Inter (GitHub Style) & JetBrains Mono -->
+  <title>Project ExyROMs | 21st Edition</title>
+  
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 
   <style>
     :root {
-      /* Theme: GitHub Dark Base x Sunset Horizon Palette */
-      --bg-base: #0d1117; /* GitHub Dark Base */
-      --bg-surface: #161b22;
-      --bg-elevated: #21262d;
+      --bg-base: #000000;
+      --bg-surface: #0a0a0a;
+      --bg-elevated: #111111;
       
-      /* Sunset Horizon Gradients */
-      --sunset-orange: #f97316;
-      --sunset-rose: #f43f5e;
-      --sunset-purple: #8b5cf6;
-      --sunset-amber: #f59e0b;
-
-      --text-main: #c9d1d9;
-      --text-bright: #f0f6fc;
-      --text-muted: #8b949e;
-
-      --border-subtle: rgba(255, 255, 255, 0.1);
+      --accent: #38bdf8; /* Cyan */
+      --accent-glow: rgba(56, 189, 248, 0.4);
+      --text-main: #ffffff;
+      --text-muted: #888888;
+      --border-color: rgba(255, 255, 255, 0.1);
       
-      --radius-md: 12px;
+      --dock-bg: rgba(255, 255, 255, 0.05);
+      --dock-border: rgba(255, 255, 255, 0.1);
+      
+      --radius-sm: 8px;
+      --radius-md: 16px;
       --radius-lg: 24px;
-      --radius-full: 9999px;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
-
+    
     html { scroll-behavior: smooth; background: var(--bg-base); }
+    body { color: var(--text-main); font-family: 'Inter', sans-serif; overflow-x: hidden; }
 
-    body {
-      background-color: var(--bg-base);
-      color: var(--text-main);
-      font-family: 'Inter', -apple-system, sans-serif;
-      overflow-x: hidden;
-      min-height: 100vh;
-      -webkit-font-smoothing: antialiased;
+    /* 1. SONAR GRID BACKGROUND (n1m4mz) */
+    .sonar-wrapper {
+      position: fixed; inset: 0; z-index: -2; background: var(--bg-base);
+      overflow: hidden; pointer-events: none;
     }
+    .sonar-grid {
+      position: absolute; inset: 0;
+      background-image: 
+        linear-gradient(to right, rgba(255,255,255,0.05) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255,255,255,0.05) 1px, transparent 1px);
+      background-size: 50px 50px;
+      mask-image: radial-gradient(circle at center, black 20%, transparent 80%);
+      -webkit-mask-image: radial-gradient(circle at center, black 20%, transparent 80%);
+    }
+    .sonar-sweep {
+      position: absolute; top: 50%; left: 50%; width: 150vw; height: 150vw;
+      background: conic-gradient(from 0deg at 50% 50%, transparent 0deg, transparent 270deg, var(--accent-glow) 360deg);
+      border-radius: 50%; transform-origin: center center;
+      animation: sweep 4s linear infinite; margin-left: -75vw; margin-top: -75vw;
+      mask-image: radial-gradient(circle at center, black 10%, transparent 60%);
+      -webkit-mask-image: radial-gradient(circle at center, black 10%, transparent 60%);
+    }
+    @keyframes sweep { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-    /* Ambient Sunset Background Glow */
-    .ambient-glow {
-      position: absolute; top: -10vh; left: 50%; transform: translateX(-50%);
-      width: 100vw; height: 80vh;
-      background: radial-gradient(ellipse at top, rgba(249, 115, 22, 0.15) 0%, rgba(139, 92, 246, 0.1) 40%, transparent 70%);
-      pointer-events: none; z-index: 0; filter: blur(100px);
+    /* Main Content Wrapper (Required for Motion Footer) */
+    .content-layer {
+      background: transparent; min-height: 100vh; position: relative; z-index: 1;
+      padding-bottom: 6rem; /* Space for dock */
+      /* Margin bottom is dynamically set by JS to reveal footer */
     }
+    .content-solid-bg { background: var(--bg-base); position: absolute; inset: 0; z-index: -1; }
 
-    /* GitHub-style Glassy Navbar */
-    nav {
-      position: fixed; top: 0; left: 0; width: 100%;
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 1rem 2rem;
-      background: rgba(13, 17, 23, 0.7);
-      backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
-      border-bottom: 1px solid var(--border-subtle); z-index: 100;
-    }
-    .logo {
-      font-weight: 800; font-size: 1.25rem; letter-spacing: -0.02em; color: var(--text-bright);
-      text-decoration: none; display: flex; align-items: center; gap: 0.5rem;
-    }
-    .nav-links { display: flex; gap: 2rem; }
-    .nav-links a { color: var(--text-muted); text-decoration: none; font-size: 0.9rem; font-weight: 500; transition: color 0.2s; }
-    .nav-links a:hover { color: var(--text-bright); }
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 1.5rem; }
 
-    .container { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; width: 100%; position: relative; z-index: 10; }
-
-    /* --- HERO & RADIAL ORBITAL TIMELINE --- */
-    .hero-wrapper {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center;
-      min-height: 90vh; padding-top: 6rem;
+    /* 2. HERO-3 ANNOUNCEMENT (efferd) */
+    .hero {
+      display: flex; flex-direction: column; align-items: center; text-align: center;
+      padding: 10rem 0 6rem 0;
     }
-    @media (max-width: 900px) { .hero-wrapper { grid-template-columns: 1fr; text-align: center; } }
-
-    .hero-content h1 {
-      font-size: clamp(3rem, 6vw, 5rem); font-weight: 900; line-height: 1.1; letter-spacing: -0.04em;
-      margin-bottom: 1.5rem; color: var(--text-bright);
+    .announcement-pill {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: rgba(255,255,255,0.03); border: 1px solid var(--border-color);
+      padding: 0.4rem 1rem; border-radius: 999px; font-size: 0.8rem; font-weight: 500;
+      color: var(--text-main); margin-bottom: 2rem; cursor: pointer; transition: 0.2s;
     }
-    /* Sunset Horizon Text Gradient */
-    .hero-content h1 span {
-      background: linear-gradient(135deg, var(--sunset-rose), var(--sunset-orange), var(--sunset-amber));
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    }
-    .hero-desc { font-size: 1.15rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 2.5rem; }
-
-    /* Radial Orbital Animation Component */
-    .orbital-container {
-      position: relative; width: 100%; max-width: 500px; aspect-ratio: 1/1;
-      display: flex; justify-content: center; align-items: center; margin: 0 auto;
-    }
-    .orbital-center {
-      position: relative; z-index: 10; width: 100px; height: 100px; border-radius: 50%;
-      background: linear-gradient(135deg, var(--bg-elevated), var(--bg-surface));
-      border: 1px solid var(--border-subtle); display: flex; justify-content: center; align-items: center;
-      font-family: 'JetBrains Mono', monospace; font-weight: 700; color: var(--sunset-orange);
-      box-shadow: 0 0 40px rgba(249, 115, 22, 0.2);
-    }
-    .orbital-ring {
-      position: absolute; border: 1px dashed var(--border-subtle); border-radius: 50%;
-      top: 50%; left: 50%; transform: translate(-50%, -50%);
-    }
-    .ring-1 { width: 280px; height: 280px; animation: spin 20s linear infinite; }
-    .ring-2 { width: 440px; height: 440px; animation: spin-reverse 30s linear infinite; }
+    .announcement-pill:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.2); }
+    .announcement-pill span.new { color: var(--accent); font-weight: 700; font-family: 'JetBrains Mono', monospace; }
     
-    .orbit-node {
-      position: absolute; top: -20px; left: 50%; transform: translateX(-50%);
-      background: var(--bg-elevated); border: 1px solid var(--border-subtle);
-      padding: 0.5rem 1rem; border-radius: var(--radius-full); font-size: 0.8rem; font-weight: 600;
-      color: var(--text-bright); box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    .hero h1 { font-size: clamp(3.5rem, 8vw, 6rem); font-weight: 900; letter-spacing: -0.04em; line-height: 1.1; margin-bottom: 1.5rem; text-shadow: 0 0 40px rgba(255,255,255,0.1); }
+    .hero h1 span { color: var(--accent); }
+    .hero p { font-size: 1.15rem; color: var(--text-muted); max-width: 600px; line-height: 1.6; }
+
+    /* 3. FEATURES CARD (mokshithgujjeti) */
+    .features-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;
+      margin: 4rem 0;
     }
-    .orbit-node.reverse { animation: spin-reverse 20s linear infinite; }
-    .ring-2 .orbit-node { top: -20px; animation: spin 30s linear infinite; }
+    .feature-card {
+      background: var(--bg-surface); border: 1px solid var(--border-color);
+      border-radius: var(--radius-md); padding: 2rem; transition: transform 0.3s;
+    }
+    .feature-card:hover { transform: translateY(-5px); border-color: rgba(255,255,255,0.2); }
+    .feature-icon { width: 40px; height: 40px; border-radius: 10px; background: rgba(56, 189, 248, 0.1); color: var(--accent); display: flex; justify-content: center; align-items: center; margin-bottom: 1rem; }
+    .feature-card h3 { font-size: 1.2rem; margin-bottom: 0.5rem; font-weight: 700; }
+    .feature-card p { font-size: 0.9rem; color: var(--text-muted); line-height: 1.5; }
+
+    /* 4. BORDER BEAM CARDS (appica-dev) */
+    .section-title { font-size: 2.5rem; font-weight: 800; margin: 6rem 0 2rem 0; letter-spacing: -0.02em; }
     
-    .node-2 { top: auto; bottom: -20px; }
-    .node-3 { top: 50%; left: -20px; transform: translateY(-50%); }
-    .node-4 { top: 50%; left: auto; right: -20px; transform: translateY(-50%); }
-
-    @keyframes spin { 100% { transform: translate(-50%, -50%) rotate(360deg); } }
-    @keyframes spin-reverse { 100% { transform: translate(-50%, -50%) rotate(-360deg); } }
-
-    /* --- SPOTLIGHT CARDS COMPONENT --- */
-    .section-title {
-      font-size: 2rem; font-weight: 800; margin: 4rem 0 2rem 0; color: var(--text-bright);
-    }
-
-    #cards-wrapper {
+    .rom-grid {
       display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 1.5rem;
     }
 
-    .spotlight-card {
-      position: relative;
-      background: rgba(255, 255, 255, 0.02);
-      border-radius: var(--radius-md);
-      overflow: hidden;
-      cursor: pointer;
+    .border-beam-card {
+      position: relative; background: var(--bg-surface); border-radius: var(--radius-md);
+      overflow: hidden; padding: 1px; /* The 1px padding reveals the animated background behind the inner card */
     }
-
-    /* Outer glowing border tracked by mouse */
-    .spotlight-card::before {
-      content: ""; position: absolute; inset: 0; border-radius: inherit;
-      background: radial-gradient(400px circle at var(--mouse-x) var(--mouse-y), rgba(249, 115, 22, 0.6), transparent 40%);
-      opacity: 0; transition: opacity 0.3s ease; z-index: 1;
-    }
-    .spotlight-card:hover::before { opacity: 1; }
-
-    /* Inner Card Content Shield */
-    .spotlight-content {
-      position: absolute;
-      inset: 1px; /* Creates the 1px border illusion from the glow behind */
-      background: var(--bg-surface);
-      border-radius: calc(var(--radius-md) - 1px);
-      z-index: 2; padding: 2rem;
-      display: flex; flex-direction: column; gap: 1.5rem;
-    }
-
-    /* Inner subtle gradient tracking mouse */
-    .spotlight-content::before {
-      content: ""; position: absolute; inset: 0; border-radius: inherit;
-      background: radial-gradient(600px circle at var(--mouse-x) var(--mouse-y), rgba(249, 115, 22, 0.08), transparent 40%);
-      opacity: 0; transition: opacity 0.3s ease; z-index: 0; pointer-events: none;
-    }
-    .spotlight-card:hover .spotlight-content::before { opacity: 1; }
-
-    /* Card Details */
-    .card-inner-z { position: relative; z-index: 10; display: flex; flex-direction: column; height: 100%; }
-
-    .card-header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px solid var(--border-subtle); padding-bottom: 1rem; margin-bottom: 1rem; }
-    .card-title { font-size: 1.25rem; font-weight: 700; color: var(--text-bright); letter-spacing: -0.01em; }
-    .card-device { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem; }
     
-    .card-badge {
-      background: rgba(255,255,255,0.05); border: 1px solid var(--border-subtle);
-      padding: 0.2rem 0.6rem; border-radius: var(--radius-full); font-size: 0.7rem; font-family: 'JetBrains Mono', monospace;
-      text-transform: uppercase; color: var(--sunset-orange);
+    /* The rotating gradient behind the inner card */
+    .border-beam-card::before {
+      content: ""; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+      background: conic-gradient(from 0deg, transparent 70%, var(--accent) 100%);
+      animation: beam-spin 4s linear infinite; z-index: 0; opacity: 0; transition: opacity 0.3s;
+    }
+    .border-beam-card:hover::before { opacity: 1; }
+    
+    @keyframes beam-spin { 100% { transform: rotate(360deg); } }
+
+    .card-inner {
+      background: var(--bg-surface); height: 100%; border-radius: calc(var(--radius-md) - 1px);
+      padding: 1.5rem; position: relative; z-index: 1; display: flex; flex-direction: column; gap: 1rem;
     }
 
-    .data-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem; }
-    .data-block { display: flex; flex-direction: column; gap: 0.25rem; }
-    .data-label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
-    .data-value { font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; color: var(--text-main); font-weight: 500; }
+    .card-header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px solid var(--border-color); padding-bottom: 1rem; }
+    .card-title { font-size: 1.25rem; font-weight: 700; }
+    .card-device { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem; }
+    .card-badge { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); padding: 0.2rem 0.6rem; border-radius: 99px; text-transform: uppercase; }
 
-    .flavor-tag {
-      font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; padding: 0.2rem 0.5rem; border-radius: 4px;
-      background: rgba(244, 63, 94, 0.1); border: 1px solid rgba(244, 63, 94, 0.3); color: var(--sunset-rose); text-transform: uppercase;
-    }
+    .data-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .data-label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.2rem;}
+    .data-value { font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; font-weight: 500; }
 
-    .changelog-box {
-      background: var(--bg-base); border: 1px solid var(--border-subtle); padding: 1rem;
-      border-radius: 8px; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem;
-      color: var(--text-muted); white-space: pre-line; max-height: 120px; overflow-y: auto; line-height: 1.6;
+    .flavor-tag { font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; padding: 0.2rem 0.5rem; border-radius: 4px; background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.3); color: var(--accent); display: inline-block; margin-right: 0.3rem; text-transform: uppercase;}
+    .changelog-box { background: rgba(0,0,0,0.5); border: 1px solid var(--border-color); padding: 1rem; border-radius: 8px; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--text-muted); white-space: pre-line; max-height: 100px; overflow-y: auto; }
+    
+    .btn-download {
+      margin-top: auto; display: block; width: 100%; text-align: center; background: var(--text-main); color: #000;
+      padding: 0.7rem; border-radius: 8px; font-weight: 600; text-decoration: none; transition: 0.2s;
     }
+    .btn-download:hover { background: var(--accent); }
 
-    .card-footer { margin-top: auto; display: flex; gap: 0.5rem; }
-    .btn {
-      flex: 1; padding: 0.6rem; border-radius: 6px; font-size: 0.8rem; font-weight: 600; text-align: center; text-decoration: none; transition: all 0.2s;
+    /* 5. CARD FAN CAROUSEL (aayush-duhan) */
+    .fan-gallery-wrapper {
+      display: flex; justify-content: center; align-items: center; height: 400px; margin: 4rem 0;
+      perspective: 1000px;
     }
-    .btn-primary { background: var(--text-bright); color: var(--bg-base); }
-    .btn-primary:hover { background: var(--sunset-orange); color: #fff;}
-    .btn-secondary { background: transparent; color: var(--text-main); border: 1px solid var(--border-subtle); }
-    .btn-secondary:hover { background: rgba(255,255,255,0.05); border-color: var(--text-muted); }
+    .fan-container { position: relative; width: 280px; height: 350px; cursor: pointer; }
+    
+    .fan-card {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      border-radius: var(--radius-md); border: 1px solid var(--border-color); background: var(--bg-surface);
+      background-size: cover; background-position: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+      transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      transform-origin: bottom center;
+    }
+    
+    /* Base stacked state */
+    .fan-card:nth-child(1) { transform: rotate(-5deg) translateY(0) scale(0.95); z-index: 1; filter: brightness(0.6);}
+    .fan-card:nth-child(2) { transform: rotate(0deg) translateY(-10px) scale(1); z-index: 2; }
+    .fan-card:nth-child(3) { transform: rotate(5deg) translateY(0) scale(0.95); z-index: 1; filter: brightness(0.6);}
 
-    footer {
-      border-top: 1px solid var(--border-subtle); padding: 3rem 0; margin-top: 4rem; text-align: center; font-size: 0.85rem; color: var(--text-muted);
+    /* Hover fanned-out state */
+    .fan-container:hover .fan-card:nth-child(1) { transform: rotate(-25deg) translateX(-60px) translateY(20px) scale(0.9); filter: brightness(0.8);}
+    .fan-container:hover .fan-card:nth-child(2) { transform: rotate(0deg) translateY(-20px) scale(1.05); z-index: 3; filter: brightness(1);}
+    .fan-container:hover .fan-card:nth-child(3) { transform: rotate(25deg) translateX(60px) translateY(20px) scale(0.9); filter: brightness(0.8);}
+
+
+    /* 6. MOTION FOOTER (jahed) */
+    .motion-footer {
+      position: fixed; bottom: 0; left: 0; width: 100%; height: 350px;
+      background: #050505; border-top: 1px solid var(--border-color);
+      z-index: 0; /* Sits behind content */
+      display: flex; flex-direction: column; justify-content: center; align-items: center;
     }
+    .footer-content { text-align: center; }
+    .footer-title { font-size: 3rem; font-weight: 900; letter-spacing: -0.04em; margin-bottom: 1rem;}
+    .footer-links { display: flex; gap: 2rem; justify-content: center; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; }
+    .footer-links a { color: var(--text-muted); text-decoration: none; transition: 0.2s;}
+    .footer-links a:hover { color: var(--accent); }
+
+
+    /* 7. MAC DOCK (ibelick) */
+    .dock-container {
+      position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+      z-index: 100;
+    }
+    .dock {
+      display: flex; gap: 10px; padding: 10px; border-radius: 20px;
+      background: var(--dock-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--dock-border); box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    }
+    .dock-item {
+      width: 50px; height: 50px; border-radius: 12px;
+      background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+      display: flex; justify-content: center; align-items: center; color: var(--text-main);
+      cursor: pointer; text-decoration: none;
+      /* Smooth return animation */
+      transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1), margin 0.2s cubic-bezier(0.25, 1, 0.5, 1);
+      transform-origin: bottom center;
+    }
+    .dock-item svg { width: 24px; height: 24px; }
+    
+    /* The JavaScript will handle the dynamic scaling, but we set up the tooltip here */
+    .dock-item::after {
+      content: attr(data-tooltip); position: absolute; top: -35px;
+      background: var(--bg-surface); padding: 4px 8px; border-radius: 6px;
+      font-size: 10px; font-weight: 600; font-family: 'Inter', sans-serif;
+      border: 1px solid var(--border-color); opacity: 0; transition: 0.2s; pointer-events: none;
+    }
+    .dock-item:hover::after { opacity: 1; }
+
   </style>
 </head>
 <body>
 
-  <div class="ambient-glow"></div>
+  <!-- 1. Sonar Grid Background -->
+  <div class="sonar-wrapper">
+    <div class="sonar-grid"></div>
+    <div class="sonar-sweep"></div>
+  </div>
 
-  <nav>
-    <a href="#" class="logo">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--sunset-orange);"><path d="M12 2L2 22h20L12 2z"/></svg>
-      EXYROMS
-    </a>
-    <div class="nav-links">
-      <a href="#downloads">Firmwares</a>
-      <a href="https://t.me/ExyROMs" target="_blank">Telegram Hub</a>
-    </div>
-  </nav>
-
-  <main class="container">
+  <!-- Content Layer (Z-index 1, scrolls over footer) -->
+  <div class="content-layer" id="mainContent">
+    <div class="content-solid-bg"></div>
     
-    <!-- Hero with Radial Orbital Timeline -->
-    <div class="hero-wrapper">
-      <div class="hero-content">
-        <h1>High-Performance<br><span>Ecosystem.</span></h1>
-        <p class="hero-desc">The ultimate aftermarket development hub for Samsung Galaxy Exynos 9611. Featuring Sunset Horizon aesthetics, custom kernels, and pure AOSP variants.</p>
-        <a href="#downloads" class="btn btn-primary" style="display: inline-block; padding: 0.8rem 2rem; border-radius: var(--radius-full);">Explore Repository &rarr;</a>
-      </div>
-
-      <!-- 21st.dev Radial Orbital Component -->
-      <div class="orbital-container">
-        <div class="orbital-center">9611</div>
-        
-        <!-- Inner Ring -->
-        <div class="orbital-ring ring-1">
-          <div class="orbit-node reverse node-1">LineageOS</div>
-          <div class="orbit-node reverse node-2">Everline</div>
-        </div>
-
-        <!-- Outer Ring -->
-        <div class="orbital-ring ring-2">
-          <div class="orbit-node node-3">VoltageOS</div>
-          <div class="orbit-node node-4">PixelOS</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Spotlight Cards Grid -->
-    <section id="downloads">
-      <h2 class="section-title">Firmware Repository</h2>
-      <div id="cards-wrapper"></div>
-    </section>
-
-  </main>
-
-  <footer>
     <div class="container">
-      <p>Project ExyROMs &copy; 2026. UI: GitHub x Sunset Horizon.</p>
+      
+      <!-- 2. Hero 3 -->
+      <section class="hero" id="home">
+        <a href="#downloads" class="announcement-pill">
+          <span class="new">New</span> ExyROMs v3.0 Database Live &rarr;
+        </a>
+        <h1>Engineering the perfect<br><span>Android Ecosystem.</span></h1>
+        <p>The premium aftermarket firmware hub for the Samsung Galaxy Exynos 9611 series. Explore custom ROMs, performance kernels, and recovery tools.</p>
+      </section>
+
+      <!-- 3. Features Cards -->
+      <section class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          </div>
+          <h3>Optimized Performance</h3>
+          <p>Kernels built with bleeding-edge Clang compilers and aggressive CPU schedulers for maximum frame rates.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+          </div>
+          <h3>Secure & Stable</h3>
+          <p>Firmware passing Play Integrity out of the box with built-in KernelSU support for safe root access.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
+          </div>
+          <h3>Vast Repository</h3>
+          <p>From LineageOS to Project Matrixx. Every major Android 13 through 17 release documented and preserved.</p>
+        </div>
+      </section>
+
+      <!-- 5. Card Fan Carousel (Visual Gallery) -->
+      <h2 class="section-title" style="text-align: center;">Interface Gallery</h2>
+      <div class="fan-gallery-wrapper">
+        <div class="fan-container">
+          <!-- Screenshots applied via inline style for demo purposes -->
+          <div class="fan-card" style="background-image: url('https://images.unsplash.com/photo-1607252656733-fd74200d5a34?auto=format&fit=crop&q=80&w=400');"></div>
+          <div class="fan-card" style="background-image: url('https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&q=80&w=400');"></div>
+          <div class="fan-card" style="background-image: url('https://images.unsplash.com/photo-1618331835717-801e976710b2?auto=format&fit=crop&q=80&w=400');"></div>
+        </div>
+      </div>
+
+      <!-- 4. Border Beam Cards (ROM Database) -->
+      <section id="downloads">
+        <h2 class="section-title">Firmware Database</h2>
+        <div class="rom-grid" id="buildsList">
+          <!-- JS injects cards here -->
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- 6. Motion Footer -->
+  <footer class="motion-footer" id="motionFooter">
+    <div class="footer-content">
+      <h2 class="footer-title">PROJECT EXYROMS</h2>
+      <div class="footer-links">
+        <a href="https://t.me/ExyROMs" target="_blank">Telegram</a>
+        <a href="#">Source Code</a>
+        <a href="#">Maintainer</a>
+      </div>
+      <p style="color: var(--text-muted); font-size: 0.8rem; margin-top: 2rem;">&copy; 2026. Built with 21st.dev components.</p>
     </div>
   </footer>
 
+  <!-- 7. Mac Dock -->
+  <div class="dock-container">
+    <div class="dock" id="macDock">
+      <a href="#home" class="dock-item" data-tooltip="Home">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>
+      </a>
+      <a href="#downloads" class="dock-item" data-tooltip="Downloads">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+      </a>
+      <a href="https://t.me/ExyROMs" target="_blank" class="dock-item" data-tooltip="Telegram">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+      </a>
+      <a class="dock-item" data-tooltip="Settings" onclick="alert('System Settings Triggered')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+      </a>
+    </div>
+  </div>
+
   <script>
+    // --- Motion Footer Setup ---
+    // Dynamically set margin on main content so it reveals the fixed footer
+    function setupMotionFooter() {
+      const footer = document.getElementById('motionFooter');
+      const content = document.getElementById('mainContent');
+      content.style.marginBottom = footer.offsetHeight + 'px';
+    }
+    window.addEventListener('resize', setupMotionFooter);
+    setupMotionFooter();
+
+    // --- Mac Dock Animation Logic (Vanilla JS implementation of ibelick/dock) ---
+    const dockItems = document.querySelectorAll('.dock-item');
+    const maxScale = 1.6;
+    const proximity = 100; // Pixel distance to trigger scale
+
+    document.getElementById('macDock').addEventListener('mousemove', (e) => {
+      dockItems.forEach(item => {
+        const rect = item.getBoundingClientRect();
+        // Calculate distance from mouse to center of the icon
+        const itemCenterX = rect.left + rect.width / 2;
+        const distance = Math.abs(e.clientX - itemCenterX);
+        
+        // Calculate scale based on distance
+        let scale = 1;
+        if (distance < proximity) {
+          // Linear mapping: 0 dist = maxScale, proximity dist = 1
+          scale = 1 + (maxScale - 1) * (1 - distance / proximity);
+        }
+        
+        // Apply transform and dynamic margin to push neighbors away
+        item.style.transform = `scale(${scale}) translateY(-${(scale - 1) * 15}px)`;
+        item.style.margin = `0 ${(scale - 1) * 10}px`;
+      });
+    });
+
+    document.getElementById('macDock').addEventListener('mouseleave', () => {
+      // Reset all items when mouse leaves the dock area
+      dockItems.forEach(item => {
+        item.style.transform = 'scale(1) translateY(0)';
+        item.style.margin = '0';
+      });
+    });
+
+
+    // --- ROM Database (Border Beam Cards) ---
     const buildsData = [
       {
-        title: "Everline kernel", category: "kernel", device: "Samsung Galaxy A51, F41, M31, M31s, M21", android: "Android 13 to 16", date: "26 July 2026", maintainer: "PARBINDAR7", flavor: ["BALANCED"],
-        changelog: "1. sched/uclamp: Move tunables to cpuctl\n2. sched/uclamp: Expose latency_sensitive and uclamp.boosted",
-        downloadUrl: "https://sourceforge.net/projects/parbindar7-builds/files/Everline%2025-07-2026/"
+        title: "Everline kernel", category: "kernel", device: "A51, F41, M31", android: "Android 13 to 16", date: "26 July 2026", maintainer: "PARBINDAR7", flavor: ["BALANCED"],
+        changelog: "1. sched/uclamp: Move tunables\n2. sched/uclamp: Expose latency",
+        downloadUrl: "#"
       },
       {
-        title: "Everline Kernel", category: "kernel", device: "Samsung Galaxy A51, F41, M31, M31s, M21", android: "Android 13 to 17", date: "24 August 2026", maintainer: "PARBINDAR7", flavor: ["BALANCED"],
-        changelog: "1. Add AutoFDO support\n2. cpufreq_schedutil: Add sugov_cpu_is_busy\n3. Built with Clang 22.1.8",
-        downloadUrl: "https://sourceforge.net/projects/parbindar7-builds/files/Everline%2024-08-2026/"
+        title: "Project Matrixx", category: "rom", device: "A51, F41, M31", android: "Android 16", date: "May 2026", maintainer: "PARBINDAR7", flavor: ["INACTIVE"],
+        changelog: "1. Contains all previous commits",
+        downloadUrl: "#"
       },
       {
-        title: "Project Matrixx OS v12.3", category: "rom", device: "A51, F41, M31, M31s, M21", android: "Android 16", date: "May 2026", maintainer: "PARBINDAR7", flavor: ["INACTIVE"],
-        changelog: "1. Contains all previous commits\n[!] Project Matrixx OS has been officially discontinued.",
-        downloadUrl: "https://sourceforge.net/projects/projectmatrixx/files/Android-16/"
+        title: "InfinityX v3.10", category: "rom", device: "A51, F41, M31, android: "Android 16", date: "May 2026", maintainer: "PARBINDAR7", flavor: ["INACTIVE"],
+        changelog: "1. Contains all previous commits",
+        downloadUrl: "#"
       },
       {
-        title: "InfinityX v3.10", category: "rom", device: "A51, F41, M31, M31s, M21", android: "Android 16", date: "05 May 2026", maintainer: "PARBINDAR7", flavor: ["GAPPS"],
-        changelog: "1. Contains all previous commits\n2. OTA push",
-        downloadUrl: "https://github.com/Parbindar7/OTA/releases/tag/InfinityX_06-05-2026"
+        title: "InfinityX v3.10", category: "rom", device: "A51, F41, M31", android: "Android 16", date: "05 May 2026", maintainer: "PARBINDAR7", flavor: ["GAPPS"],
+        changelog: "1. OTA push enabled\n2. Performance tuned",
+        downloadUrl: "#"
       },
       {
-        title: "Lineage OS v23.2", category: "rom", device: "A51, F41, M31, M31s, M21", android: "Android 16", date: "26 Jun 2026", maintainer: "PARBINDAR7", flavor: ["VANILLA"],
-        changelog: "1. Refactor Powerhint.json\n2. Tune up/down frequency rate limits\n3. Cleanup task_profiles_30.json",
-        downloadUrl: "https://drive.google.com/drive/folders/1sUjnPe88Q6sRX2-8nxYO37ac-MDAmhyj?usp=sharing"
-      },
-      {
-        title: "Voltage OS v5.8", category: "rom", device: "A51, F41, M31, M31s, M21", android: "Android 16", date: "25 Apr 2026", maintainer: "PARBINDAR7", flavor: ["VANILLA"],
-        changelog: "1. Re-tune POWERHINT for efficiency\n2. Boost CPU on EXPENSIVE_RENDERING",
-        downloadUrl: "https://drive.google.com/drive/folders/16UW_O8Megsh4MpqPprNJgv4JV1j4taP5?usp=sharing"
-      },
-      {
-        title: "LunarisAOSP v3.12 ", category: "rom", device: "A51, F41, M31, M31s, M21", android: "Android 16", date: "01 Jul 2026", maintainer: "PARBINDAR7", flavor: ["VANILLA"],
-        changelog: "1. Remove unused /dev/freezer\n2. Tune up/down frequency transition rate limits",
-        downloadUrl: "https://drive.google.com/drive/folders/1_RG0oDENhUGLcEh5kDkDNwOtc5VT5s3t"
-      },
-      {
-        title: "LineageOS EXT", category: "rom", device: "A51, F41, M31, M31s, M21", android: "Android 17", date: "10 Aug 2026", maintainer: "PARBINDAR7", flavor: ["VANILLA"],
-        changelog: "1. Update included soong namespaces\n2. Disable app launch blur\n3. Set legacy gralloc flag",
-        downloadUrl: "https://drive.google.com/drive/folders/11VAKKkzQEnQ-hCucJFv6She-AtUQNiDo?usp=sharing"
-      },
-      {
-        title: "PixelOS v16.2", category: "rom", device: "A51, F41, M31, M31s, M21", android: "Android 16", date: "17 Aug 2026", maintainer: "PARBINDAR7", flavor: ["GAPPS"],
-        changelog: "1. GPU Frequency set to 949mhz\n2. Blur disabled",
-        downloadUrl: "https://drive.google.com/drive/folders/1y9wpS1P07NaXY9XiLxwQLYonk-ucRgDv"
-      },
-      {
-        title: "TWRP Recovery", category: "recovery", device: "All Supported Devices", android: "Android 13 - 17", date: "2026", maintainer: "TWRP Team", flavor: ["ZIP/TAR"],
-        changelog: "1. Fully compatible with Android 16 & 17 custom ROMs",
-        downloadUrl: "https://twrp.me/Devices/"
+        title: "LineageOS EXT", category: "rom", device: "A51, F41, M31", android: "Android 17", date: "10 Aug 2026", maintainer: "PARBINDAR7", flavor: ["VANILLA"],
+        changelog: "1. Initial A17 release\n2. Set legacy gralloc flag",
+        downloadUrl: "#"
       }
     ];
 
@@ -329,17 +398,17 @@
       return flavorArray.map(f => `<span class="flavor-tag">${f}</span>`).join('');
     }
 
-    function createCard(item) {
-      const cat = (item.category || "rom").toLowerCase();
-      const log = (item.changelog || "").trim();
-
-      return `
-        <div class="spotlight-card">
-          <div class="spotlight-content">
-            <div class="card-inner-z">
-              
+    function renderBuilds() {
+      const container = document.getElementById("buildsList");
+      let html = "";
+      
+      buildsData.forEach(item => {
+        const cat = (item.category || "rom").toLowerCase();
+        html += `
+          <div class="border-beam-card">
+            <div class="card-inner">
               <div class="card-header">
-                <div class="card-title-box">
+                <div>
                   <div class="card-title">${item.title}</div>
                   <div class="card-device">${item.device}</div>
                 </div>
@@ -347,45 +416,22 @@
               </div>
 
               <div class="data-grid">
-                <div class="data-block"><div class="data-label">Target OS</div><div class="data-value">${item.android}</div></div>
-                <div class="data-block"><div class="data-label">Build Date</div><div class="data-value">${item.date || 'Unknown'}</div></div>
+                <div class="data-block"><span class="data-label">OS</span><span class="data-value">${item.android}</span></div>
+                <div class="data-block"><span class="data-label">Date</span><span class="data-value">${item.date}</span></div>
               </div>
 
-              <div style="margin-bottom: 1rem;">
-                ${renderTags(item.flavor)}
-              </div>
-
-              <div class="changelog-box">${log}</div>
-
-              <div class="card-footer">
-                <a href="${item.downloadUrl}" target="_blank" class="btn btn-primary">Download</a>
-              </div>
-
+              <div>${renderTags(item.flavor)}</div>
+              <div class="changelog-box">${item.changelog}</div>
+              
+              <a href="${item.downloadUrl}" class="btn-download">Deploy Firmware</a>
             </div>
           </div>
-        </div>
-      `;
+        `;
+      });
+      container.innerHTML = html;
     }
 
-    function init() {
-      const wrapper = document.getElementById("cards-wrapper");
-      let html = "";
-      buildsData.forEach(item => html += createCard(item));
-      wrapper.innerHTML = html;
-
-      // Mouse Tracking for Spotlight Effect
-      wrapper.onmousemove = (e) => {
-        for(const card of document.getElementsByClassName("spotlight-card")) {
-          const rect = card.getBoundingClientRect(),
-                x = e.clientX - rect.left,
-                y = e.clientY - rect.top;
-          card.style.setProperty("--mouse-x", `${x}px`);
-          card.style.setProperty("--mouse-y", `${y}px`);
-        }
-      };
-    }
-
-    init();
+    renderBuilds();
   </script>
 </body>
 </html>
