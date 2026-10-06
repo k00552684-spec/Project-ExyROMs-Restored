@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Project ExyROMs</title>
   
-  <!-- Fonts: Inter (UI), Caveat (Apple Hello Effect), JetBrains Mono (Tech) -->
+  <!-- Fonts: Inter (UI), JetBrains Mono (Tech) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 
   <style>
     :root {
@@ -64,11 +64,11 @@
     .container { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; position: relative; z-index: 10; }
 
     /* =========================================
-       2. HERO LAYERED TEXT (xubohuah style) - FIXED
+       2. HERO (coming-soon-02 + layered text fix)
        ========================================= */
     .hero {
       display: flex; flex-direction: column; align-items: center; text-align: center;
-      padding: 10rem 0 8rem 0; min-height: 90vh; justify-content: center;
+      padding: 12rem 0 8rem 0; min-height: 90vh; justify-content: center;
     }
     
     .hero-badge {
@@ -80,48 +80,45 @@
     }
     .hero-badge span.highlight { color: #fff; font-weight: 700; }
 
-    /* The Stacked, Slanted Text Component */
+    /* The new stacked, slanted text component */
     .layered-hero-container {
       display: flex;
       justify-content: center;
       width: 100%;
-      margin: 1rem 0 4rem 0;
-      perspective: 1000px;
+      /* 100% FIXED OVERLAP: Added huge bottom margin to prevent text from bleeding into paragraph */
+      margin: 2rem 0 6rem 0; 
     }
     .layered-hero-text {
       display: flex;
       flex-direction: column;
       align-items: flex-start;
-      /* Exactly matching the 3D skew and rotation of the image */
-      transform: rotateZ(-8deg) rotateX(15deg) skewX(-15deg);
-      transform-style: preserve-3d;
+      /* Exactly matching the slant of your 2nd image */
+      transform: rotate(-8deg) skewX(-12deg); 
     }
     .layered-hero-text span {
-      font-size: clamp(3.5rem, 9.5vw, 8.5rem);
+      font-size: clamp(3rem, 8vw, 7.5rem); /* Resized slightly to ensure it fits mobile/desktop perfectly */
       font-weight: 900;
-      /* Removed italic, relying purely on the skewX to achieve the slant while keeping font bold */
+      font-style: italic; /* Forces the aggressive, forward-leaning look */
       text-transform: uppercase;
-      line-height: 0.82; /* Tightly packed */
-      letter-spacing: -0.02em;
+      line-height: 0.85; /* Tightly stacked */
+      letter-spacing: -0.03em;
       color: var(--text-main);
       white-space: nowrap;
-      /* Drop shadow for 3D depth */
-      text-shadow: -4px 10px 20px rgba(0,0,0,0.8);
       
       /* Animation */
       opacity: 0;
-      transform: translateZ(50px) translateY(20px);
+      transform: translateY(20px);
       animation: layeredTextReveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
     
-    /* Staggered loading */
+    /* Staggered loading for the layers */
     .layered-hero-text span:nth-child(1) { animation-delay: 0.1s; }
     .layered-hero-text span:nth-child(2) { animation-delay: 0.2s; }
     .layered-hero-text span:nth-child(3) { animation-delay: 0.3s; }
     .layered-hero-text span:nth-child(4) { animation-delay: 0.4s; }
 
     @keyframes layeredTextReveal {
-      to { opacity: 1; transform: translateZ(0) translateY(0); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     .hero p {
@@ -194,7 +191,7 @@
 
 
     /* =========================================
-       5. ROM DATABASE PLACEHOLDER
+       ROM DATABASE PLACEHOLDER
        ========================================= */
     .rom-placeholder {
       display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -205,7 +202,7 @@
     .rom-placeholder p { color: var(--text-muted); font-family: 'JetBrains Mono', monospace; font-size: 0.9rem;}
 
     /* =========================================
-       6. EXPANDABLE TABS DOCK (starc007)
+       5. EXPANDABLE TABS DOCK (starc007)
        ========================================= */
     .dock-container {
       position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); z-index: 1000;
@@ -233,7 +230,7 @@
     .dock-tab:hover { background: rgba(255,255,255,0.1); color: var(--text-main); }
     .dock-tab:hover .dock-label { max-width: 100px; opacity: 1; margin-left: 0.6rem; }
     
-    /* Active state */
+    /* Active state (optional, for demo) */
     .dock-tab.active { background: rgba(255,255,255,0.15); color: var(--text-main); }
 
   </style>
@@ -248,13 +245,13 @@
 
   <div class="container">
     
-    <!-- 2. SaaS Hero + Layered Text Component -->
+    <!-- 2. SaaS Announcement Hero & Layered Text -->
     <section class="hero" id="home">
       <a href="#database" class="hero-badge">
         <span class="highlight">Update</span> Project ExyROMs Initializing &rarr;
       </a>
       
-      <!-- LAYERED TEXT IMPLEMENTATION (Perfect Skew/Rotate Match) -->
+      <!-- FIXED LAYERED TEXT COMPONENT -->
       <div class="layered-hero-container">
         <div class="layered-hero-text">
           <span>REDEFINING</span>
@@ -299,7 +296,7 @@
       </div>
     </section>
 
-    <!-- 4. Formation 3D Gallery -->
+    <!-- 4. Formation Tilt/Ring Gallery (uicapsule) -->
     <h2 class="section-title">Interface Formation</h2>
     <div class="gallery-container-main" id="galleryScene">
       <div class="formation-scene" id="formationWrap">
