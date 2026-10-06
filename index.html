@@ -3,14 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Project ExyROMs | 21st Edition</title>
+  <title>Project ExyROMs</title>
   
+  <!-- Fonts: Inter for UI, JetBrains Mono for Code/Data -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 
   <style>
     :root {
+      /* Deep Dark SaaS Palette (Pure Black & White) */
       --bg-base: #000000;
       --bg-surface: #0a0a0a;
       --bg-elevated: #111111;
@@ -19,7 +21,9 @@
       --text-main: #ffffff;
       --text-muted: #888888;
       --border-color: rgba(255, 255, 255, 0.1);
-      --border-glow: rgba(255, 255, 255, 0.4);
+      
+      --dock-bg: rgba(255, 255, 255, 0.05);
+      --dock-border: rgba(255, 255, 255, 0.1);
       
       --radius-sm: 8px;
       --radius-md: 16px;
@@ -59,16 +63,26 @@
     }
     @keyframes sweep { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
+    /* Content Wrapper */
     .container { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; position: relative; z-index: 10; }
+    .content-layer { position: relative; z-index: 2; width: 100%; background: var(--bg-base); box-shadow: 0 20px 50px rgba(0,0,0,1); padding-bottom: 6rem;}
+
+    /* Scroll Reveal */
+    .reveal-up {
+      opacity: 0; transform: translateY(40px);
+      transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+    .reveal-up.is-visible { opacity: 1; transform: translateY(0); }
 
     /* =========================================
        2. SAAS ANNOUNCEMENT HERO & TEXT ROLL
        ========================================= */
     .hero {
       display: flex; flex-direction: column; align-items: center; text-align: center;
-      padding: 10rem 0 6rem 0; min-height: 80vh; justify-content: center;
+      padding: 10rem 0 6rem 0; min-height: 80vh; justify-content: center; background: transparent;
     }
     
+    /* SaaS Pill */
     .hero-pill {
       display: inline-flex; align-items: center; gap: 0.5rem;
       background: rgba(255,255,255,0.05); border: 1px solid var(--border-color);
@@ -86,7 +100,7 @@
     .roll-word { display: inline-flex; overflow: hidden; vertical-align: bottom; }
     .roll-char {
       display: inline-flex; flex-direction: column; transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-      height: 1em;
+      height: 1em; 
     }
     .hero-title:hover .roll-char { transform: translateY(-100%); }
     .roll-char span { height: 1em; line-height: 1; display: flex; align-items: center; }
@@ -122,66 +136,51 @@
     .bento-card p { font-size: 1rem; color: var(--text-muted); line-height: 1.6; }
 
     /* =========================================
-       4. FAN GALLERY ANIMATION 
+       4. VERTICAL STICKY IMAGE STACK GALLERY
        ========================================= */
-    .fan-gallery-wrapper {
-      display: flex; justify-content: center; align-items: center; height: 400px; margin: 2rem 0 6rem 0;
-      perspective: 1000px;
-    }
-    .fan-container { position: relative; width: 280px; height: 350px; cursor: pointer; }
+    .stack-wrapper { position: relative; padding-bottom: 10rem; }
+    .stack-container { display: flex; flex-direction: column; gap: 4rem; position: relative; }
     
-    .fan-card {
-      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-      border-radius: var(--radius-md); border: 1px solid var(--border-color); background: var(--bg-surface);
-      background-size: cover; background-position: center;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.8);
-      transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      transform-origin: bottom center;
+    .stack-card {
+      position: sticky; top: 15vh;
+      height: 70vh; width: 100%; border-radius: var(--radius-lg);
+      border: 1px solid var(--border-color); overflow: hidden;
+      background: var(--bg-base); box-shadow: 0 -20px 40px rgba(0,0,0,0.8);
+      display: flex; flex-direction: column;
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), filter 0.3s;
+      transform-origin: top center;
     }
     
-    /* Stacked state */
-    .fan-card:nth-child(1) { transform: rotate(-10deg) translateY(0) scale(0.95); z-index: 1; filter: brightness(0.6);}
-    .fan-card:nth-child(2) { transform: rotate(0deg) translateY(-10px) scale(1); z-index: 2; }
-    .fan-card:nth-child(3) { transform: rotate(10deg) translateY(0) scale(0.95); z-index: 1; filter: brightness(0.6);}
+    .stack-card:nth-child(1) { top: 10vh; }
+    .stack-card:nth-child(2) { top: 13vh; }
+    .stack-card:nth-child(3) { top: 16vh; }
+    .stack-card:nth-child(4) { top: 19vh; }
 
-    /* Hover fanned-out state */
-    .fan-container:hover .fan-card:nth-child(1) { transform: rotate(-25deg) translateX(-60px) translateY(20px) scale(0.9); filter: brightness(0.8);}
-    .fan-container:hover .fan-card:nth-child(2) { transform: rotate(0deg) translateY(-20px) scale(1.05); z-index: 3; filter: brightness(1);}
-    .fan-container:hover .fan-card:nth-child(3) { transform: rotate(25deg) translateX(60px) translateY(20px) scale(0.9); filter: brightness(0.8);}
+    .stack-img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(50%); transition: 0.5s; }
+    .stack-card:hover .stack-img { filter: grayscale(0%); transform: scale(1.02); }
 
     /* =========================================
-       5. CONTINUOUS BORDER BEAM (Fixed)
+       5. CONTINUOUS BORDER BEAM (Fixed Blinking)
        ========================================= */
     .rom-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 1.5rem; padding-bottom: 8rem;}
 
     .border-beam-card {
-      position: relative;
-      background: var(--bg-surface);
-      border-radius: var(--radius-lg);
+      position: relative; border-radius: var(--radius-md);
       padding: 1px; /* The gap for the animated border */
-      overflow: hidden;
+      overflow: hidden; background: var(--border-color);
     }
 
-    /* Fixed Border Animation - No Blinking Circles */
+    /* FIX: Made the gradient 300% width/height to push the center rendering dot completely out of bounds */
     .border-beam-card::before {
-      content: "";
-      position: absolute;
-      inset: -50%;
-      background: conic-gradient(
-        from 0deg,
-        transparent 0deg,
-        transparent 260deg,
-        rgba(255, 255, 255, 0.8) 360deg
-      );
-      animation: spin-border 3s linear infinite;
+      content: ""; position: absolute;
+      top: -100%; left: -100%; width: 300%; height: 300%; 
+      background: conic-gradient(from 0deg, transparent 80%, rgba(255,255,255,0.8) 100%);
+      animation: beam-spin 4s linear infinite; z-index: 0;
     }
-
-    @keyframes spin-border {
-      100% { transform: rotate(360deg); }
-    }
+    @keyframes beam-spin { 100% { transform: rotate(360deg); } }
 
     .rom-card-inner {
-      background: var(--bg-surface); height: 100%; border-radius: calc(var(--radius-lg) - 1px);
+      background: var(--bg-surface); height: 100%; border-radius: calc(var(--radius-md) - 1px);
       padding: 2rem; position: relative; z-index: 1; display: flex; flex-direction: column; gap: 1.5rem;
     }
 
@@ -195,6 +194,8 @@
     .data-value { font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; font-weight: 500; }
 
     .flavor-tag { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; padding: 0.25rem 0.6rem; border-radius: 6px; background: rgba(255,255,255, 0.08); border: 1px solid rgba(255,255,255, 0.2); display: inline-block; margin-right: 0.4rem; text-transform: uppercase;}
+    
+    /* MAINTAINER LINK STYLING */
     .maintainer-link { color: var(--text-muted); text-decoration: none; transition: 0.2s; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem;}
     .maintainer-link:hover { color: var(--text-main); text-decoration: underline; }
 
@@ -203,22 +204,34 @@
     .btn-download:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(255,255,255,0.2); }
 
     /* =========================================
-       6. FLOATING MAC DOCK
+       6. MOTION FOOTER
        ========================================= */
-    .dock-wrapper {
-      position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 1000;
+    .motion-footer {
+      position: fixed; bottom: 0; left: 0; width: 100%; height: 350px;
+      background: #050505; border-top: 1px solid var(--border-color);
+      z-index: 1; /* Behind content layer */
+      display: flex; flex-direction: column; justify-content: center; align-items: center;
     }
+    .footer-content { text-align: center; }
+    .footer-title { font-size: 3rem; font-weight: 900; letter-spacing: -0.04em; margin-bottom: 1rem;}
+    .footer-links { display: flex; gap: 2rem; justify-content: center; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; }
+    .footer-links a { color: var(--text-muted); text-decoration: none; transition: 0.2s;}
+    .footer-links a:hover { color: var(--text-main); }
+
+    /* =========================================
+       7. FLOATING MAC DOCK
+       ========================================= */
+    .dock-wrapper { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 1000; }
     .dock {
       display: flex; gap: 12px; padding: 12px; border-radius: 24px;
       background: rgba(20, 20, 20, 0.6); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
       border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 40px rgba(0,0,0,0.8);
-      align-items: flex-end; 
+      align-items: flex-end; /* Anchor scale origin to bottom */
     }
     .dock-item {
-      width: 50px; height: 50px; border-radius: 12px;
-      background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
-      display: flex; justify-content: center; align-items: center; color: var(--text-main);
-      cursor: pointer; text-decoration: none; position: relative;
+      width: 50px; height: 50px; border-radius: 12px; background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: center; align-items: center;
+      color: var(--text-main); cursor: pointer; text-decoration: none; position: relative;
       transition: width 0.15s ease, height 0.15s ease, margin 0.15s ease;
     }
     .dock-item svg { width: 24px; height: 24px; transition: width 0.15s, height 0.15s; pointer-events: none;}
@@ -241,75 +254,98 @@
     <div class="sonar-sweep"></div>
   </div>
 
-  <div class="container">
-    
-    <!-- Hero Announcement & Text Roll -->
-    <section class="hero" id="home">
-      <a href="#downloads" class="hero-pill">
-        <span class="badge">NEW</span> ExyROMs v3.0 Database is Live &rarr;
-      </a>
-      
-      <!-- Text Roll Animation Target -->
-      <h1 class="hero-title" id="rollTitle">
-        Engineering the perfect <br>
-        <span style="color: #888;">Android Ecosystem.</span>
-      </h1>
-      
-      <p class="hero-desc">The ultimate aftermarket development hub for the Samsung Galaxy Exynos 9611. Featuring pure AOSP variants, customized performance kernels, and unified recovery tools.</p>
-      
-      <div class="hero-buttons">
-        <a href="#downloads" class="btn-primary">Explore Builds</a>
-        <a href="https://t.me/ExyROMs" target="_blank" class="btn-secondary">Telegram Hub</a>
-      </div>
-    </section>
-
-    <!-- Features 8 Bento -->
-    <h2 class="section-header">Core Infrastructure</h2>
-    <section class="features-bento">
-      <div class="bento-card bento-large">
-        <div class="bento-icon">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-        </div>
-        <h3>Optimized Performance</h3>
-        <p>Custom kernels built with bleeding-edge Clang compilers. Aggressive CPU schedulers, auto-cpufreq tuned setups, and completely debloated source trees ensure maximum frame rates and zero jitter.</p>
-      </div>
-      <div class="bento-card">
-        <div class="bento-icon">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-        </div>
-        <h3>Secure & Stable</h3>
-        <p>Firmware passing Play Integrity out of the box with KernelSU support for safe root.</p>
-      </div>
-      <div class="bento-card">
-        <div class="bento-icon">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
-        </div>
-        <h3>Vast Repository</h3>
-        <p>From LineageOS to Project Matrixx. Every major Android 13-17 release documented.</p>
-      </div>
-    </section>
-
-    <!-- Fan Gallery with Your Images -->
-    <h2 class="section-header">Interface Gallery</h2>
-    <div class="fan-gallery-wrapper">
-      <div class="fan-container">
-        <!-- Replaced with your requested screenshots -->
-        <div class="fan-card" style="background-image: url('1000021188.jpg');"></div>
-        <div class="fan-card" style="background-image: url('1000021189.jpg');"></div>
-        <div class="fan-card" style="background-image: url('1000021190.jpg');"></div>
+  <!-- Footer Layer (Behind Main Content) -->
+  <footer class="motion-footer" id="motionFooter">
+    <div class="footer-content">
+      <h2 class="footer-title">PROJECT EXYROMS</h2>
+      <div class="footer-links">
+        <a href="https://t.me/ExyROMs" target="_blank">Telegram</a>
+        <a href="https://github.com/parbindar7" target="_blank">Maintainer</a>
+        <a href="#home">Back to Top</a>
       </div>
     </div>
+  </footer>
 
-    <!-- Border Beam Database -->
-    <h2 class="section-header" id="downloads">Firmware Database</h2>
-    <div class="rom-grid" id="buildsList"></div>
+  <!-- Main Scrollable Content Layer -->
+  <div class="content-layer" id="mainContent">
+    <div class="container">
+      
+      <!-- Hero Announcement & Text Roll -->
+      <section class="hero reveal-up" id="home">
+        <a href="#downloads" class="hero-pill">
+          <span class="badge">NEW</span> ExyROMs v3.0 Database is Live &rarr;
+        </a>
+        
+        <h1 class="hero-title" id="rollTitle">
+          Engineering the perfect <br>
+          <span style="color: #888;">Android Ecosystem.</span>
+        </h1>
+        
+        <p class="hero-desc">The ultimate aftermarket development hub for the Samsung Galaxy Exynos 9611. Featuring pure AOSP variants, customized performance kernels, and unified recovery tools.</p>
+        
+        <div class="hero-buttons">
+          <a href="#downloads" class="btn-primary">Explore Builds</a>
+          <a href="https://t.me/ExyROMs" target="_blank" class="btn-secondary">Telegram Hub</a>
+        </div>
+      </section>
 
-  </div> <!-- End Container -->
+      <!-- Features 8 Bento -->
+      <h2 class="section-header reveal-up">Core Infrastructure</h2>
+      <section class="features-bento">
+        <div class="bento-card bento-large reveal-up">
+          <div class="bento-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          </div>
+          <h3>Optimized Performance</h3>
+          <p>Custom kernels built with bleeding-edge Clang compilers. Aggressive CPU schedulers, auto-cpufreq tuned setups, and completely debloated source trees ensure maximum frame rates and zero jitter.</p>
+        </div>
+        <div class="bento-card reveal-up" style="transition-delay: 0.1s;">
+          <div class="bento-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+          </div>
+          <h3>Secure & Stable</h3>
+          <p>Firmware passing Play Integrity out of the box with KernelSU support for safe root.</p>
+        </div>
+        <div class="bento-card reveal-up" style="transition-delay: 0.2s;">
+          <div class="bento-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
+          </div>
+          <h3>Vast Repository</h3>
+          <p>From LineageOS to Project Matrixx. Every major Android 13-17 release documented.</p>
+        </div>
+      </section>
+
+      <!-- Vertical Sticky Image Stack Gallery -->
+      <h2 class="section-header reveal-up">Interface Gallery</h2>
+      <section class="stack-wrapper reveal-up">
+        <div class="stack-container">
+          <div class="stack-card">
+            <img src="1000021188.jpg" class="stack-img" alt="UI Screenshot 1">
+          </div>
+          <div class="stack-card">
+            <img src="1000021189.jpg" class="stack-img" alt="UI Screenshot 2">
+          </div>
+          <div class="stack-card">
+            <img src="1000021190.jpg" class="stack-img" alt="UI Screenshot 3">
+          </div>
+          <div class="stack-card">
+            <img src="1000021191.jpg" class="stack-img" alt="UI Screenshot 4">
+          </div>
+        </div>
+      </section>
+
+      <!-- Border Beam Database -->
+      <h2 class="section-header reveal-up" id="downloads">Firmware Database</h2>
+      <div class="rom-grid" id="buildsList"></div>
+
+    </div>
+  </div> <!-- End Content Layer -->
 
   <!-- Floating Mac Dock -->
   <div class="dock-wrapper">
     <div class="dock" id="macDock">
-      <a href="#home" class="dock-item" data-tooltip="Home">
+      <!-- Tooltip removed from Home -->
+      <a href="#home" class="dock-item">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>
       </a>
       <a href="#downloads" class="dock-item" data-tooltip="Downloads">
@@ -358,7 +394,42 @@
     applyTextRoll('rollTitle');
 
     /* =========================================
-       2. MAC DOCK PHYSICS LOGIC
+       2. SCROLL REVEAL OBSERVER
+       ========================================= */
+    const observerOptions = { threshold: 0.1, rootMargin: "0px 0px -50px 0px" };
+    const scrollObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          scrollObserver.unobserve(entry.target); 
+        }
+      });
+    }, observerOptions);
+
+    document.querySelectorAll('.reveal-up').forEach(el => scrollObserver.observe(el));
+
+    /* =========================================
+       3. VERTICAL STICKY SCALE ANIMATION
+       ========================================= */
+    const stackCards = document.querySelectorAll('.stack-card');
+    window.addEventListener('scroll', () => {
+      stackCards.forEach((card, index) => {
+        if (index < stackCards.length - 1) {
+          const rect = card.getBoundingClientRect();
+          // Scale down the card if it hits the top portion of the screen
+          if (rect.top <= window.innerHeight * 0.2) {
+            card.style.transform = `scale(0.95)`;
+            card.style.filter = `brightness(0.5)`;
+          } else {
+            card.style.transform = `scale(1)`;
+            card.style.filter = `brightness(1)`;
+          }
+        }
+      });
+    });
+
+    /* =========================================
+       4. MAC DOCK PHYSICS LOGIC
        ========================================= */
     const dockItems = document.querySelectorAll('.dock-item');
     const maxScale = 1.8; 
@@ -399,7 +470,18 @@
     });
 
     /* =========================================
-       3. FULL 27 ROM DATABASE
+       5. MOTION FOOTER LOGIC
+       ========================================= */
+    function setupMotionFooter() {
+      const footer = document.getElementById('motionFooter');
+      const content = document.getElementById('mainContent');
+      content.style.marginBottom = footer.offsetHeight + 'px';
+    }
+    window.addEventListener('resize', setupMotionFooter);
+    setupMotionFooter();
+
+    /* =========================================
+       6. FULL 27 ROM DATABASE
        ========================================= */
     const buildsData = [
       {
@@ -585,11 +667,11 @@
       buildsData.forEach(item => {
         const cat = (item.category || "rom").toLowerCase();
         
-        // Exact formatting: "@Parbindar" linking to GitHub
-        const maintainerHtml = item.maintainer ? `<a href="${item.github || '#'}" target="_blank" class="maintainer-link">@${item.maintainer}</a>` : '';
+        // Exact formatting: Maintainer linking to GitHub without @
+        const maintainerHtml = item.maintainer ? `<a href="${item.github || '#'}" target="_blank" class="maintainer-link">${item.maintainer}</a>` : '';
 
         html += `
-          <div class="border-beam-card">
+          <div class="border-beam-card reveal-up">
             <div class="rom-card-inner">
               <div class="card-header">
                 <div>
@@ -617,6 +699,9 @@
         `;
       });
       container.innerHTML = html;
+
+      // Observe the newly created cards for scroll reveal
+      document.querySelectorAll('.reveal-up').forEach(el => scrollObserver.observe(el));
     }
 
     renderBuilds();
