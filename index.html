@@ -3,323 +3,298 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Project ExyROMs</title>
+  <title>Project ExyROMs | Horizon</title>
 
-  <!-- High-End Typography: 'Anton' for the massive bold text, 'Space Grotesk' for body -->
+  <!-- Google Fonts: Inter (GitHub Style) & JetBrains Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <style>
     :root {
-      /* The exact 'Developer Flex' color palette from the video */
-      --bg-cream: #EAE6DF; /* That specific warm vintage off-white */
-      --bg-black: #000000;
-      --bg-dark-panel: #111111;
+      /* Theme: GitHub Dark Base x Sunset Horizon Palette */
+      --bg-base: #0d1117; /* GitHub Dark Base */
+      --bg-surface: #161b22;
+      --bg-elevated: #21262d;
       
-      --text-dark: #000000;
-      --text-light: #EAE6DF;
-      --text-muted: #888888;
+      /* Sunset Horizon Gradients */
+      --sunset-orange: #f97316;
+      --sunset-rose: #f43f5e;
+      --sunset-purple: #8b5cf6;
+      --sunset-amber: #f59e0b;
 
-      --font-display: 'Anton', sans-serif;
-      --font-body: 'Space Grotesk', sans-serif;
-      --font-mono: 'JetBrains Mono', monospace;
+      --text-main: #c9d1d9;
+      --text-bright: #f0f6fc;
+      --text-muted: #8b949e;
 
-      --border-thin: 1px solid var(--text-dark);
-      --border-light: 1px solid rgba(234, 230, 223, 0.2);
+      --border-subtle: rgba(255, 255, 255, 0.1);
+      
+      --radius-md: 12px;
+      --radius-lg: 24px;
+      --radius-full: 9999px;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
-    html { scroll-behavior: smooth; background: var(--bg-cream); }
+    html { scroll-behavior: smooth; background: var(--bg-base); }
 
     body {
-      background-color: var(--bg-cream);
-      color: var(--text-dark);
-      font-family: var(--font-body);
+      background-color: var(--bg-base);
+      color: var(--text-main);
+      font-family: 'Inter', -apple-system, sans-serif;
       overflow-x: hidden;
+      min-height: 100vh;
       -webkit-font-smoothing: antialiased;
     }
 
-    /* --- Pre-Loader (0 to 100%) --- */
-    #loader {
-      position: fixed; inset: 0;
-      background: var(--bg-black);
-      z-index: 9999;
-      display: flex; justify-content: center; align-items: center;
-      transition: transform 1s cubic-bezier(0.85, 0, 0.15, 1); /* Slide up animation */
-    }
-    #loader.hidden { transform: translateY(-100%); }
-    
-    #loader-text {
-      font-family: var(--font-display);
-      font-size: 6rem;
-      color: var(--text-light);
+    /* Ambient Sunset Background Glow */
+    .ambient-glow {
+      position: absolute; top: -10vh; left: 50%; transform: translateX(-50%);
+      width: 100vw; height: 80vh;
+      background: radial-gradient(ellipse at top, rgba(249, 115, 22, 0.15) 0%, rgba(139, 92, 246, 0.1) 40%, transparent 70%);
+      pointer-events: none; z-index: 0; filter: blur(100px);
     }
 
-    /* --- Minimal Navbar --- */
+    /* GitHub-style Glassy Navbar */
     nav {
       position: fixed; top: 0; left: 0; width: 100%;
-      padding: 1.5rem 2rem;
       display: flex; justify-content: space-between; align-items: center;
-      z-index: 100;
-      mix-blend-mode: difference; /* Critical for black/white overlapping */
-      color: #fff;
+      padding: 1rem 2rem;
+      background: rgba(13, 17, 23, 0.7);
+      backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+      border-bottom: 1px solid var(--border-subtle); z-index: 100;
     }
-
-    .nav-logo {
-      font-family: var(--font-display); font-size: 1.5rem; letter-spacing: 2px;
-      text-transform: uppercase; text-decoration: none; color: inherit;
+    .logo {
+      font-weight: 800; font-size: 1.25rem; letter-spacing: -0.02em; color: var(--text-bright);
+      text-decoration: none; display: flex; align-items: center; gap: 0.5rem;
     }
+    .nav-links { display: flex; gap: 2rem; }
+    .nav-links a { color: var(--text-muted); text-decoration: none; font-size: 0.9rem; font-weight: 500; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--text-bright); }
 
-    .nav-links {
-      display: flex; gap: 2rem;
-      font-family: var(--font-mono); font-size: 0.8rem; font-weight: 700;
-      text-transform: uppercase;
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; width: 100%; position: relative; z-index: 10; }
+
+    /* --- HERO & RADIAL ORBITAL TIMELINE --- */
+    .hero-wrapper {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center;
+      min-height: 90vh; padding-top: 6rem;
     }
-    .nav-links a { color: inherit; text-decoration: none; cursor: pointer; transition: opacity 0.2s;}
-    .nav-links a:hover { opacity: 0.6; }
+    @media (max-width: 900px) { .hero-wrapper { grid-template-columns: 1fr; text-align: center; } }
 
-    @media (max-width: 768px) { .nav-links { display: none; } }
-
-    /* --- The Massive Kinetic Hero Section --- */
-    .hero {
-      min-height: 100vh;
-      display: flex; flex-direction: column; justify-content: center; align-items: center;
-      padding: 0 2rem; position: relative;
+    .hero-content h1 {
+      font-size: clamp(3rem, 6vw, 5rem); font-weight: 900; line-height: 1.1; letter-spacing: -0.04em;
+      margin-bottom: 1.5rem; color: var(--text-bright);
     }
-
-    /* The huge distorted text from the video */
-    .hero-title-huge {
-      font-family: var(--font-display);
-      font-size: clamp(6rem, 18vw, 15rem);
-      line-height: 0.8;
-      text-transform: uppercase;
-      color: var(--text-dark);
-      text-align: center;
-      margin-top: 4rem;
-      /* Subtle CSS text manipulation to mimic that stretched/custom look */
-      transform: scaleY(1.3); 
-      letter-spacing: -0.02em;
+    /* Sunset Horizon Text Gradient */
+    .hero-content h1 span {
+      background: linear-gradient(135deg, var(--sunset-rose), var(--sunset-orange), var(--sunset-amber));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
     }
+    .hero-desc { font-size: 1.15rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 2.5rem; }
 
-    .hero-subtitle {
-      font-family: var(--font-body); font-weight: 700; font-size: clamp(1.5rem, 4vw, 2.5rem);
-      text-transform: uppercase; letter-spacing: 0.2em;
-      margin-top: 3rem; text-align: center;
+    /* Radial Orbital Animation Component */
+    .orbital-container {
+      position: relative; width: 100%; max-width: 500px; aspect-ratio: 1/1;
+      display: flex; justify-content: center; align-items: center; margin: 0 auto;
     }
-
-    /* Scrolling ticker tape under hero */
-    .ticker-wrap {
-      width: 100%; overflow: hidden; white-space: nowrap;
-      border-top: var(--border-thin); border-bottom: var(--border-thin);
-      padding: 0.75rem 0; margin-top: 4rem;
-      font-family: var(--font-mono); font-size: 0.8rem; font-weight: 700;
-      text-transform: uppercase;
+    .orbital-center {
+      position: relative; z-index: 10; width: 100px; height: 100px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--bg-elevated), var(--bg-surface));
+      border: 1px solid var(--border-subtle); display: flex; justify-content: center; align-items: center;
+      font-family: 'JetBrains Mono', monospace; font-weight: 700; color: var(--sunset-orange);
+      box-shadow: 0 0 40px rgba(249, 115, 22, 0.2);
     }
-    .ticker {
-      display: inline-block; animation: ticker 20s linear infinite;
+    .orbital-ring {
+      position: absolute; border: 1px dashed var(--border-subtle); border-radius: 50%;
+      top: 50%; left: 50%; transform: translate(-50%, -50%);
     }
-    .ticker-item { margin: 0 2rem; }
-    @keyframes ticker { 0% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(-50%, 0, 0); } }
-
-    /* --- The Dark Portfolio Section --- */
-    .dark-section {
-      background: var(--bg-black); color: var(--text-light);
-      padding: 8rem 2rem;
-      position: relative; z-index: 2;
-    }
-
-    .container { max-width: 1200px; margin: 0 auto; width: 100%; }
-
-    .section-title-dark {
-      font-family: var(--font-display); font-size: clamp(4rem, 12vw, 8rem);
-      line-height: 0.8; text-transform: uppercase; margin-bottom: 4rem;
-      color: var(--text-light); border-bottom: var(--border-light); padding-bottom: 1rem;
-    }
-    .section-title-dark span { color: transparent; -webkit-text-stroke: 1px var(--text-light); }
-
-    /* --- Brutalist List Layout for ROMs --- */
-    .builds-list { display: flex; flex-direction: column; }
-
-    .build-row {
-      display: grid; grid-template-columns: 1fr; gap: 1rem;
-      padding: 2.5rem 0; border-bottom: var(--border-light);
-      transition: background 0.3s;
-    }
-
-    @media (min-width: 768px) {
-      .build-row { grid-template-columns: 2fr 1.5fr 1fr 1fr; align-items: center; }
-    }
-
-    .build-row:hover { background: rgba(255,255,255,0.03); }
-    .build-row:hover .build-name { transform: translateX(10px); }
-
-    .build-name {
-      font-family: var(--font-display); font-size: 2.5rem; line-height: 1; text-transform: uppercase;
-      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-    }
+    .ring-1 { width: 280px; height: 280px; animation: spin 20s linear infinite; }
+    .ring-2 { width: 440px; height: 440px; animation: spin-reverse 30s linear infinite; }
     
-    .build-device { font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;}
-    
-    .build-meta { display: flex; flex-direction: column; gap: 0.25rem; font-family: var(--font-mono); font-size: 0.8rem; }
-    .meta-label { color: var(--text-muted); font-size: 0.6rem; }
-    
-    .build-actions { display: flex; flex-direction: column; gap: 0.5rem; justify-content: flex-end; }
-
-    .btn-brutal {
-      background: transparent; color: var(--text-light); border: 1px solid var(--text-light);
-      padding: 0.75rem 1rem; font-family: var(--font-mono); font-size: 0.75rem; font-weight: 700;
-      text-transform: uppercase; cursor: pointer; text-align: center; text-decoration: none;
-      transition: all 0.2s; border-radius: 4px;
+    .orbit-node {
+      position: absolute; top: -20px; left: 50%; transform: translateX(-50%);
+      background: var(--bg-elevated); border: 1px solid var(--border-subtle);
+      padding: 0.5rem 1rem; border-radius: var(--radius-full); font-size: 0.8rem; font-weight: 600;
+      color: var(--text-bright); box-shadow: 0 4px 12px rgba(0,0,0,0.5);
     }
-    .btn-brutal:hover { background: var(--text-light); color: var(--bg-black); }
-
-    /* --- Modals for Changelog (Minimalist Dark) --- */
-    .overlay {
-      position: fixed; inset: 0; background: rgba(0, 0, 0, 0.95);
-      z-index: 2000; display: flex; justify-content: center; align-items: center;
-      opacity: 0; pointer-events: none; transition: opacity 0.3s ease; padding: 1rem;
-    }
-    .overlay.active { opacity: 1; pointer-events: all; }
-
-    .modal-content {
-      background: var(--bg-dark-panel); border: 1px solid rgba(255,255,255,0.2);
-      padding: 3rem; max-width: 600px; width: 100%; position: relative;
-      transform: translateY(20px); transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    .overlay.active .modal-content { transform: translateY(0); }
-
-    .modal-title { font-family: var(--font-display); font-size: 2.5rem; text-transform: uppercase; margin-bottom: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 1rem; }
+    .orbit-node.reverse { animation: spin-reverse 20s linear infinite; }
+    .ring-2 .orbit-node { top: -20px; animation: spin 30s linear infinite; }
     
-    .modal-close {
-      position: absolute; top: 1.5rem; right: 1.5rem; background: none; border: none;
-      color: var(--text-light); cursor: pointer; font-family: var(--font-mono); font-size: 1rem;
+    .node-2 { top: auto; bottom: -20px; }
+    .node-3 { top: 50%; left: -20px; transform: translateY(-50%); }
+    .node-4 { top: 50%; left: auto; right: -20px; transform: translateY(-50%); }
+
+    @keyframes spin { 100% { transform: translate(-50%, -50%) rotate(360deg); } }
+    @keyframes spin-reverse { 100% { transform: translate(-50%, -50%) rotate(-360deg); } }
+
+    /* --- SPOTLIGHT CARDS COMPONENT --- */
+    .section-title {
+      font-size: 2rem; font-weight: 800; margin: 4rem 0 2rem 0; color: var(--text-bright);
+    }
+
+    #cards-wrapper {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 1.5rem;
+    }
+
+    .spotlight-card {
+      position: relative;
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    /* Outer glowing border tracked by mouse */
+    .spotlight-card::before {
+      content: ""; position: absolute; inset: 0; border-radius: inherit;
+      background: radial-gradient(400px circle at var(--mouse-x) var(--mouse-y), rgba(249, 115, 22, 0.6), transparent 40%);
+      opacity: 0; transition: opacity 0.3s ease; z-index: 1;
+    }
+    .spotlight-card:hover::before { opacity: 1; }
+
+    /* Inner Card Content Shield */
+    .spotlight-content {
+      position: absolute;
+      inset: 1px; /* Creates the 1px border illusion from the glow behind */
+      background: var(--bg-surface);
+      border-radius: calc(var(--radius-md) - 1px);
+      z-index: 2; padding: 2rem;
+      display: flex; flex-direction: column; gap: 1.5rem;
+    }
+
+    /* Inner subtle gradient tracking mouse */
+    .spotlight-content::before {
+      content: ""; position: absolute; inset: 0; border-radius: inherit;
+      background: radial-gradient(600px circle at var(--mouse-x) var(--mouse-y), rgba(249, 115, 22, 0.08), transparent 40%);
+      opacity: 0; transition: opacity 0.3s ease; z-index: 0; pointer-events: none;
+    }
+    .spotlight-card:hover .spotlight-content::before { opacity: 1; }
+
+    /* Card Details */
+    .card-inner-z { position: relative; z-index: 10; display: flex; flex-direction: column; height: 100%; }
+
+    .card-header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px solid var(--border-subtle); padding-bottom: 1rem; margin-bottom: 1rem; }
+    .card-title { font-size: 1.25rem; font-weight: 700; color: var(--text-bright); letter-spacing: -0.01em; }
+    .card-device { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem; }
+    
+    .card-badge {
+      background: rgba(255,255,255,0.05); border: 1px solid var(--border-subtle);
+      padding: 0.2rem 0.6rem; border-radius: var(--radius-full); font-size: 0.7rem; font-family: 'JetBrains Mono', monospace;
+      text-transform: uppercase; color: var(--sunset-orange);
+    }
+
+    .data-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem; }
+    .data-block { display: flex; flex-direction: column; gap: 0.25rem; }
+    .data-label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
+    .data-value { font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; color: var(--text-main); font-weight: 500; }
+
+    .flavor-tag {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; padding: 0.2rem 0.5rem; border-radius: 4px;
+      background: rgba(244, 63, 94, 0.1); border: 1px solid rgba(244, 63, 94, 0.3); color: var(--sunset-rose); text-transform: uppercase;
     }
 
     .changelog-box {
-      font-family: var(--font-mono); font-size: 0.85rem; color: var(--text-muted);
-      line-height: 1.6; max-height: 50vh; overflow-y: auto; white-space: pre-line;
+      background: var(--bg-base); border: 1px solid var(--border-subtle); padding: 1rem;
+      border-radius: 8px; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem;
+      color: var(--text-muted); white-space: pre-line; max-height: 120px; overflow-y: auto; line-height: 1.6;
     }
-    .changelog-box b { color: var(--text-light); }
 
-    /* Footer */
-    footer {
-      background: var(--bg-cream); color: var(--text-dark);
-      padding: 6rem 2rem; text-align: center;
+    .card-footer { margin-top: auto; display: flex; gap: 0.5rem; }
+    .btn {
+      flex: 1; padding: 0.6rem; border-radius: 6px; font-size: 0.8rem; font-weight: 600; text-align: center; text-decoration: none; transition: all 0.2s;
     }
-    .footer-huge {
-      font-family: var(--font-display); font-size: clamp(3rem, 10vw, 8rem);
-      line-height: 0.9; text-transform: uppercase; margin-bottom: 2rem;
+    .btn-primary { background: var(--text-bright); color: var(--bg-base); }
+    .btn-primary:hover { background: var(--sunset-orange); color: #fff;}
+    .btn-secondary { background: transparent; color: var(--text-main); border: 1px solid var(--border-subtle); }
+    .btn-secondary:hover { background: rgba(255,255,255,0.05); border-color: var(--text-muted); }
+
+    footer {
+      border-top: 1px solid var(--border-subtle); padding: 3rem 0; margin-top: 4rem; text-align: center; font-size: 0.85rem; color: var(--text-muted);
     }
   </style>
 </head>
 <body>
 
-  <!-- Percentage Loader exactly like the video -->
-  <div id="loader">
-    <div id="loader-text">0%</div>
-  </div>
+  <div class="ambient-glow"></div>
 
   <nav>
-    <a href="#" class="nav-logo">EXY</a>
+    <a href="#" class="logo">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--sunset-orange);"><path d="M12 2L2 22h20L12 2z"/></svg>
+      EXYROMS
+    </a>
     <div class="nav-links">
-      <a href="#work">Firmware</a>
-      <a href="https://t.me/ExyROMs" target="_blank">Telegram</a>
+      <a href="#downloads">Firmwares</a>
+      <a href="https://t.me/ExyROMs" target="_blank">Telegram Hub</a>
     </div>
   </nav>
 
-  <main>
-    <!-- Light Hero Section -->
-    <section class="hero">
-      <h1 class="hero-title-huge">EXYROMS</h1>
-      <h2 class="hero-subtitle">Developer</h2>
-      
-      <div class="ticker-wrap">
-        <div class="ticker">
-          <span class="ticker-item">EXYNOS 9611</span>
-          <span class="ticker-item">ANDROID ROMS</span>
-          <span class="ticker-item">CUSTOM KERNELS</span>
-          <span class="ticker-item">RECOVERY</span>
-          <span class="ticker-item">EXYNOS 9611</span>
-          <span class="ticker-item">ANDROID ROMS</span>
-          <span class="ticker-item">CUSTOM KERNELS</span>
-          <span class="ticker-item">RECOVERY</span>
-        </div>
+  <main class="container">
+    
+    <!-- Hero with Radial Orbital Timeline -->
+    <div class="hero-wrapper">
+      <div class="hero-content">
+        <h1>High-Performance<br><span>Ecosystem.</span></h1>
+        <p class="hero-desc">The ultimate aftermarket development hub for Samsung Galaxy Exynos 9611. Featuring Sunset Horizon aesthetics, custom kernels, and pure AOSP variants.</p>
+        <a href="#downloads" class="btn btn-primary" style="display: inline-block; padding: 0.8rem 2rem; border-radius: var(--radius-full);">Explore Repository &rarr;</a>
       </div>
-    </section>
 
-    <!-- Dark Portfolio / Builds Section -->
-    <section id="work" class="dark-section">
-      <div class="container">
-        <h2 class="section-title-dark">My <span>Work</span></h2>
+      <!-- 21st.dev Radial Orbital Component -->
+      <div class="orbital-container">
+        <div class="orbital-center">9611</div>
         
-        <div class="builds-list" id="buildsList">
-          <!-- Firmware items generated by JavaScript here -->
+        <!-- Inner Ring -->
+        <div class="orbital-ring ring-1">
+          <div class="orbit-node reverse node-1">LineageOS</div>
+          <div class="orbit-node reverse node-2">Everline</div>
+        </div>
+
+        <!-- Outer Ring -->
+        <div class="orbital-ring ring-2">
+          <div class="orbit-node node-3">VoltageOS</div>
+          <div class="orbit-node node-4">PixelOS</div>
         </div>
       </div>
+    </div>
+
+    <!-- Spotlight Cards Grid -->
+    <section id="downloads">
+      <h2 class="section-title">Firmware Repository</h2>
+      <div id="cards-wrapper"></div>
     </section>
 
   </main>
 
   <footer>
-    <h2 class="footer-huge">STILL BUILDING.</h2>
-    <p style="font-family: var(--font-mono); font-weight: 700; margin-top: 2rem;">PROJECT EXYROMS &copy; 2026. BY PARBINDAR7.</p>
+    <div class="container">
+      <p>Project ExyROMs &copy; 2026. UI: GitHub x Sunset Horizon.</p>
+    </div>
   </footer>
 
-  <!-- Changelog Modal -->
-  <div class="overlay" id="changelogModal" onclick="closeModal(event)">
-    <div class="modal-content">
-      <button class="modal-close" onclick="closeModal(event, true)">[ CLOSE ]</button>
-      <h3 class="modal-title" id="modalTitle">Changelog</h3>
-      <div class="changelog-box" id="modalContent"></div>
-    </div>
-  </div>
-
   <script>
-    // --- Pre-loader Logic ---
-    document.addEventListener("DOMContentLoaded", () => {
-      const loader = document.getElementById("loader");
-      const loaderText = document.getElementById("loader-text");
-      let progress = 0;
-      
-      const interval = setInterval(() => {
-        progress += Math.floor(Math.random() * 12) + 3;
-        if (progress > 100) progress = 100;
-        loaderText.innerText = progress + "%";
-        
-        if (progress === 100) {
-          clearInterval(interval);
-          setTimeout(() => { loader.classList.add("hidden"); }, 400);
-        }
-      }, 70);
-    });
-
-    // --- Original Full Database ---
     const buildsData = [
       {
         title: "Everline kernel", category: "kernel", device: "Samsung Galaxy A51, F41, M31, M31s, M21", android: "Android 13 to 16", date: "26 July 2026", maintainer: "PARBINDAR7", flavor: ["BALANCED"],
-        changelog: "1. sched/uclamp: Move tunables to cpuctl\n2. sched/uclamp: Expose latency_sensitive and uclamp.boosted\n\n[NOTICE] Only support builds 25.07.2026 or newer.",
+        changelog: "1. sched/uclamp: Move tunables to cpuctl\n2. sched/uclamp: Expose latency_sensitive and uclamp.boosted",
         downloadUrl: "https://sourceforge.net/projects/parbindar7-builds/files/Everline%2025-07-2026/"
       },
       {
-        title: "Project Matrixx", category: "rom", device: "A51, F41, M31, M31s, M21", android: "Android 16", date: "May 2026", maintainer: "PARBINDAR7", flavor: ["INACTIVE"],
-        changelog: "1. Contains all previous commits\n\n[NOTICE] Project Matrixx OS has been officially discontinued.",
+        title: "Everline Kernel", category: "kernel", device: "Samsung Galaxy A51, F41, M31, M31s, M21", android: "Android 13 to 17", date: "24 August 2026", maintainer: "PARBINDAR7", flavor: ["BALANCED"],
+        changelog: "1. Add AutoFDO support\n2. cpufreq_schedutil: Add sugov_cpu_is_busy\n3. Built with Clang 22.1.8",
+        downloadUrl: "https://sourceforge.net/projects/parbindar7-builds/files/Everline%2024-08-2026/"
+      },
+      {
+        title: "Project Matrixx OS v12.3", category: "rom", device: "A51, F41, M31, M31s, M21", android: "Android 16", date: "May 2026", maintainer: "PARBINDAR7", flavor: ["INACTIVE"],
+        changelog: "1. Contains all previous commits\n[!] Project Matrixx OS has been officially discontinued.",
         downloadUrl: "https://sourceforge.net/projects/projectmatrixx/files/Android-16/"
       },
       {
-        title: "InfinityX v3.10", category: "rom", device: "A51, F41, M31, M31s, M21", android: "Android 16", date: "05 May 2026", maintainer: "PARBINDAR7", flavor: ["GAPPS INCLUDED"],
+        title: "InfinityX v3.10", category: "rom", device: "A51, F41, M31, M31s, M21", android: "Android 16", date: "05 May 2026", maintainer: "PARBINDAR7", flavor: ["GAPPS"],
         changelog: "1. Contains all previous commits\n2. OTA push",
         downloadUrl: "https://github.com/Parbindar7/OTA/releases/tag/InfinityX_06-05-2026"
       },
       {
-        title: "Afterlife OS", category: "rom", device: "A51, F41, M31, M31s, M21", android: "Android 16", date: "23 Apr 2026", maintainer: "PARBINDAR7", flavor: ["INACTIVE"],
-        changelog: "1. Enable frame pacing\n2. Define screenRecorderAVCProfileLevel\n3. Decrease launch boost to 3sec\n4. Tune schedutil rate limits",
-        downloadUrl: "https://afterlifeos.com/download"
-      },
-      {
         title: "Lineage OS v23.2", category: "rom", device: "A51, F41, M31, M31s, M21", android: "Android 16", date: "26 Jun 2026", maintainer: "PARBINDAR7", flavor: ["VANILLA"],
-        changelog: "1. Refactor Powerhint.json\n2. Tune up/down frequency rate limits",
+        changelog: "1. Refactor Powerhint.json\n2. Tune up/down frequency rate limits\n3. Cleanup task_profiles_30.json",
         downloadUrl: "https://drive.google.com/drive/folders/1sUjnPe88Q6sRX2-8nxYO37ac-MDAmhyj?usp=sharing"
       },
       {
@@ -328,13 +303,13 @@
         downloadUrl: "https://drive.google.com/drive/folders/16UW_O8Megsh4MpqPprNJgv4JV1j4taP5?usp=sharing"
       },
       {
-        title: "LunarisAOSP v3.12", category: "rom", device: "A51, F41, M31, M31s, M21", android: "Android 16", date: "01 Jul 2026", maintainer: "PARBINDAR7", flavor: ["VANILLA"],
+        title: "LunarisAOSP v3.12 ", category: "rom", device: "A51, F41, M31, M31s, M21", android: "Android 16", date: "01 Jul 2026", maintainer: "PARBINDAR7", flavor: ["VANILLA"],
         changelog: "1. Remove unused /dev/freezer\n2. Tune up/down frequency transition rate limits",
         downloadUrl: "https://drive.google.com/drive/folders/1_RG0oDENhUGLcEh5kDkDNwOtc5VT5s3t"
       },
       {
         title: "LineageOS EXT", category: "rom", device: "A51, F41, M31, M31s, M21", android: "Android 17", date: "10 Aug 2026", maintainer: "PARBINDAR7", flavor: ["VANILLA"],
-        changelog: "1. Update included soong namespaces\n2. Disable app launch blur",
+        changelog: "1. Update included soong namespaces\n2. Disable app launch blur\n3. Set legacy gralloc flag",
         downloadUrl: "https://drive.google.com/drive/folders/11VAKKkzQEnQ-hCucJFv6She-AtUQNiDo?usp=sharing"
       },
       {
@@ -349,68 +324,68 @@
       }
     ];
 
-    // --- Modal Logic ---
-    const modal = document.getElementById("changelogModal");
-    const modalTitle = document.getElementById("modalTitle");
-    const modalContent = document.getElementById("modalContent");
-
-    function openModal(title, content) {
-      modalTitle.innerText = title;
-      modalContent.innerHTML = content.replace(/\n/g, '<br>');
-      modal.classList.add("active");
-      document.body.style.overflow = "hidden";
+    function renderTags(flavorArray) {
+      if (!flavorArray) return '';
+      return flavorArray.map(f => `<span class="flavor-tag">${f}</span>`).join('');
     }
 
-    function closeModal(e, force = false) {
-      if (force || e.target === modal) {
-        modal.classList.remove("active");
-        document.body.style.overflow = "";
-      }
-    }
+    function createCard(item) {
+      const cat = (item.category || "rom").toLowerCase();
+      const log = (item.changelog || "").trim();
 
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") closeModal(e, true);
-    });
+      return `
+        <div class="spotlight-card">
+          <div class="spotlight-content">
+            <div class="card-inner-z">
+              
+              <div class="card-header">
+                <div class="card-title-box">
+                  <div class="card-title">${item.title}</div>
+                  <div class="card-device">${item.device}</div>
+                </div>
+                <div class="card-badge">${cat}</div>
+              </div>
 
-    // --- Build List Generator ---
-    function renderBuilds() {
-      const container = document.getElementById("buildsList");
-      let htmlBuffer = "";
+              <div class="data-grid">
+                <div class="data-block"><div class="data-label">Target OS</div><div class="data-value">${item.android}</div></div>
+                <div class="data-block"><div class="data-label">Build Date</div><div class="data-value">${item.date || 'Unknown'}</div></div>
+              </div>
 
-      buildsData.forEach((item) => {
-        const cat = (item.category || "rom").toUpperCase();
-        const safeChangelog = (item.changelog || '').trim().replace(/'/g, "\\'").replace(/"/g, '&quot;');
-        const titleClean = item.title.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+              <div style="margin-bottom: 1rem;">
+                ${renderTags(item.flavor)}
+              </div>
 
-        htmlBuffer += `
-          <div class="build-row">
-            <div>
-              <div class="build-name">${item.title}</div>
-              <div class="build-device">${item.device}</div>
-            </div>
+              <div class="changelog-box">${log}</div>
 
-            <div class="build-meta">
-              <span class="meta-label">TARGET OS</span>
-              <span>${item.android}</span>
-            </div>
+              <div class="card-footer">
+                <a href="${item.downloadUrl}" target="_blank" class="btn btn-primary">Download</a>
+              </div>
 
-            <div class="build-meta">
-              <span class="meta-label">TYPE</span>
-              <span>${cat}</span>
-            </div>
-
-            <div class="build-actions">
-              <button class="btn-brutal" onclick="openModal('${titleClean}', '${safeChangelog}')">COMMITS</button>
-              <a href="${item.downloadUrl}" target="_blank" rel="noopener noreferrer" class="btn-brutal" style="background: var(--text-light); color: var(--bg-black);">DEPLOY</a>
             </div>
           </div>
-        `;
-      });
-
-      container.innerHTML = htmlBuffer;
+        </div>
+      `;
     }
 
-    renderBuilds();
+    function init() {
+      const wrapper = document.getElementById("cards-wrapper");
+      let html = "";
+      buildsData.forEach(item => html += createCard(item));
+      wrapper.innerHTML = html;
+
+      // Mouse Tracking for Spotlight Effect
+      wrapper.onmousemove = (e) => {
+        for(const card of document.getElementsByClassName("spotlight-card")) {
+          const rect = card.getBoundingClientRect(),
+                x = e.clientX - rect.left,
+                y = e.clientY - rect.top;
+          card.style.setProperty("--mouse-x", `${x}px`);
+          card.style.setProperty("--mouse-y", `${y}px`);
+        }
+      };
+    }
+
+    init();
   </script>
 </body>
 </html>
