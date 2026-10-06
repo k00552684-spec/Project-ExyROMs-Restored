@@ -8,31 +8,35 @@
   <!-- Fonts: Inter (UI), Caveat (Apple Hello Effect), JetBrains Mono (Tech) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 
   <style>
     :root {
-      --bg-dark: #050505;
+      --bg-dark: #000000;
       --bg-card: rgba(20, 20, 20, 0.6);
-      --text-main: #f8fafc;
-      --text-muted: #94a3b8;
-      --accent: #818cf8; /* Soft purple/indigo glow */
-      --border-color: rgba(255, 255, 255, 0.08);
+      --text-main: #ffffff;
+      --text-muted: #888888;
+      --accent: #818cf8; 
+      --border-color: rgba(255, 255, 255, 0.1);
       
       --radius-md: 16px;
       --radius-lg: 24px;
       --radius-full: 9999px;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
     html { scroll-behavior: smooth; background: var(--bg-dark); }
     body { 
       color: var(--text-main); 
       font-family: 'Inter', sans-serif; 
       overflow-x: hidden; 
-      background: var(--bg-dark);
-      -webkit-font-smoothing: antialiased;
+      background: transparent;
     }
+
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #fff; }
 
     /* =========================================
        1. APPLE HELLO EFFECT (ncdai)
@@ -45,25 +49,53 @@
     }
     #hello-screen.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
     
-    #hello-text {
+    #hello-svg { width: 100%; max-width: 800px; height: 300px; }
+    
+    #hello-text-svg {
       font-family: 'Caveat', cursive;
-      font-size: 6rem;
+      font-size: 120px;
       font-weight: 500;
-      color: var(--text-main);
-      opacity: 0;
-      transform: scale(0.9);
-      transition: opacity 0.5s ease, transform 0.5s ease;
+      fill: transparent;
+      stroke: var(--text-main);
+      stroke-width: 2px;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-dasharray: 1000;
+      stroke-dashoffset: 1000;
     }
-    #hello-text.visible { opacity: 1; transform: scale(1); }
+
+    @media (max-width: 768px) { #hello-text-svg { font-size: 80px; } }
+
+    @keyframes drawText {
+      0% { stroke-dashoffset: 1000; fill: transparent; stroke-width: 2px; }
+      50% { stroke-dashoffset: 0; fill: transparent; stroke-width: 2px; }
+      100% { stroke-dashoffset: 0; fill: var(--text-main); stroke-width: 0px; }
+    }
 
     /* =========================================
-       2. BACKGROUND ANIMATION (coming-soon-02)
+       2. BACKGROUND ANIMATIONS
        ========================================= */
-    .bg-container {
-      position: fixed; inset: 0; z-index: -1; overflow: hidden;
-    }
+    .bg-container { position: fixed; inset: 0; z-index: -1; overflow: hidden; background: var(--bg-dark); }
     
-    /* Glowing Animated Orb */
+    /* Sonar Grid */
+    .sonar-grid {
+      position: absolute; inset: 0;
+      background-image: 
+        linear-gradient(to right, rgba(255,255,255,0.05) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255,255,255,0.05) 1px, transparent 1px);
+      background-size: 60px 60px;
+      mask-image: radial-gradient(circle at center, black 30%, transparent 80%);
+      -webkit-mask-image: radial-gradient(circle at center, black 30%, transparent 80%);
+    }
+    .sonar-sweep {
+      position: absolute; top: 50%; left: 50%; width: 200vw; height: 200vw;
+      background: conic-gradient(from 0deg at 50% 50%, transparent 0deg, transparent 270deg, rgba(255,255,255,0.1) 360deg);
+      border-radius: 50%; transform-origin: center center;
+      animation: sweep 4s linear infinite; margin-left: -100vw; margin-top: -100vw;
+    }
+    @keyframes sweep { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+    /* Glowing Orb */
     .bg-orb {
       position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%);
       width: 60vw; height: 60vw; max-width: 800px; max-height: 800px;
@@ -76,21 +108,14 @@
       100% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
     }
 
-    /* CSS Film Grain / Noise Overlay */
-    .bg-noise {
-      position: absolute; inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-      opacity: 0.04; pointer-events: none;
-    }
-
-    .container { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; position: relative; z-index: 10; }
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 1.5rem; position: relative; z-index: 10; padding-bottom: 8rem;}
 
     /* =========================================
-       3. HERO (coming-soon-02)
+       3. HERO (SaaS Coming Soon 02)
        ========================================= */
     .hero {
       display: flex; flex-direction: column; align-items: center; text-align: center;
-      padding: 12rem 0 8rem 0; min-height: 90vh; justify-content: center;
+      padding: 12rem 0 6rem 0; min-height: 80vh; justify-content: center;
     }
     
     .hero-badge {
@@ -98,27 +123,20 @@
       background: rgba(255,255,255,0.03); border: 1px solid var(--border-color);
       padding: 0.4rem 1rem; border-radius: var(--radius-full);
       font-size: 0.8rem; font-weight: 500; font-family: 'JetBrains Mono', monospace;
-      color: var(--text-muted); margin-bottom: 2rem; backdrop-filter: blur(10px);
+      color: var(--text-muted); margin-bottom: 2rem; backdrop-filter: blur(10px); text-decoration: none; transition: 0.3s;
     }
-    .hero-badge span.highlight { color: #fff; font-weight: 700; }
+    .hero-badge:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.3); }
+    .hero-badge span.highlight { color: #000; background: #fff; padding: 0.1rem 0.5rem; border-radius: 99px; font-weight: 700; }
 
-    .hero h1 {
-      font-size: clamp(3.5rem, 8vw, 6rem); font-weight: 800; letter-spacing: -0.04em;
-      line-height: 1.1; margin-bottom: 1.5rem; color: var(--text-main);
-    }
-    .hero p {
-      font-size: 1.15rem; color: var(--text-muted); max-width: 600px; line-height: 1.6;
-    }
+    .hero h1 { font-size: clamp(3rem, 8vw, 6rem); font-weight: 900; letter-spacing: -0.04em; line-height: 1.1; margin-bottom: 1.5rem; }
+    .hero p { font-size: 1.15rem; color: var(--text-muted); max-width: 600px; line-height: 1.6; font-weight: 400; margin-bottom: 3rem;}
 
     /* =========================================
        4. FEATURES WITH HOVER (manuarora700)
        ========================================= */
-    .section-title { font-size: 2.5rem; font-weight: 700; letter-spacing: -0.03em; margin: 6rem 0 3rem 0; text-align: center;}
+    .section-title { font-size: 2.5rem; font-weight: 800; letter-spacing: -0.03em; margin: 4rem 0 3rem 0; text-align: center;}
     
-    .features-grid {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;
-      margin-bottom: 6rem;
-    }
+    .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 6rem; }
 
     .feature-card {
       position: relative; background: var(--bg-card); border: 1px solid var(--border-color);
@@ -129,31 +147,27 @@
     /* Internal Mouse Spotlight Effect */
     .feature-card::before {
       content: ""; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-      background: radial-gradient(400px circle at var(--mouse-x) var(--mouse-y), rgba(129, 140, 248, 0.15), transparent 40%);
+      background: radial-gradient(400px circle at var(--mouse-x) var(--mouse-y), rgba(255, 255, 255, 0.1), transparent 40%);
       opacity: 0; transition: opacity 0.3s; z-index: 0; pointer-events: none;
     }
     .feature-card:hover::before { opacity: 1; }
 
     .feature-content { position: relative; z-index: 1; }
     .feature-icon { width: 48px; height: 48px; border-radius: 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: center; align-items: center; margin-bottom: 1.5rem; color: var(--text-main); }
-    .feature-card h3 { font-size: 1.25rem; font-weight: 600; margin-bottom: 0.75rem; }
+    .feature-card h3 { font-size: 1.25rem; font-weight: 700; margin-bottom: 0.75rem; }
     .feature-card p { font-size: 0.95rem; color: var(--text-muted); line-height: 1.6; }
 
     /* =========================================
        5. FORMATION TILE GALLERY (uicapsule)
        ========================================= */
     .gallery-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      grid-auto-rows: 250px;
-      gap: 1rem;
-      margin-bottom: 8rem;
+      display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-rows: 250px;
+      gap: 1rem; margin-bottom: 8rem;
     }
 
     .tile {
       position: relative; border-radius: var(--radius-md); overflow: hidden;
-      border: 1px solid var(--border-color); background: var(--bg-card);
-      cursor: pointer;
+      border: 1px solid var(--border-color); background: var(--bg-card); cursor: pointer;
     }
     .tile img {
       width: 100%; height: 100%; object-fit: cover; filter: grayscale(80%);
@@ -161,7 +175,7 @@
     }
     .tile:hover img { transform: scale(1.05); filter: grayscale(0%); }
     
-    /* Formation Layout: Spanning rows/cols to create tile effect */
+    /* Formation Layout Setup */
     .tile-large { grid-column: span 2; grid-row: span 2; }
     .tile-wide { grid-column: span 2; grid-row: span 1; }
     .tile-tall { grid-column: span 1; grid-row: span 2; }
@@ -177,26 +191,13 @@
     }
 
     /* =========================================
-       ROM DATABASE PLACEHOLDER
-       ========================================= */
-    .rom-placeholder {
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      padding: 6rem 2rem; border: 1px dashed var(--border-color); border-radius: var(--radius-lg);
-      background: rgba(255,255,255,0.02); margin-bottom: 10rem; text-align: center;
-    }
-    .rom-placeholder h3 { font-size: 1.5rem; margin-bottom: 1rem; }
-    .rom-placeholder p { color: var(--text-muted); font-family: 'JetBrains Mono', monospace; font-size: 0.9rem;}
-
-    /* =========================================
        6. EXPANDABLE TABS DOCK (starc007)
        ========================================= */
-    .dock-container {
-      position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); z-index: 1000;
-    }
+    .dock-container { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); z-index: 1000; }
     .dock {
       display: flex; gap: 0.5rem; padding: 0.5rem; border-radius: 99px;
       background: rgba(15, 15, 15, 0.8); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
-      border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+      border: 1px solid var(--border-color); box-shadow: 0 10px 40px rgba(0,0,0,0.8);
     }
     .dock-tab {
       display: flex; align-items: center; padding: 0.75rem; border-radius: 99px;
@@ -205,33 +206,61 @@
     }
     .dock-tab svg { width: 20px; height: 20px; flex-shrink: 0; }
     
-    /* The expanding text label */
+    /* Expandable Label */
     .dock-label {
       max-width: 0; opacity: 0; overflow: hidden; white-space: nowrap;
-      font-size: 0.85rem; font-weight: 500;
+      font-size: 0.85rem; font-weight: 600;
       transition: max-width 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease, margin-left 0.3s ease;
     }
     
     /* Hover Animation */
     .dock-tab:hover { background: rgba(255,255,255,0.1); color: var(--text-main); }
     .dock-tab:hover .dock-label { max-width: 100px; opacity: 1; margin-left: 0.6rem; }
-    
-    /* Active state (optional, for demo) */
     .dock-tab.active { background: rgba(255,255,255,0.15); color: var(--text-main); }
+
+    /* =========================================
+       7. ROM DATABASE PLACEHOLDER & BORDER BEAM
+       ========================================= */
+    .rom-placeholder {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: 6rem 2rem; position: relative; border-radius: var(--radius-lg);
+      background: var(--bg-card); overflow: hidden; text-align: center;
+    }
+
+    /* Applying Border Beam to the Placeholder */
+    .rom-placeholder::before {
+      content: ""; position: absolute; inset: -100%;
+      background: conic-gradient(from 0deg, transparent 80%, rgba(255,255,255,0.8) 100%);
+      animation: beam-spin 4s linear infinite; z-index: 0;
+    }
+    @keyframes beam-spin { 100% { transform: rotate(360deg); } }
+
+    .placeholder-content {
+      position: relative; z-index: 1; background: var(--bg-surface);
+      width: calc(100% - 2px); height: calc(100% - 2px); border-radius: calc(var(--radius-lg) - 1px);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: 4rem 2rem;
+    }
+    
+    .placeholder-content h3 { font-size: 1.5rem; margin-bottom: 1rem; font-weight: 800;}
+    .placeholder-content p { color: var(--text-muted); font-family: 'JetBrains Mono', monospace; font-size: 0.9rem;}
 
   </style>
 </head>
 <body>
 
-  <!-- 1. Apple Hello Effect Overlay -->
+  <!-- 1. Apple Hello Effect Overlay (SVG Path Animation) -->
   <div id="hello-screen">
-    <div id="hello-text">Hello</div>
+    <svg id="hello-svg" viewBox="0 0 600 200">
+      <text id="hello-text-svg" x="50%" y="60%" text-anchor="middle">hello</text>
+    </svg>
   </div>
 
   <!-- 2. Background Animation -->
   <div class="bg-container">
+    <div class="sonar-grid"></div>
+    <div class="sonar-sweep"></div>
     <div class="bg-orb"></div>
-    <div class="bg-noise"></div>
   </div>
 
   <div class="container">
@@ -239,14 +268,14 @@
     <!-- 3. SaaS Announcement Hero -->
     <section class="hero" id="home">
       <a href="#database" class="hero-badge">
-        <span class="highlight">Update</span> Project ExyROMs Initializing &rarr;
+        <span class="highlight">Update</span> Project ExyROMs Initialization &rarr;
       </a>
       <h1>Redefining the custom<br>Android experience.</h1>
       <p>The premium aftermarket development hub for Samsung Galaxy Exynos 9611. Uncompromised performance, security, and design.</p>
     </section>
 
     <!-- 4. Features with Hover Effects -->
-    <h2 class="section-title">Core Features</h2>
+    <h2 class="section-title">Core Infrastructure</h2>
     <section class="features-grid">
       <div class="feature-card">
         <div class="feature-content">
@@ -280,7 +309,7 @@
     <!-- 5. Formation Tile Gallery -->
     <h2 class="section-title">Interface Formation</h2>
     <section class="gallery-grid">
-      <!-- Replace src URLs with your actual screenshots -->
+      <!-- Inserting the requested screenshots into the masonry formation -->
       <div class="tile tile-large">
         <img src="1000021188.jpg" alt="UI Shot 1">
       </div>
@@ -298,11 +327,13 @@
       </div>
     </section>
 
-    <!-- ROM Database Placeholder (As requested) -->
+    <!-- 7. ROM Database Placeholder (Waiting for your command) -->
     <h2 class="section-title" id="database">Firmware Database</h2>
     <div class="rom-placeholder">
-      <h3>Database Connecting...</h3>
-      <p>[ Awaiting instruction to inject the 27 ROM list ]</p>
+      <div class="placeholder-content">
+        <h3>Database Connecting...</h3>
+        <p>[ Waiting for instruction to inject the 27 ROM list ]</p>
+      </div>
     </div>
 
   </div> <!-- End Container -->
@@ -331,41 +362,47 @@
 
   <script>
     /* =========================================
-       1. APPLE HELLO EFFECT LOGIC
+       1. APPLE HELLO SEQUENCE LOGIC
        ========================================= */
-    const greetings = ["Hello", "Hola", "Bonjour", "Ciao", "Namaste", "ExyROMs"];
-    const textElement = document.getElementById("hello-text");
-    const screenElement = document.getElementById("hello-screen");
+    const greetings = ["hello", "hola", "bonjour", "ciao", "namaste", "ExyROMs"];
     let currentGreeting = 0;
+    const textElement = document.getElementById("hello-text-svg");
+    const screenElement = document.getElementById("hello-screen");
 
     function playHelloSequence() {
-      // Fade in
-      textElement.innerText = greetings[currentGreeting];
-      textElement.classList.add("visible");
+      if (currentGreeting >= greetings.length) {
+        // Animation finished, hide overlay
+        screenElement.classList.add("hidden");
+        document.body.style.overflow = "auto";
+        return;
+      }
 
+      // Update text
+      textElement.textContent = greetings[currentGreeting];
+      
+      // Force animation restart
+      textElement.style.animation = 'none';
+      void textElement.offsetWidth; // trigger reflow
+      
+      // Apply drawing animation
+      textElement.style.animation = `drawText 2s cubic-bezier(0.25, 1, 0.5, 1) forwards`;
+
+      // Wait 2.5 seconds, then fade out and loop
       setTimeout(() => {
-        // If it's the last word (ExyROMs), keep it on screen longer then fade out whole screen
-        if (currentGreeting === greetings.length - 1) {
-          setTimeout(() => {
-            screenElement.classList.add("hidden");
-            document.body.style.overflow = "auto"; // Re-enable scrolling
-          }, 1500);
-        } else {
-          // Fade out word, change text, recurse
-          textElement.classList.remove("visible");
-          setTimeout(() => {
-            currentGreeting++;
-            playHelloSequence();
-          }, 500); // Wait for fade out to complete before next word
-        }
-      }, 1000); // Time word stays on screen
+        textElement.style.animation = `fadeOutText 0.4s ease forwards`;
+        setTimeout(() => {
+          currentGreeting++;
+          playHelloSequence();
+        }, 400); // Wait for fade out to finish before starting next word
+      }, 2000);
     }
 
-    // Disable scrolling while loading
+    // Lock scrolling while overlay is active
     document.body.style.overflow = "hidden";
-    // Start animation shortly after load
+    
+    // Start sequence after a tiny delay
     window.addEventListener("load", () => {
-      setTimeout(playHelloSequence, 500);
+      setTimeout(playHelloSequence, 300);
     });
 
     /* =========================================
@@ -380,6 +417,17 @@
         card.style.setProperty("--mouse-y", `${y}px`);
       }
     };
+
+    /* =========================================
+       3. DOCK ACTIVE STATE LOGIC
+       ========================================= */
+    const tabs = document.querySelectorAll('.dock-tab');
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+      });
+    });
   </script>
 </body>
 </html>
