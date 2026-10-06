@@ -64,7 +64,7 @@
     .container { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; position: relative; z-index: 10; }
 
     /* =========================================
-       2. HERO LAYERED TEXT (xubohuah style)
+       2. HERO LAYERED TEXT (xubohuah style) - FIXED
        ========================================= */
     .hero {
       display: flex; flex-direction: column; align-items: center; text-align: center;
@@ -80,42 +80,48 @@
     }
     .hero-badge span.highlight { color: #fff; font-weight: 700; }
 
-    /* The new stacked, slanted text component - PERFECT MATCH TO IMAGE */
+    /* The Stacked, Slanted Text Component */
     .layered-hero-container {
       display: flex;
       justify-content: center;
       width: 100%;
       margin: 1rem 0 4rem 0;
+      perspective: 1000px;
     }
     .layered-hero-text {
       display: flex;
       flex-direction: column;
       align-items: flex-start;
-      /* Perfect match to the image: slight rotation + strong skew */
-      transform: rotate(-8deg) skewX(-18deg); 
+      /* Exactly matching the 3D skew and rotation of the image */
+      transform: rotateZ(-8deg) rotateX(15deg) skewX(-15deg);
+      transform-style: preserve-3d;
     }
     .layered-hero-text span {
       font-size: clamp(3.5rem, 9.5vw, 8.5rem);
       font-weight: 900;
-      font-style: italic; /* <--- THIS MAKES IT LOOK LIKE THE SECOND IMAGE */
+      /* Removed italic, relying purely on the skewX to achieve the slant while keeping font bold */
       text-transform: uppercase;
-      line-height: 0.78; /* Extremely tight vertical packing */
-      letter-spacing: -0.04em;
+      line-height: 0.82; /* Tightly packed */
+      letter-spacing: -0.02em;
       color: var(--text-main);
       white-space: nowrap;
-      text-shadow: 0 20px 40px rgba(0,0,0,0.5); /* Soften shadow to match image */
-      /* Staggered load animation */
+      /* Drop shadow for 3D depth */
+      text-shadow: -4px 10px 20px rgba(0,0,0,0.8);
+      
+      /* Animation */
       opacity: 0;
-      transform: translateY(20px);
+      transform: translateZ(50px) translateY(20px);
       animation: layeredTextReveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
+    
+    /* Staggered loading */
     .layered-hero-text span:nth-child(1) { animation-delay: 0.1s; }
     .layered-hero-text span:nth-child(2) { animation-delay: 0.2s; }
     .layered-hero-text span:nth-child(3) { animation-delay: 0.3s; }
     .layered-hero-text span:nth-child(4) { animation-delay: 0.4s; }
 
     @keyframes layeredTextReveal {
-      to { opacity: 1; transform: translateY(0); }
+      to { opacity: 1; transform: translateZ(0) translateY(0); }
     }
 
     .hero p {
@@ -151,6 +157,7 @@
     .feature-card h3 { font-size: 1.25rem; font-weight: 600; margin-bottom: 0.75rem; }
     .feature-card p { font-size: 0.95rem; color: var(--text-muted); line-height: 1.6; }
 
+
     /* =========================================
        4. FORMATION TILT/RING GALLERY (uicapsule)
        ========================================= */
@@ -184,6 +191,7 @@
     .formation-card:nth-child(3) { transform: translateX(0px) translateZ(0px) rotateY(0deg); filter: brightness(1) grayscale(0%); z-index: 10;}
     .formation-card:nth-child(4) { transform: translateX(180px) translateZ(-100px) rotateY(-15deg); }
     .formation-card:nth-child(5) { transform: translateX(350px) translateZ(-200px) rotateY(-30deg); }
+
 
     /* =========================================
        5. ROM DATABASE PLACEHOLDER
@@ -246,7 +254,7 @@
         <span class="highlight">Update</span> Project ExyROMs Initializing &rarr;
       </a>
       
-      <!-- LAYERED TEXT IMPLEMENTATION (Fixed Styling) -->
+      <!-- LAYERED TEXT IMPLEMENTATION (Perfect Skew/Rotate Match) -->
       <div class="layered-hero-container">
         <div class="layered-hero-text">
           <span>REDEFINING</span>
