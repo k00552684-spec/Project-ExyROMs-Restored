@@ -139,42 +139,41 @@
     .feature-card h3 { font-size: 1.25rem; font-weight: 600; margin-bottom: 0.75rem; }
     .feature-card p { font-size: 0.95rem; color: var(--text-muted); line-height: 1.6; }
 
+
     /* =========================================
-       5. FORMATION TILE GALLERY (uicapsule)
+       5. FORMATION TILT/RING GALLERY (uicapsule)
        ========================================= */
-    .gallery-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      grid-auto-rows: 250px;
-      gap: 1rem;
-      margin-bottom: 8rem;
+    .gallery-container-main {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      margin-bottom: 8rem; min-height: 500px; perspective: 1500px; overflow: hidden; padding: 2rem 0;
+    }
+    
+    .formation-scene {
+      position: relative; width: 100%; height: 400px;
+      display: flex; justify-content: center; align-items: center;
+      transform-style: preserve-3d;
+      transition: transform 0.1s ease-out; /* Smooth follow for mouse */
+    }
+    
+    .formation-card {
+      position: absolute;
+      width: 240px; height: 340px;
+      border-radius: var(--radius-md);
+      background-size: cover; background-position: center;
+      border: 1px solid rgba(255,255,255,0.2);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+      transition: filter 0.6s;
+      transform-origin: center center;
+      filter: brightness(0.6) grayscale(50%);
     }
 
-    .tile {
-      position: relative; border-radius: var(--radius-md); overflow: hidden;
-      border: 1px solid var(--border-color); background: var(--bg-card);
-      cursor: pointer;
-    }
-    .tile img {
-      width: 100%; height: 100%; object-fit: cover; filter: grayscale(80%);
-      transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), filter 0.6s;
-    }
-    .tile:hover img { transform: scale(1.05); filter: grayscale(0%); }
-    
-    /* Formation Layout: Spanning rows/cols to create tile effect */
-    .tile-large { grid-column: span 2; grid-row: span 2; }
-    .tile-wide { grid-column: span 2; grid-row: span 1; }
-    .tile-tall { grid-column: span 1; grid-row: span 2; }
-    
-    @media (max-width: 900px) {
-      .gallery-grid { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 200px; }
-      .tile-large, .tile-wide { grid-column: span 2; }
-      .tile-tall { grid-column: span 1; grid-row: span 1; }
-    }
-    @media (max-width: 600px) {
-      .gallery-grid { grid-template-columns: 1fr; grid-auto-rows: 250px; }
-      .tile-large, .tile-wide, .tile-tall, .tile { grid-column: span 1; grid-row: span 1; }
-    }
+    /* Fixed 3D Arc Positioning */
+    .formation-card:nth-child(1) { transform: translateX(-350px) translateZ(-200px) rotateY(30deg); }
+    .formation-card:nth-child(2) { transform: translateX(-180px) translateZ(-100px) rotateY(15deg); }
+    .formation-card:nth-child(3) { transform: translateX(0px) translateZ(0px) rotateY(0deg); filter: brightness(1) grayscale(0%); z-index: 10;}
+    .formation-card:nth-child(4) { transform: translateX(180px) translateZ(-100px) rotateY(-15deg); }
+    .formation-card:nth-child(5) { transform: translateX(350px) translateZ(-200px) rotateY(-30deg); }
+
 
     /* =========================================
        ROM DATABASE PLACEHOLDER
@@ -277,28 +276,20 @@
       </div>
     </section>
 
-    <!-- 5. Formation Tile Gallery -->
+    <!-- 5. Formation 3D Gallery (Tilt/Ring logic) -->
     <h2 class="section-title">Interface Formation</h2>
-    <section class="gallery-grid">
-      <!-- Replace src URLs with your actual screenshots -->
-      <div class="tile tile-large">
-        <img src="screenshots/voltageos/v1.jpg" alt="UI Shot 1">
+    <div class="gallery-container-main" id="galleryScene">
+      <div class="formation-scene" id="formationWrap">
+        <!-- Replaced with the requested screenshots -->
+        <div class="formation-card" style="background-image: url('1000021188.jpg');"></div>
+        <div class="formation-card" style="background-image: url('1000021189.jpg');"></div>
+        <div class="formation-card" style="background-image: url('1000021190.jpg');"></div>
+        <div class="formation-card" style="background-image: url('1000021191.jpg');"></div>
+        <div class="formation-card" style="background-image: url('1000021188.jpg');"></div>
       </div>
-      <div class="tile tile-wide">
-        <img src="screenshots/voltageos/v2.jpg" alt="UI Shot 2">
-      </div>
-      <div class="tile">
-        <img src="screenshots/voltageos/v3.jpg" alt="UI Shot 3">
-      </div>
-      <div class="tile">
-        <img src="screenshots/voltageos/v4.jpg" alt="UI Shot 4">
-      </div>
-      <div class="tile tile-wide">
-        <img src="screenshots/voltageos/v5.jpg" alt="UI Shot 5">
-      </div>
-    </section>
+    </div>
 
-    <!-- ROM Database Placeholder (As requested) -->
+    <!-- ROM Database Placeholder -->
     <h2 class="section-title" id="database">Firmware Database</h2>
     <div class="rom-placeholder">
       <h3>Database Connecting...</h3>
@@ -380,6 +371,40 @@
         card.style.setProperty("--mouse-y", `${y}px`);
       }
     };
+
+    /* =========================================
+       3. FORMATION 3D GALLERY MOUSE TRACKING
+       ========================================= */
+    const scene = document.getElementById('galleryScene');
+    const wrap = document.getElementById('formationWrap');
+    
+    scene.addEventListener('mousemove', (e) => {
+      const rect = scene.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      
+      // Calculate rotation based on mouse position relative to center of scene
+      const xRot = ((y / rect.height) - 0.5) * -20; // Tilt up/down
+      const yRot = ((x / rect.width) - 0.5) * 20;  // Pan left/right
+
+      wrap.style.transform = `rotateX(${xRot}deg) rotateY(${yRot}deg)`;
+    });
+
+    scene.addEventListener('mouseleave', () => {
+      // Reset rotation when mouse leaves
+      wrap.style.transform = `rotateX(0deg) rotateY(0deg)`;
+    });
+
+    /* =========================================
+       4. DOCK ACTIVE STATE LOGIC
+       ========================================= */
+    const tabs = document.querySelectorAll('.dock-tab');
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+      });
+    });
   </script>
 </body>
 </html>
