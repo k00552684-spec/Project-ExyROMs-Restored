@@ -160,27 +160,34 @@
     .stack-card:hover .stack-img { filter: grayscale(0%); transform: scale(1.02); }
 
     /* =========================================
-       5. CONTINUOUS BORDER BEAM (Fixed Blinking)
+       5. CONTINUOUS BORDER BEAM (Fixed Center Blink)
        ========================================= */
     .rom-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 1.5rem; padding-bottom: 8rem;}
 
     .border-beam-card {
       position: relative; border-radius: var(--radius-md);
       padding: 1px; /* The gap for the animated border */
-      overflow: hidden; background: var(--border-color);
+      overflow: hidden; 
+      /* Fix for Webkit center blinking bug */
+      transform: translateZ(0); 
+      isolation: isolate;
+      background: var(--border-color); /* Fallback */
     }
 
-    /* FIX: Made the gradient 300% width/height to push the center rendering dot completely out of bounds */
     .border-beam-card::before {
       content: ""; position: absolute;
+      /* Making the gradient massive pushes the center far outside the card to prevent the blink */
       top: -100%; left: -100%; width: 300%; height: 300%; 
       background: conic-gradient(from 0deg, transparent 80%, rgba(255,255,255,0.8) 100%);
-      animation: beam-spin 4s linear infinite; z-index: 0;
+      animation: beam-spin 4s linear infinite;
+      z-index: -1; 
     }
+
     @keyframes beam-spin { 100% { transform: rotate(360deg); } }
 
     .rom-card-inner {
-      background: var(--bg-surface); height: 100%; border-radius: calc(var(--radius-md) - 1px);
+      background: var(--bg-surface); width: 100%; height: 100%; 
+      border-radius: calc(var(--radius-md) - 1px);
       padding: 2rem; position: relative; z-index: 1; display: flex; flex-direction: column; gap: 1.5rem;
     }
 
@@ -195,7 +202,7 @@
 
     .flavor-tag { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; padding: 0.25rem 0.6rem; border-radius: 6px; background: rgba(255,255,255, 0.08); border: 1px solid rgba(255,255,255, 0.2); display: inline-block; margin-right: 0.4rem; text-transform: uppercase;}
     
-    /* MAINTAINER LINK STYLING */
+    /* MAINTAINER LINK STYLING (No @ Symbol) */
     .maintainer-link { color: var(--text-muted); text-decoration: none; transition: 0.2s; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem;}
     .maintainer-link:hover { color: var(--text-main); text-decoration: underline; }
 
@@ -226,12 +233,13 @@
       display: flex; gap: 12px; padding: 12px; border-radius: 24px;
       background: rgba(20, 20, 20, 0.6); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
       border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 40px rgba(0,0,0,0.8);
-      align-items: flex-end; /* Anchor scale origin to bottom */
+      align-items: flex-end; /* Critical for scaling up from the bottom */
     }
     .dock-item {
       width: 50px; height: 50px; border-radius: 12px; background: rgba(255,255,255,0.05);
       border: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: center; align-items: center;
       color: var(--text-main); cursor: pointer; text-decoration: none; position: relative;
+      /* Physics transitions */
       transition: width 0.15s ease, height 0.15s ease, margin 0.15s ease;
     }
     .dock-item svg { width: 24px; height: 24px; transition: width 0.15s, height 0.15s; pointer-events: none;}
@@ -344,7 +352,6 @@
   <!-- Floating Mac Dock -->
   <div class="dock-wrapper">
     <div class="dock" id="macDock">
-      <!-- Tooltip removed from Home -->
       <a href="#home" class="dock-item">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>
       </a>
@@ -416,7 +423,6 @@
       stackCards.forEach((card, index) => {
         if (index < stackCards.length - 1) {
           const rect = card.getBoundingClientRect();
-          // Scale down the card if it hits the top portion of the screen
           if (rect.top <= window.innerHeight * 0.2) {
             card.style.transform = `scale(0.95)`;
             card.style.filter = `brightness(0.5)`;
