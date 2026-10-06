@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Project ExyROMs</title>
   
-  <!-- Fonts: Inter (UI), Caveat (Apple Hello Effect), JetBrains Mono (Tech) -->
+  <!-- Fonts: Inter (UI), JetBrains Mono (Tech) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 
   <style>
     :root {
@@ -35,78 +35,7 @@
     }
 
     /* =========================================
-       1. APPLE HELLO EFFECT (xubohuah - Layered Text)
-       ========================================= */
-    #hello-screen {
-      position: fixed; inset: 0; z-index: 9999;
-      background: var(--bg-dark);
-      display: flex; justify-content: center; align-items: center;
-      transition: opacity 1s ease-in-out, visibility 1s;
-    }
-    #hello-screen.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
-    
-    .layered-text-container {
-      position: relative;
-      font-family: 'Caveat', cursive;
-      font-size: 8rem;
-      font-weight: 700;
-      line-height: 1;
-      height: 1.2em; /* Ensure container height accommodates the cursive ascenders/descenders */
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .layered-text {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      white-space: nowrap;
-      clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0% 100%);
-      opacity: 0;
-    }
-
-    .layered-text.active {
-      animation: revealText 2.5s cubic-bezier(0.77, 0, 0.175, 1) forwards;
-    }
-
-    /* Standard Apple colors for the layers */
-    .layered-text:nth-child(1) { color: #f9d86b; z-index: 1; }
-    .layered-text:nth-child(2) { color: #f07b5a; z-index: 2; animation-delay: 0.1s; }
-    .layered-text:nth-child(3) { color: #c35c91; z-index: 3; animation-delay: 0.2s; }
-    .layered-text:nth-child(4) { color: #8e62ad; z-index: 4; animation-delay: 0.3s; }
-    .layered-text:nth-child(5) { color: var(--text-main); z-index: 5; animation-delay: 0.4s; }
-
-    @keyframes revealText {
-      0% {
-        clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0% 100%);
-        transform: translate(-50%, -10%);
-        opacity: 0;
-      }
-      20% {
-        opacity: 1;
-      }
-      50% {
-        clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
-        transform: translate(-50%, -50%);
-        opacity: 1;
-      }
-      80% {
-        opacity: 1;
-        transform: translate(-50%, -50%);
-      }
-      100% {
-        opacity: 0;
-        transform: translate(-50%, -60%);
-        clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
-      }
-    }
-
-    @media (max-width: 768px) { .layered-text-container { font-size: 5rem; } }
-
-    /* =========================================
-       2. BACKGROUND ANIMATION (coming-soon-02)
+       1. BACKGROUND ANIMATION (coming-soon-02)
        ========================================= */
     .bg-container {
       position: fixed; inset: 0; z-index: -1; overflow: hidden;
@@ -135,11 +64,11 @@
     .container { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; position: relative; z-index: 10; }
 
     /* =========================================
-       3. HERO (coming-soon-02)
+       2. HERO LAYERED TEXT (xubohuah style)
        ========================================= */
     .hero {
       display: flex; flex-direction: column; align-items: center; text-align: center;
-      padding: 12rem 0 8rem 0; min-height: 90vh; justify-content: center;
+      padding: 10rem 0 8rem 0; min-height: 90vh; justify-content: center;
     }
     
     .hero-badge {
@@ -151,16 +80,49 @@
     }
     .hero-badge span.highlight { color: #fff; font-weight: 700; }
 
-    .hero h1 {
-      font-size: clamp(3.5rem, 8vw, 6rem); font-weight: 800; letter-spacing: -0.04em;
-      line-height: 1.1; margin-bottom: 1.5rem; color: var(--text-main);
+    /* The new stacked, slanted text component */
+    .layered-hero-container {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+      margin: 1rem 0 4rem 0;
+      perspective: 1000px;
     }
+    .layered-hero-text {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      transform: rotate(-15deg); /* Aggressive tilt matching your image */
+    }
+    .layered-hero-text span {
+      font-size: clamp(3.5rem, 9vw, 8rem);
+      font-weight: 900;
+      text-transform: uppercase;
+      line-height: 0.85; /* Tightly packed stacking */
+      letter-spacing: -0.04em;
+      color: var(--text-main);
+      white-space: nowrap;
+      text-shadow: 0 15px 30px rgba(0,0,0,0.6);
+      /* Staggered load animation */
+      opacity: 0;
+      transform: translateY(20px);
+      animation: layeredTextReveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    .layered-hero-text span:nth-child(1) { animation-delay: 0.1s; }
+    .layered-hero-text span:nth-child(2) { animation-delay: 0.2s; }
+    .layered-hero-text span:nth-child(3) { animation-delay: 0.3s; }
+    .layered-hero-text span:nth-child(4) { animation-delay: 0.4s; }
+
+    @keyframes layeredTextReveal {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
     .hero p {
       font-size: 1.15rem; color: var(--text-muted); max-width: 600px; line-height: 1.6;
     }
 
     /* =========================================
-       4. FEATURES WITH HOVER (manuarora700)
+       3. FEATURES WITH HOVER (manuarora700)
        ========================================= */
     .section-title { font-size: 2.5rem; font-weight: 700; letter-spacing: -0.03em; margin: 6rem 0 3rem 0; text-align: center;}
     
@@ -188,20 +150,19 @@
     .feature-card h3 { font-size: 1.25rem; font-weight: 600; margin-bottom: 0.75rem; }
     .feature-card p { font-size: 0.95rem; color: var(--text-muted); line-height: 1.6; }
 
-
     /* =========================================
-       5. FORMATION TILT/RING GALLERY (uicapsule) - FIXED
+       4. FORMATION TILT/RING GALLERY (uicapsule)
        ========================================= */
     .gallery-container-main {
       display: flex; flex-direction: column; align-items: center; justify-content: center;
-      margin-bottom: 8rem; min-height: 500px; perspective: 2000px; overflow: hidden; padding: 2rem 0;
+      margin-bottom: 8rem; min-height: 500px; perspective: 1500px; overflow: hidden; padding: 2rem 0;
     }
     
     .formation-scene {
       position: relative; width: 100%; height: 400px;
       display: flex; justify-content: center; align-items: center;
       transform-style: preserve-3d;
-      transition: transform 0.2s ease-out; /* Smooth follow for mouse */
+      transition: transform 0.1s ease-out; /* Smooth follow for mouse */
     }
     
     .formation-card {
@@ -211,20 +172,21 @@
       background-size: cover; background-position: center;
       border: 1px solid rgba(255,255,255,0.2);
       box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+      transition: filter 0.6s;
       transform-origin: center center;
       filter: brightness(0.6) grayscale(50%);
     }
 
-    /* Fixed 3D Arc Positioning (Ring style) */
-    .formation-card:nth-child(1) { transform: rotateY(35deg) translateZ(350px); }
-    .formation-card:nth-child(2) { transform: rotateY(15deg) translateZ(350px); }
-    .formation-card:nth-child(3) { transform: rotateY(0deg) translateZ(350px); filter: brightness(1) grayscale(0%); z-index: 10;}
-    .formation-card:nth-child(4) { transform: rotateY(-15deg) translateZ(350px); }
-    .formation-card:nth-child(5) { transform: rotateY(-35deg) translateZ(350px); }
+    /* Fixed 3D Arc Positioning */
+    .formation-card:nth-child(1) { transform: translateX(-350px) translateZ(-200px) rotateY(30deg); }
+    .formation-card:nth-child(2) { transform: translateX(-180px) translateZ(-100px) rotateY(15deg); }
+    .formation-card:nth-child(3) { transform: translateX(0px) translateZ(0px) rotateY(0deg); filter: brightness(1) grayscale(0%); z-index: 10;}
+    .formation-card:nth-child(4) { transform: translateX(180px) translateZ(-100px) rotateY(-15deg); }
+    .formation-card:nth-child(5) { transform: translateX(350px) translateZ(-200px) rotateY(-30deg); }
 
 
     /* =========================================
-       ROM DATABASE PLACEHOLDER
+       5. ROM DATABASE PLACEHOLDER
        ========================================= */
     .rom-placeholder {
       display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -263,21 +225,14 @@
     .dock-tab:hover { background: rgba(255,255,255,0.1); color: var(--text-main); }
     .dock-tab:hover .dock-label { max-width: 100px; opacity: 1; margin-left: 0.6rem; }
     
-    /* Active state (optional, for demo) */
+    /* Active state */
     .dock-tab.active { background: rgba(255,255,255,0.15); color: var(--text-main); }
 
   </style>
 </head>
 <body>
 
-  <!-- 1. Layered Text Apple Hello Effect -->
-  <div id="hello-screen">
-    <div class="layered-text-container" id="layeredTextContainer">
-      <!-- The 5 layers will be injected here by JS -->
-    </div>
-  </div>
-
-  <!-- 2. Background Animation -->
+  <!-- 1. Background Animation -->
   <div class="bg-container">
     <div class="bg-orb"></div>
     <div class="bg-noise"></div>
@@ -285,16 +240,26 @@
 
   <div class="container">
     
-    <!-- 3. SaaS Announcement Hero -->
+    <!-- 2. SaaS Hero + Layered Text Component -->
     <section class="hero" id="home">
       <a href="#database" class="hero-badge">
         <span class="highlight">Update</span> Project ExyROMs Initializing &rarr;
       </a>
-      <h1>Redefining the custom<br>Android experience.</h1>
+      
+      <!-- LAYERED TEXT IMPLEMENTATION -->
+      <div class="layered-hero-container">
+        <div class="layered-hero-text">
+          <span>REDEFINING</span>
+          <span>THE CUSTOM</span>
+          <span>ANDROID</span>
+          <span>EXPERIENCE.</span>
+        </div>
+      </div>
+      
       <p>The premium aftermarket development hub for Samsung Galaxy Exynos 9611. Uncompromised performance, security, and design.</p>
     </section>
 
-    <!-- 4. Features with Hover Effects -->
+    <!-- 3. Features with Hover Effects -->
     <h2 class="section-title">Core Features</h2>
     <section class="features-grid">
       <div class="feature-card">
@@ -326,19 +291,19 @@
       </div>
     </section>
 
-    <!-- 5. Formation 3D Gallery (Tilt/Ring logic FIXED) -->
+    <!-- 4. Formation 3D Gallery -->
     <h2 class="section-title">Interface Formation</h2>
     <div class="gallery-container-main" id="galleryScene">
       <div class="formation-scene" id="formationWrap">
-        <div class="formation-card" style="background-image: url('screenshotes/voltageos/v1.jpg');"></div>
-        <div class="formation-card" style="background-image: url('screenshotes/voltageos/v2.jpg');"></div>
-        <div class="formation-card" style="background-image: url('screenshotes/voltageos/v3.jpg');"></div>
-        <div class="formation-card" style="background-image: url('screenshotes/voltageos/v4.jpg');"></div>
-        <div class="formation-card" style="background-image: url('screenshotes/voltageos/v5.jpg');"></div>
+        <div class="formation-card" style="background-image: url('screenshots/voltageos/v1.jpg');"></div>
+        <div class="formation-card" style="background-image: url('screenshots/voltageos/v2.jpg');"></div>
+        <div class="formation-card" style="background-image: url('screenshots/voltageos/v3.jpg');"></div>
+        <div class="formation-card" style="background-image: url('screenshots/voltageos/v4.jpg');"></div>
+        <div class="formation-card" style="background-image: url('screenshots/voltageos/v5.jpg');"></div>
       </div>
     </div>
 
-    <!-- ROM Database Placeholder -->
+    <!-- 5. ROM Database Placeholder -->
     <h2 class="section-title" id="database">Firmware Database</h2>
     <div class="rom-placeholder">
       <h3>Database Connecting...</h3>
@@ -371,51 +336,7 @@
 
   <script>
     /* =========================================
-       1. LAYERED TEXT HELLO LOGIC
-       ========================================= */
-    const greetings = ["hello"];
-    let currentGreeting = 0;
-    const textContainer = document.getElementById("layeredTextContainer");
-    const screenElement = document.getElementById("hello-screen");
-
-    function playHelloSequence() {
-      if (currentGreeting >= greetings.length) {
-        screenElement.classList.add("hidden");
-        document.body.style.overflow = "auto";
-        return;
-      }
-
-      // Clear previous text
-      textContainer.innerHTML = '';
-      
-      // Inject the 5 layers for the current greeting
-      for(let i=0; i<5; i++) {
-        const span = document.createElement('div');
-        span.className = 'layered-text';
-        span.innerText = greetings[currentGreeting];
-        textContainer.appendChild(span);
-      }
-
-      // Force reflow and apply animation
-      void textContainer.offsetWidth; 
-      
-      const layers = document.querySelectorAll('.layered-text');
-      layers.forEach(layer => layer.classList.add('active'));
-
-      // Wait for the animation to finish (2.5s) plus a small buffer, then loop
-      setTimeout(() => {
-        currentGreeting++;
-        playHelloSequence();
-      }, 2600);
-    }
-
-    document.body.style.overflow = "hidden";
-    window.addEventListener("load", () => {
-      setTimeout(playHelloSequence, 300);
-    });
-
-    /* =========================================
-       2. FEATURES SPOTLIGHT HOVER LOGIC
+       1. FEATURES SPOTLIGHT HOVER LOGIC
        ========================================= */
     document.querySelector('.features-grid').onmousemove = e => {
       for(const card of document.getElementsByClassName("feature-card")) {
@@ -428,7 +349,7 @@
     };
 
     /* =========================================
-       3. FORMATION 3D GALLERY MOUSE TRACKING (FIXED RING)
+       2. FORMATION 3D GALLERY MOUSE TRACKING
        ========================================= */
     const scene = document.getElementById('galleryScene');
     const wrap = document.getElementById('formationWrap');
@@ -436,23 +357,20 @@
     scene.addEventListener('mousemove', (e) => {
       const rect = scene.getBoundingClientRect();
       const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
       
-      // Calculate rotation based on horizontal mouse position relative to center
-      // ONLY rotating Y axis to keep cards level, preventing wild up/down tilting
-      const yRot = ((x / rect.width) - 0.5) * 40;
+      const xRot = ((y / rect.height) - 0.5) * -20; 
+      const yRot = ((x / rect.width) - 0.5) * 20;  
 
-      wrap.style.transform = `rotateY(${yRot}deg) translateZ(-150px)`;
+      wrap.style.transform = `rotateX(${xRot}deg) rotateY(${yRot}deg)`;
     });
 
     scene.addEventListener('mouseleave', () => {
-      wrap.style.transform = `rotateY(0deg) translateZ(-150px)`;
+      wrap.style.transform = `rotateX(0deg) rotateY(0deg)`;
     });
-    
-    // Set initial depth so it matches interaction logic
-    wrap.style.transform = `rotateY(0deg) translateZ(-150px)`;
 
     /* =========================================
-       4. DOCK ACTIVE STATE LOGIC
+       3. DOCK ACTIVE STATE LOGIC
        ========================================= */
     const tabs = document.querySelectorAll('.dock-tab');
     tabs.forEach(tab => {
