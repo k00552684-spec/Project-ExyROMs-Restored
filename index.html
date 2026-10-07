@@ -3,22 +3,29 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Project ExyROMs</title>
+  <title>Project ExyROMs — Exynos 9611 Hub</title>
   
   <!-- Fonts: Inter (UI), JetBrains Mono (Tech) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <style>
     :root {
       --bg-dark: #050505;
-      --bg-card: rgba(20, 20, 20, 0.6);
+      --bg-card: rgba(16, 16, 18, 0.72);
+      --bg-terminal: #0a0a0c;
       --text-main: #f8fafc;
       --text-muted: #94a3b8;
-      --accent: #818cf8; /* Soft purple/indigo glow */
+      --accent: #818cf8;       /* Indigo glow */
+      --race: #ef4444;         /* v0 Crimson/Red accent */
+      --cyan: #06b6d4;         /* Claude Isometric Cyan */
+      --orange: #f97316;       /* Claude Isometric Orange */
+      --emerald: #10b981;      /* Active status green */
       --border-color: rgba(255, 255, 255, 0.08);
+      --border-hover: rgba(255, 255, 255, 0.18);
       
+      --radius-sm: 10px;
       --radius-md: 16px;
       --radius-lg: 24px;
       --radius-full: 9999px;
@@ -35,85 +42,114 @@
     }
 
     /* =========================================
-       1. BACKGROUND ANIMATION (coming-soon-02)
+       1. BACKGROUND ANIMATION & TOP HEADER
        ========================================= */
     .bg-container {
       position: fixed; inset: 0; z-index: -1; overflow: hidden;
     }
-    
-    /* Glowing Animated Orb */
     .bg-orb {
-      position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%);
+      position: absolute; top: 35%; left: 50%; transform: translate(-50%, -50%);
       width: 60vw; height: 60vw; max-width: 800px; max-height: 800px;
-      background: radial-gradient(circle, rgba(129, 140, 248, 0.15) 0%, rgba(129, 140, 248, 0) 70%);
+      background: radial-gradient(circle, rgba(129, 140, 248, 0.12) 0%, rgba(239, 68, 68, 0.05) 45%, rgba(0, 0, 0, 0) 70%);
       border-radius: 50%; filter: blur(60px);
       animation: pulse-orb 8s ease-in-out infinite alternate;
     }
     @keyframes pulse-orb {
-      0% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.5; }
-      100% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+      0% { transform: translate(-50%, -50%) scale(0.85); opacity: 0.5; }
+      100% { transform: translate(-50%, -50%) scale(1.15); opacity: 1; }
     }
-
-    /* CSS Film Grain / Noise Overlay */
     .bg-noise {
       position: absolute; inset: 0;
       background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-      opacity: 0.04; pointer-events: none;
+      opacity: 0.035; pointer-events: none;
+    }
+
+    /* Top Minimalist Header (v0 style) */
+    .top-nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1rem 2rem; background: rgba(5, 5, 5, 0.75);
+      backdrop-filter: blur(16px); border-bottom: 1px solid var(--border-color);
+    }
+    .brand-logo {
+      display: flex; align-items: center; gap: 0.65rem;
+      font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 0.9rem;
+      letter-spacing: 0.08em; color: var(--text-main); text-decoration: none;
+    }
+    .brand-badge {
+      width: 26px; height: 26px; border-radius: 6px; background: var(--race);
+      display: inline-flex; align-items: center; justify-content: center;
+      font-weight: 900; color: #fff; font-size: 0.85rem;
+    }
+    .nav-telemetry {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.72rem;
+      color: var(--text-muted); letter-spacing: 0.15em; text-transform: uppercase;
+      display: flex; align-items: center; gap: 1rem;
+    }
+    .nav-telemetry span.dot {
+      width: 6px; height: 6px; border-radius: 50%; background: var(--emerald);
+      display: inline-block; box-shadow: 0 0 8px var(--emerald);
     }
 
     .container { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; position: relative; z-index: 10; }
 
+    /* Section Header Pattern (v0 style) */
+    .section-header {
+      margin: 6rem 0 2.5rem 0;
+    }
+    .section-eyebrow {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.75rem;
+      text-transform: uppercase; letter-spacing: 0.2em; color: var(--text-muted);
+      display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.75rem;
+    }
+    .section-eyebrow span.num { color: var(--race); font-weight: 700; }
+    .section-heading {
+      font-size: clamp(2.2rem, 5vw, 3.5rem); font-weight: 800;
+      letter-spacing: -0.04em; line-height: 1.05;
+    }
+    .section-heading span.accent-red { color: var(--race); }
+    .section-sub {
+      color: var(--text-muted); font-size: 1rem; max-width: 580px;
+      line-height: 1.6; margin-top: 0.75rem;
+    }
+
     /* =========================================
-       2. HERO (coming-soon-02 + layered text fix)
+       2. HERO + LAYERED TEXT + CLAUDE SVG BANNER
        ========================================= */
     .hero {
       display: flex; flex-direction: column; align-items: center; text-align: center;
-      padding: 12rem 0 8rem 0; min-height: 90vh; justify-content: center;
+      padding: 9rem 0 4rem 0; min-height: 90vh; justify-content: center;
     }
     
     .hero-badge {
       display: inline-flex; align-items: center; gap: 0.5rem;
       background: rgba(255,255,255,0.03); border: 1px solid var(--border-color);
-      padding: 0.4rem 1rem; border-radius: var(--radius-full);
-      font-size: 0.8rem; font-weight: 500; font-family: 'JetBrains Mono', monospace;
+      padding: 0.45rem 1.1rem; border-radius: var(--radius-full);
+      font-size: 0.78rem; font-weight: 500; font-family: 'JetBrains Mono', monospace;
       color: var(--text-muted); margin-bottom: 2rem; backdrop-filter: blur(10px);
+      text-decoration: none; transition: border-color 0.2s;
     }
-    .hero-badge span.highlight { color: #fff; font-weight: 700; }
+    .hero-badge:hover { border-color: var(--race); }
+    .hero-badge span.highlight { color: var(--race); font-weight: 700; }
 
-    /* The new stacked, slanted text component */
+    /* Slanted Layered Hero Text */
     .layered-hero-container {
-      display: flex;
-      justify-content: center;
-      width: 100%;
-      /* MASSIVE gap below to completely prevent the slant from hitting the paragraph */
-      margin: 2rem 0 10rem 0; 
+      display: flex; justify-content: center; width: 100%;
+      margin: 1.5rem 0 6rem 0; 
     }
     .layered-hero-text {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      /* Slant matching your 2nd image */
+      display: flex; flex-direction: column; align-items: flex-start;
       transform: rotate(-8deg) skewX(-12deg); 
-      /* Absorbs the physical drop of the bottom-right corner */
-      padding-bottom: 3rem; 
+      padding-bottom: 2.5rem; 
     }
     .layered-hero-text span {
-      font-size: clamp(3rem, 8vw, 7.5rem); 
-      font-weight: 900;
-      font-style: italic; 
-      text-transform: uppercase;
-      line-height: 0.85; 
-      letter-spacing: -0.03em;
-      color: var(--text-main);
-      white-space: nowrap;
-      
-      /* Animation */
-      opacity: 0;
-      transform: translateY(20px);
+      font-size: clamp(2.6rem, 7.5vw, 6.8rem); 
+      font-weight: 900; font-style: italic; text-transform: uppercase;
+      line-height: 0.86; letter-spacing: -0.03em; color: var(--text-main);
+      white-space: nowrap; opacity: 0; transform: translateY(20px);
       animation: layeredTextReveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
-    
-    /* Staggered loading for the layers */
+    .layered-hero-text span.highlight-layer { color: var(--race); }
     .layered-hero-text span:nth-child(1) { animation-delay: 0.1s; }
     .layered-hero-text span:nth-child(2) { animation-delay: 0.2s; }
     .layered-hero-text span:nth-child(3) { animation-delay: 0.3s; }
@@ -124,231 +160,761 @@
     }
 
     .hero p {
-      font-size: 1.15rem; color: var(--text-muted); max-width: 600px; line-height: 1.6;
-      /* Extra margin to guarantee clearance */
-      margin-top: 2rem;
-      position: relative;
-      z-index: 10;
+      font-size: 1.1rem; color: var(--text-muted); max-width: 620px; line-height: 1.6;
+      margin-bottom: 2rem; position: relative; z-index: 10;
+    }
+
+    /* v0 CTA Buttons & Status Pills */
+    .hero-actions {
+      display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; align-items: center;
+      margin-bottom: 2rem;
+    }
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 0.6rem;
+      background: var(--race); color: #fff; font-weight: 600; font-size: 0.95rem;
+      padding: 0.85rem 1.6rem; border-radius: var(--radius-sm); text-decoration: none;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 10px 25px -5px rgba(239, 68, 68, 0.4);
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 15px 30px -5px rgba(239, 68, 68, 0.6); }
+    .btn-secondary {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      color: var(--text-muted); font-size: 0.9rem; font-weight: 500;
+      padding: 0.85rem 1.2rem; text-decoration: none; transition: color 0.2s;
+    }
+    .btn-secondary:hover { color: var(--text-main); }
+
+    .status-pills {
+      display: flex; flex-wrap: wrap; gap: 0.6rem; justify-content: center; margin-bottom: 3.5rem;
+    }
+    .status-pill {
+      display: inline-flex; align-items: center; gap: 0.45rem;
+      padding: 0.35rem 0.85rem; border-radius: var(--radius-full);
+      border: 1px solid var(--border-color); background: rgba(255,255,255,0.02);
+      font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--text-main);
+    }
+    .status-pill::before {
+      content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--race);
+    }
+
+    /* Claude's Isometric Vector Smartphone Banner */
+    .isometric-banner-wrap {
+      width: 100%; max-width: 780px; margin: 0 auto;
+      padding: 1rem; border-radius: var(--radius-lg);
+      background: radial-gradient(ellipse at center, rgba(6, 182, 212, 0.07) 0%, transparent 70%);
+    }
+    .isometric-svg {
+      width: 100%; height: auto; display: block;
+      filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.8));
     }
 
     /* =========================================
-       3. FEATURES WITH HOVER (manuarora700)
+       3. DEVICE MATRIX (01 / EXYNOS 9611 CLUSTER)
        ========================================= */
-    .section-title { font-size: 2.5rem; font-weight: 700; letter-spacing: -0.03em; margin: 6rem 0 3rem 0; text-align: center;}
-    
-    .features-grid {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;
-      margin-bottom: 6rem;
+    .device-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.25rem; margin-bottom: 5rem;
     }
+    .device-card {
+      position: relative; background: var(--bg-card); border: 1px solid var(--border-color);
+      border-radius: var(--radius-md); padding: 1.5rem; overflow: hidden;
+      backdrop-filter: blur(12px); transition: border-color 0.3s, transform 0.25s;
+      display: flex; flex-direction: column; justify-content: space-between; min-height: 230px;
+    }
+    .device-card:hover { border-color: var(--border-hover); transform: translateY(-3px); }
+    .device-card-top {
+      display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;
+    }
+    .device-idx {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; color: var(--race); font-weight: 600;
+    }
+    .device-status {
+      display: inline-flex; align-items: center; gap: 0.35rem;
+      font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: var(--emerald);
+      background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.2);
+      padding: 0.2rem 0.6rem; border-radius: var(--radius-full);
+    }
+    .device-name { font-size: 1.25rem; font-weight: 700; margin-bottom: 0.3rem; }
+    .device-codename {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; color: var(--text-muted);
+      margin-bottom: 1.75rem;
+    }
+    .device-meta {
+      border-top: 1px solid var(--border-color); padding-top: 1rem;
+      display: flex; justify-content: space-between; align-items: flex-end;
+    }
+    .meta-group { display: flex; gap: 1.5rem; }
+    .meta-item span.label {
+      display: block; font-family: 'JetBrains Mono', monospace; font-size: 0.62rem;
+      text-transform: uppercase; letter-spacing: 0.12em; color: var(--text-muted); margin-bottom: 0.2rem;
+    }
+    .meta-item span.val { font-size: 0.82rem; font-weight: 600; color: var(--text-main); }
+    .device-arrow {
+      width: 32px; height: 32px; border-radius: 8px; border: 1px solid var(--border-color);
+      display: flex; align-items: center; justify-content: center; color: var(--race);
+      transition: background 0.2s, color 0.2s; text-decoration: none;
+    }
+    .device-card:hover .device-arrow { background: var(--race); color: #fff; border-color: var(--race); }
 
+    /* =========================================
+       4. UNDER THE HOOD / FEATURES WITH SPOTLIGHT
+       ========================================= */
+    .features-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 1.25rem;
+      margin-bottom: 5rem;
+    }
     .feature-card {
       position: relative; background: var(--bg-card); border: 1px solid var(--border-color);
       border-radius: var(--radius-lg); padding: 2rem; overflow: hidden;
       backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
     }
-    
-    /* Internal Mouse Spotlight Effect */
     .feature-card::before {
       content: ""; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-      background: radial-gradient(400px circle at var(--mouse-x) var(--mouse-y), rgba(129, 140, 248, 0.15), transparent 40%);
+      background: radial-gradient(400px circle at var(--mouse-x) var(--mouse-y), rgba(239, 68, 68, 0.14), transparent 40%);
       opacity: 0; transition: opacity 0.3s; z-index: 0; pointer-events: none;
     }
     .feature-card:hover::before { opacity: 1; }
-
     .feature-content { position: relative; z-index: 1; }
-    .feature-icon { width: 48px; height: 48px; border-radius: 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: center; align-items: center; margin-bottom: 1.5rem; color: var(--text-main); }
-    .feature-card h3 { font-size: 1.25rem; font-weight: 600; margin-bottom: 0.75rem; }
-    .feature-card p { font-size: 0.95rem; color: var(--text-muted); line-height: 1.6; }
-
+    .feature-num {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--race);
+      margin-bottom: 1.5rem; display: block; font-weight: 600;
+    }
+    .feature-icon {
+      width: 44px; height: 44px; border-radius: 10px; background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: center;
+      align-items: center; margin-bottom: 1.25rem; color: var(--text-main);
+    }
+    .feature-card h3 { font-size: 1.2rem; font-weight: 700; margin-bottom: 0.6rem; }
+    .feature-card p { font-size: 0.9rem; color: var(--text-muted); line-height: 1.6; }
 
     /* =========================================
-       4. FORMATION TILT/RING GALLERY (uicapsule)
+       5. FORMATION TILT/RING GALLERY
        ========================================= */
     .gallery-container-main {
       display: flex; flex-direction: column; align-items: center; justify-content: center;
-      margin-bottom: 8rem; min-height: 500px; perspective: 1500px; overflow: hidden; padding: 2rem 0;
+      margin-bottom: 6rem; min-height: 460px; perspective: 1500px; overflow: hidden; padding: 2rem 0;
     }
-    
     .formation-scene {
-      position: relative; width: 100%; height: 400px;
+      position: relative; width: 100%; height: 380px;
       display: flex; justify-content: center; align-items: center;
-      transform-style: preserve-3d;
-      transition: transform 0.1s ease-out; /* Smooth follow for mouse */
+      transform-style: preserve-3d; transition: transform 0.1s ease-out;
     }
-    
     .formation-card {
-      position: absolute;
-      width: 240px; height: 340px;
-      border-radius: var(--radius-md);
+      position: absolute; width: 220px; height: 320px; border-radius: var(--radius-md);
+      background-color: #111115;
       background-size: cover; background-position: center;
       border: 1px solid rgba(255,255,255,0.2);
-      box-shadow: 0 20px 50px rgba(0,0,0,0.8);
-      transition: filter 0.6s;
-      transform-origin: center center;
-      filter: brightness(0.6) grayscale(50%);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.85);
+      transition: filter 0.6s; transform-origin: center center;
+      filter: brightness(0.6) grayscale(40%);
     }
-
-    /* Fixed 3D Arc Positioning */
-    .formation-card:nth-child(1) { transform: translateX(-350px) translateZ(-200px) rotateY(30deg); }
-    .formation-card:nth-child(2) { transform: translateX(-180px) translateZ(-100px) rotateY(15deg); }
-    .formation-card:nth-child(3) { transform: translateX(0px) translateZ(0px) rotateY(0deg); filter: brightness(1) grayscale(0%); z-index: 10;}
-    .formation-card:nth-child(4) { transform: translateX(180px) translateZ(-100px) rotateY(-15deg); }
-    .formation-card:nth-child(5) { transform: translateX(350px) translateZ(-200px) rotateY(-30deg); }
-
+    .formation-card:nth-child(1) { transform: translateX(-340px) translateZ(-200px) rotateY(30deg); }
+    .formation-card:nth-child(2) { transform: translateX(-175px) translateZ(-100px) rotateY(15deg); }
+    .formation-card:nth-child(3) { transform: translateX(0px) translateZ(0px) rotateY(0deg); filter: brightness(1) grayscale(0%); z-index: 10; border-color: var(--race); }
+    .formation-card:nth-child(4) { transform: translateX(175px) translateZ(-100px) rotateY(-15deg); }
+    .formation-card:nth-child(5) { transform: translateX(340px) translateZ(-200px) rotateY(-30deg); }
 
     /* =========================================
-       ROM DATABASE PLACEHOLDER
+       6. FIRMWARE RELEASE & CLAUDE SPEC SHEET
        ========================================= */
-    .rom-placeholder {
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      padding: 6rem 2rem; border: 1px dashed var(--border-color); border-radius: var(--radius-lg);
-      background: rgba(255,255,255,0.02); margin-bottom: 10rem; text-align: center;
+    .release-hub {
+      display: grid; grid-template-columns: 1fr 1.15fr; gap: 1.5rem; margin-bottom: 6rem;
     }
-    .rom-placeholder h3 { font-size: 1.5rem; margin-bottom: 1rem; }
-    .rom-placeholder p { color: var(--text-muted); font-family: 'JetBrains Mono', monospace; font-size: 0.9rem;}
+    @media (max-width: 860px) {
+      .release-hub { grid-template-columns: 1fr; }
+    }
+    .radar-card, .spec-sheet-card {
+      background: var(--bg-card); border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg); padding: 2.25rem; position: relative; overflow: hidden;
+    }
+    .radar-visual {
+      position: relative; width: 200px; height: 200px; margin: 0 auto 2rem auto;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .radar-ring {
+      position: absolute; border-radius: 50%; border: 1px dashed rgba(239, 68, 68, 0.35);
+    }
+    .radar-ring.r1 { width: 100%; height: 100%; animation: spin 24s linear infinite; }
+    .radar-ring.r2 { width: 72%; height: 72%; border-style: solid; border-color: rgba(239, 68, 68, 0.25); }
+    .radar-ring.r3 { width: 44%; height: 44%; background: rgba(239, 68, 68, 0.12); border: 1px solid var(--race); }
+    @keyframes spin { 100% { transform: rotate(360deg); } }
+
+    .radar-Spec-Grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;
+      margin: 1.5rem 0; padding: 1.25rem 0; border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color);
+    }
+    .verified-note {
+      display: flex; align-items: center; gap: 0.5rem; margin-top: 1rem;
+      font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--text-muted);
+    }
+    .verified-note svg { color: var(--emerald); }
+
+    /* Terminal Code Box (Claude + v0 style) */
+    .terminal-box {
+      background: var(--bg-terminal); border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm); overflow: hidden; margin-top: 1rem;
+    }
+    .terminal-header {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0.55rem 1rem; background: rgba(255, 255, 255, 0.03);
+      border-bottom: 1px solid var(--border-color);
+      font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--text-muted);
+    }
+    .copy-btn {
+      background: transparent; border: 1px solid var(--border-color); color: var(--text-muted);
+      border-radius: 6px; padding: 0.25rem 0.55rem; font-family: 'JetBrains Mono', monospace;
+      font-size: 0.68rem; cursor: pointer; transition: all 0.2s;
+    }
+    .copy-btn:hover { color: var(--text-main); border-color: var(--text-muted); }
+    .terminal-body {
+      padding: 1rem; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem;
+      line-height: 1.65; color: #e2e8f0; overflow-x: auto; white-space: pre;
+    }
+    .terminal-body .hl-cyan { color: var(--cyan); }
+    .terminal-body .hl-muted { color: var(--text-muted); }
 
     /* =========================================
-       5. EXPANDABLE TABS DOCK (starc007)
+       7. SAMSUNG RECOVERY FLASHING GUIDE (CLAUDE)
+       ========================================= */
+    .accordion-list {
+      display: flex; flex-direction: column; border-top: 1px solid var(--border-color);
+      margin-bottom: 2.5rem;
+    }
+    .accordion-item {
+      border-bottom: 1px solid var(--border-color);
+    }
+    .accordion-trigger {
+      width: 100%; background: transparent; border: none; color: var(--text-main);
+      padding: 1.4rem 0.5rem; display: flex; align-items: center; justify-content: space-between;
+      cursor: pointer; text-align: left; font-family: inherit;
+    }
+    .accordion-trigger:hover .acc-title { color: var(--race); }
+    .acc-left { display: flex; align-items: center; gap: 1.25rem; }
+    .acc-num { font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; color: var(--race); font-weight: 600; }
+    .acc-title { font-size: 1.1rem; font-weight: 600; transition: color 0.2s; }
+    .acc-chevron {
+      color: var(--text-muted); transition: transform 0.3s ease; width: 18px; height: 18px;
+    }
+    .accordion-item.open .acc-chevron { transform: rotate(180deg); color: var(--race); }
+    .accordion-content {
+      max-height: 0; overflow: hidden; transition: max-height 0.35s ease, padding 0.35s ease;
+      padding: 0 0.5rem 0 2.75rem;
+    }
+    .accordion-item.open .accordion-content {
+      max-height: 420px; padding: 0 0.5rem 1.5rem 2.75rem;
+    }
+    .accordion-content p {
+      color: var(--text-muted); font-size: 0.92rem; line-height: 1.6; margin-bottom: 0.75rem;
+    }
+    .inline-code {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--cyan);
+      background: rgba(6, 182, 212, 0.1); padding: 0.15rem 0.45rem; border-radius: 4px;
+    }
+
+    /* Warning Callout Box (v0 style) */
+    .warning-box {
+      border: 1px solid rgba(239, 68, 68, 0.35);
+      background: linear-gradient(135deg, rgba(239, 68, 68, 0.08) 0%, rgba(20, 20, 20, 0.6) 100%);
+      border-radius: var(--radius-md); padding: 1.75rem; margin-bottom: 9rem;
+    }
+    .warning-box h4 {
+      display: flex; align-items: center; gap: 0.6rem; font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem;
+    }
+    .warning-box p { color: var(--text-muted); font-sizze: 0.9rem; line-height: 1.5; margin-bottom: 1rem; }
+    .warning-link {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; color: var(--race);
+      text-decoration: none; font-weight: 600;
+    }
+
+    /* =========================================
+       8. EXPANDABLE TABS DOCK
        ========================================= */
     .dock-container {
-      position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); z-index: 1000;
+      position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%); z-index: 1000;
     }
     .dock {
-      display: flex; gap: 0.5rem; padding: 0.5rem; border-radius: 99px;
-      background: rgba(15, 15, 15, 0.8); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
-      border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+      display: flex; gap: 0.4rem; padding: 0.45rem; border-radius: 99px;
+      background: rgba(12, 12, 14, 0.85); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(255,255,255,0.12); box-shadow: 0 10px 40px rgba(0,0,0,0.85);
     }
     .dock-tab {
-      display: flex; align-items: center; padding: 0.75rem; border-radius: 99px;
+      display: flex; align-items: center; padding: 0.7rem 0.85rem; border-radius: 99px;
       background: transparent; color: var(--text-muted); cursor: pointer; text-decoration: none;
       transition: background 0.3s ease, color 0.3s ease;
     }
-    .dock-tab svg { width: 20px; height: 20px; flex-shrink: 0; }
-    
-    /* The expanding text label */
+    .dock-tab svg { width: 19px; height: 19px; flex-shrink: 0; }
     .dock-label {
       max-width: 0; opacity: 0; overflow: hidden; white-space: nowrap;
-      font-size: 0.85rem; font-weight: 500;
+      font-size: 0.82rem; font-weight: 600;
       transition: max-width 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease, margin-left 0.3s ease;
     }
-    
-    /* Hover Animation */
-    .dock-tab:hover { background: rgba(255,255,255,0.1); color: var(--text-main); }
-    .dock-tab:hover .dock-label { max-width: 100px; opacity: 1; margin-left: 0.6rem; }
-    
-    /* Active state */
-    .dock-tab.active { background: rgba(255,255,255,0.15); color: var(--text-main); }
-
+    .dock-tab:hover { background: rgba(255,255,255,0.08); color: var(--text-main); }
+    .dock-tab:hover .dock-label { max-width: 110px; opacity: 1; margin-left: 0.55rem; }
+    .dock-tab.active { background: var(--race); color: #fff; }
   </style>
 </head>
 <body>
 
-  <!-- 1. Background Animation -->
+  <!-- Background Animation -->
   <div class="bg-container">
     <div class="bg-orb"></div>
     <div class="bg-noise"></div>
   </div>
 
+  <!-- Top Telemetry Bar -->
+  <header class="top-nav">
+    <a href="#home" class="brand-logo">
+      <span class="brand-badge">E</span>
+      EXYROMS // 9611
+    </a>
+    <div class="nav-telemetry">
+      <span><span class="dot"></span> EVERLINE KERNEL</span>
+      <span style="display: none; @media(min-width:640px){display:inline;}">ANDROID 13–17</span>
+    </div>
+  </header>
+
   <div class="container">
     
-    <!-- 2. SaaS Announcement Hero & Layered Text -->
+    <!-- 1. HERO SECTION -->
     <section class="hero" id="home">
       <a href="#database" class="hero-badge">
-        <span class="highlight">Update</span> Project ExyROMs Initializing &rarr;
+        <span class="highlight">ANDROID / OPEN SOURCE</span> Project ExyROMs Hub &rarr;
       </a>
       
-      <!-- FIXED LAYERED TEXT COMPONENT -->
+      <!-- Slanted Layered Text -->
       <div class="layered-hero-container">
         <div class="layered-hero-text">
           <span>REDEFINING</span>
-          <span>THE CUSTOM</span>
+          <span class="highlight-layer">THE CUSTOM</span>
           <span>ANDROID</span>
           <span>EXPERIENCE.</span>
         </div>
       </div>
       
-      <p>The premium aftermarket development hub for Samsung Galaxy Exynos 9611. Uncompromised performance, security, and design.</p>
+      <p>The aftermarket development hub for Samsung Galaxy Exynos 9611. Clean, quick, and relentlessly stable builds powered by Everline Kernel.</p>
+
+      <!-- v0 CTA Buttons -->
+      <div class="hero-actions">
+        <a href="#database" class="btn-primary">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download ROM
+        </a>
+        <a href="#guide" class="btn-secondary">Read the flashing guide &rarr;</a>
+      </div>
+
+      <!-- v0 Status Pills -->
+      <div class="status-pills">
+        <span class="status-pill">Official Builds</span>
+        <span class="status-pill">SELinux Enforcing</span>
+        <span class="status-pill">KSU Supported</span>
+        <span class="status-pill">Everline Kernel</span>
+      </div>
+
+      <!-- Claude's Isometric Smartphone Vector Banner (Cyan & Orange Glow) -->
+      <div class="isometric-banner-wrap">
+        <svg class="isometric-svg" viewBox="0 0 800 320" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Isometric Background Grid Lines -->
+          <path d="M120 190 L380 40 M420 40 L680 190 M120 130 L380 280 M420 280 L680 130" stroke="#ffffff" stroke-opacity="0.05" stroke-width="1"/>
+          <!-- Glowing Cyan & Orange Underlay Layers -->
+          <polygon points="400,268 210,158 400,48 590,158" fill="none" stroke="#06b6d4" stroke-opacity="0.25" stroke-width="2" transform="translate(0, 18)"/>
+          <polygon points="400,268 210,158 400,48 590,158" fill="none" stroke="#f97316" stroke-opacity="0.4" stroke-width="2" transform="translate(0, 9)"/>
+          <!-- Metallic Phone Body Base -->
+          <polygon points="400,265 205,152 400,40 595,152" fill="#0d1117" stroke="#22d3ee" stroke-width="2.5"/>
+          <!-- Inner Screen Bezel -->
+          <polygon points="400,250 228,150 400,52 572,150" fill="#07090e" stroke="#334155" stroke-width="1.5"/>
+          <!-- Isometric UI Elements inside Screen -->
+          <!-- Orange Accent Header Card -->
+          <polygon points="395,112 315,66 355,43 435,89" fill="#f97316" fill-opacity="0.85" transform="translate(-35, 38)"/>
+          <!-- Cyan Telemetry Bars -->
+          <polygon points="435,145 345,93 362,83 452,135" fill="#06b6d4" fill-opacity="0.7" transform="translate(-30, 48)"/>
+          <polygon points="455,175 365,123 378,115 468,167" fill="#06b6d4" fill-opacity="0.35" transform="translate(-30, 52)"/>
+          <!-- Bottom Status Pill on Screen -->
+          <polygon points="445,215 395,186 415,174 465,203" fill="#f97316" fill-opacity="0.9"/>
+          <!-- Glowing Corner Nodes -->
+          <circle cx="205" cy="152" r="4" fill="#06b6d4"/>
+          <circle cx="595" cy="152" r="4" fill="#f97316"/>
+          <circle cx="400" cy="265" r="4" fill="#06b6d4"/>
+        </svg>
+      </div>
     </section>
 
-    <!-- 3. Features with Hover Effects -->
-    <h2 class="section-title">Core Features</h2>
-    <section class="features-grid">
-      <div class="feature-card">
-        <div class="feature-content">
-          <div class="feature-icon">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+    <!-- 2. DEVICE MATRIX (01 / EXYNOS 9611 TARGETS) -->
+    <section id="devices">
+      <div class="section-header">
+        <div class="section-eyebrow"><span class="num">01</span> / DEVICE MATRIX</div>
+        <h2 class="section-heading">Your device. <span class="accent-red">Our focus.</span></h2>
+        <p class="section-sub">Every Exynos 9611 build is maintained, tested, and verified with Everline Kernel before shipping.</p>
+      </div>
+
+      <div class="device-grid">
+        <!-- Galaxy M31 -->
+        <div class="device-card">
+          <div>
+            <div class="device-card-top">
+              <span class="device-idx">01</span>
+              <span class="device-status">&#10003; Active</span>
+            </div>
+            <div class="device-name">Samsung Galaxy M31</div>
+            <div class="device-codename">SM-M315F / m31</div>
           </div>
-          <h3>Performance Scaled</h3>
-          <p>Kernels built with Clang compilers and aggressive scheduling. Tuned specifically for Exynos 9611 maximum frame rates.</p>
+          <div class="device-meta">
+            <div class="meta-group">
+              <div class="meta-item">
+                <span class="label">MAINTAINER</span>
+                <span class="val">PARBINDAR7</span>
+              </div>
+              <div class="meta-item">
+                <span class="label">KERNEL</span>
+                <span class="val">Everline</span>
+              </div>
+            </div>
+            <a href="#database" class="device-arrow" title="View Builds">&#8599;</a>
+          </div>
+        </div>
+
+        <!-- Galaxy M21 -->
+        <div class="device-card">
+          <div>
+            <div class="device-card-top">
+              <span class="device-idx">02</span>
+              <span class="device-status">&#10003; Active</span>
+            </div>
+            <div class="device-name">Samsung Galaxy M21</div>
+            <div class="device-codename">SM-M215F / m21</div>
+          </div>
+          <div class="device-meta">
+            <div class="meta-group">
+              <div class="meta-item">
+                <span class="label">MAINTAINER</span>
+                <span class="val">PARBINDAR7</span>
+              </div>
+              <div class="meta-item">
+                <span class="label">KERNEL</span>
+                <span class="val">Everline</span>
+              </div>
+            </div>
+            <a href="#database" class="device-arrow" title="View Builds">&#8599;</a>
+          </div>
+        </div>
+
+        <!-- Galaxy F41 -->
+        <div class="device-card">
+          <div>
+            <div class="device-card-top">
+              <span class="device-idx">03</span>
+              <span class="device-status">&#10003; Active</span>
+            </div>
+            <div class="device-name">Samsung Galaxy F41</div>
+            <div class="device-codename">SM-F415F / f41</div>
+          </div>
+          <div class="device-meta">
+            <div class="meta-group">
+              <div class="meta-item">
+                <span class="label">MAINTAINER</span>
+                <span class="val">PARBINDAR7</span>
+              </div>
+              <div class="meta-item">
+                <span class="label">KERNEL</span>
+                <span class="val">Everline</span>
+              </div>
+            </div>
+            <a href="#database" class="device-arrow" title="View Builds">&#8599;</a>
+          </div>
+        </div>
+
+        <!-- Galaxy A51 -->
+        <div class="device-card">
+          <div>
+            <div class="device-card-top">
+              <span class="device-idx">04</span>
+              <span class="device-status">&#10003; Active</span>
+            </div>
+            <div class="device-name">Samsung Galaxy A51</div>
+            <div class="device-codename">SM-A515F / a51</div>
+          </div>
+          <div class="device-meta">
+            <div class="meta-group">
+              <div class="meta-item">
+                <span class="label">MAINTAINER</span>
+                <span class="val">PARBINDAR7</span>
+              </div>
+              <div class="meta-item">
+                <span class="label">KERNEL</span>
+                <span class="val">Everline</span>
+              </div>
+            </div>
+            <a href="#database" class="device-arrow" title="View Builds">&#8599;</a>
+          </div>
         </div>
       </div>
-      <div class="feature-card">
-        <div class="feature-content">
-          <div class="feature-icon">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+  </section>
+
+    <!-- 3. UNDER THE HOOD / SPOTLIGHT FEATURES -->
+    <section id="features">
+      <div class="section-header">
+        <div class="section-eyebrow"><span class="num">02</span> / UNDER THE HOOD</div>
+        <h2 class="section-heading">Less noise. <span class="accent-red">More signal.</span></h2>
+        <p class="section-sub">Purpose-built optimizations that stay out of the way and let your Exynos 9611 hardware do what it does best.</p>
+      </div>
+
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-content">
+            <span class="feature-num">01</span>
+            <div class="feature-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+            </div>
+            <h3>Everline Upstream Kernel</h3>
+            <p>Compiled with Clang and aggressive CPU/GPU scheduling. Tuned specifically for Exynos 9611 sustained frame rates.</p>
           </div>
-          <h3>Play Integrity Verified</h3>
-          <p>Firmware passing Google Play Integrity directly out of the box, with built-in KernelSU support for safe root access.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-content">
+            <span class="feature-num">02</span>
+            <div class="feature-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+            </div>
+            <h3>Play Integrity & KSU</h3>
+            <p>Passes Google Play Integrity checks out of the box with built-in KernelSU Support for clean, root-hidden control.</p>
+          </div>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-content">
+            <span class="feature-num">03</span>
+            <div class="feature-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
+            </div>
+            <h3>27+ ROM Database</h3>
+            <p>From LineageOS and VoltageOS to Project Matrixx. Every major Android 13 through 17 release documented and preserved.</p>
+          </div>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-content">
+            <span class="feature-num">04</span>
+            <div class="feature-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/></svg>
+            </div>
+            <h3>Thermal & Battery Tuned</h3>
+            <p>Smart idle profiles, deep-sleep wakelock blockers, and balanced thermal throttling keep your phone cool all day.</p>
+          </div>
         </div>
       </div>
-      <div class="feature-card">
-        <div class="feature-content">
-          <div class="feature-icon">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
+      </section>
+
+    <!-- 5. FIRMWARE DATABASE & CLAUDE SPEC SHEET -->
+    <section id="database">
+      <div class="section-header">
+        <div class="section-eyebrow"><span class="num">04</span> / FIRMWARE HUB & SPECS</div>
+        <h2 class="section-heading">Ready when <span class="accent-red">you are.</span></h2>
+        <p class="section-sub">Verify build specifications or query your booted device directly via ADB.</p>
+      </div>
+
+      <div class="release-hub">
+        <!-- Left: v0 Radar Download Card -->
+        <div class="radar-card">
+          <div class="radar-visual">
+            <div class="radar-ring r1"></div>
+            <div class="radar-ring r2"></div>
+            <div class="radar-ring r3"></div>
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
           </div>
-          <h3>Extensive Database</h3>
-          <p>From LineageOS to Project Matrixx. Every major Android 13 through 17 release documented and preserved securely.</p>
+          <div class="section-eyebrow"><span class="num">LATEST STABLE</span> / EXYNOS 9611</div>
+          <h3 style="font-size: 1.65rem; font-weight: 800; margin-bottom: 0.5rem;">ExyROMs Archive</h3>
+          <div class="radar-Spec-Grid">
+            <div class="meta-item">
+              <span class="label">ANDROID</span>
+              <span class="val">13 — 17</span>
+            </div>
+            <div class="meta-item">
+              <span class="label">KERNEL</span>
+              <span class="val">Everline</span>
+            </div>
+            <div class="meta-item">
+              <span class="label">TARGETS</span>
+              <span class="val">M31/M21/F41/A51</span>
+            </div>
+          </div>
+          <a href="https://t.me/ExyROMs" target="_blank" class="btn-primary" style="width: 100%; justify-content: center;">
+            Browse 27+ ROM Builds
+          </a>
+          <div class="verified-note">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            Signed releases &middot; SHA256 verified
+          </div>
+        </div>
+
+        <!-- Right: Claude Build Specification & ADB Verification -->
+        <div class="spec-sheet-card">
+          <div class="section-eyebrow"><span class="num">SPECIFICATION</span> / BUILD MANIFEST</div>
+          <div class="terminal-box">
+            <div class="terminal-header">
+              <span>>_ BUILD_MANIFEST</span>
+              <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            </div>
+            <div class="terminal-body">ROM         &lt;ExyROMs Build&gt; &lt;version&gt;
+Device      &lt;A51 | M31 | M21 | F41&gt;
+Android     &lt;13.0 — 17.0&gt;
+Kernel      Everline &lt;ver&gt;
+Linux       4.14.x-Everline+
+Patch level &lt;YYYY-MM-DD&gt;
+Maintainer  PARBINDAR7
+Status      Active (SELinux Enforcing)</div>
+          </div>
+
+          <p style="color: var(--text-muted); font-size: 0.85rem; margin: 1.25rem 0 0.5rem 0;">
+            Read live build properties directly from a booted Exynos 9611 device:
+          </p>
+          <div class="terminal-box">
+            <div class="terminal-header">
+              <span>>_ ADB_VERIFICATION</span>
+              <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            </div>
+            <div class="terminal-body">adb shell getprop ro.build.version.release
+adb shell getprop ro.build.version.security_patch
+adb shell uname -r</div>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- 4. Formation 3D Gallery -->
-    <h2 class="section-title">Interface Formation</h2>
-    <div class="gallery-container-main" id="galleryScene">
-      <div class="formation-scene" id="formationWrap">
-        <div class="formation-card" style="background-image: url('screenshots/voltageos/v1.jpg');"></div>
-        <div class="formation-card" style="background-image: url('screenshots/voltageos/v2.jpg');"></div>
-        <div class="formation-card" style="background-image: url('screenshots/voltageos/v3.jpg');"></div>
-        <div class="formation-card" style="background-image: url('screenshots/voltageos/v4.jpg');"></div>
-        <div class="formation-card" style="background-image: url('screenshots/voltageos/v5.jpg');"></div>
+    <!-- 6. FLASHING GUIDE (CLAUDE'S 7-STEP SAMSUNG RECOVERY INSTALL) -->
+    <section id="guide">
+      <div class="section-header">
+        <div class="section-eyebrow"><span class="num">05</span> / FLASHING GUIDE</div>
+        <h2 class="section-heading">Make the <span class="accent-red">switch.</span></h2>
+        <p class="section-sub">Requires an unlocked bootloader and USB debugging enabled. Follow every step carefully for Samsung Exynos 9611 devices.</p>
       </div>
-    </div>
 
-    <!-- 5. ROM Database Placeholder -->
-    <h2 class="section-title" id="database">Firmware Database</h2>
-    <div class="rom-placeholder">
-      <h3>Database Connecting...</h3>
-      <p>[ Awaiting instruction to inject the 27 ROM list ]</p>
-    </div>
+      <div class="accordion-list">
+        <!-- Step 01 -->
+        <div class="accordion-item open">
+          <button class="accordion-trigger">
+            <div class="acc-left">
+              <span class="acc-num">01</span>
+              <span class="acc-title">Enter Download Mode</span>
+            </div>
+            <svg class="acc-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="accordion-content">
+            <p>Connect your phone to your PC with USB debugging enabled and reboot directly into Samsung Download mode:</p>
+            <div class="terminal-box">
+              <div class="terminal-header">
+                <span>>_ TERMINAL</span>
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              </div>
+              <div class="terminal-body">adb reboot download</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 02 -->
+        <div class="accordion-item">
+          <button class="accordion-trigger">
+            <div class="acc-left">
+              <span class="acc-num">02</span>
+              <span class="acc-title">Flash Custom Recovery & VBMeta (Odin / Heimdall)</span>
+            </div>
+            <svg class="acc-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="accordion-content">
+            <p>Flash the recovery using <strong>Odin</strong> (place in <span class="inline-code">AP</span> slot with <strong>Auto Reboot OFF</strong>) or run <strong>Heimdall</strong> (include <span class="inline-code">vbmeta_disabled.img</span> if required by the build):</p>
+            <div class="terminal-box">
+              <div class="terminal-header">
+                <span>>_ TERMINAL</span>
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              </div>
+              <div class="terminal-body">heimdall flash --RECOVERY recovery.img --VBMETA vbmeta_disabled.img --no-reboot</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 03 -->
+        <div class="accordion-item">
+          <button class="accordion-trigger">
+            <div class="acc-left">
+              <span class="acc-num">03</span>
+              <span class="acc-title">Key Combo Transition into Recovery</span>
+            </div>
+            <svg class="acc-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="accordion-content">
+            <p>Exit Download mode by holding <span class="inline-code">Vol Down + Power</span>. The exact moment the screen goes black, immediately switch to holding <span class="inline-code">Vol Up + Power</span> to boot into custom recovery. <em>Note: A normal boot into stock OS can overwrite custom recovery with stock recovery.</em></p>
+          </div>
+        </div>
+
+        <!-- Step 04 -->
+        <div class="accordion-item">
+          <button class="accordion-trigger">
+            <div class="acc-left">
+              <span class="acc-num">04</span>
+              <span class="acc-title">Format Data & Sideload ROM + GApps</span>
+            </div>
+            <svg class="acc-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="accordion-content">
+            <p>Select <strong>Format Data</strong> (type <span class="inline-code">yes</span>) inside recovery, start <strong>ADB Sideload</strong> from the recovery menu, and flash the ROM package (plus GApps if not bundled):</p>
+            <div class="terminal-box">
+              <div class="terminal-header">
+                <span>>_ TERMINAL</span>
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              </div>
+              <div class="terminal-body">adb sideload rom.zip
+# If GApps aren't bundled with the ROM:
+adb sideload gapps.zip</div>
+            </div>
+            <p style="margin-top: 0.75rem;">Once complete, select <strong>Reboot System</strong> from the recovery menu.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- v0 Warning Callout Box -->
+      <div class="warning-box">
+        <h4>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          Before you flash
+        </h4>
+        <p>Make a full backup of your internal storage. Formatting data is mandatory on clean installs and will erase all user files.</p>
+        <a href="#devices" class="warning-link">Check supported Exynos 9611 devices &rarr;</a>
+      </div>
+    </section>
 
   </div> <!-- End Container -->
 
-  <!-- 6. Expandable Tabs Dock -->
+  <!-- Expandable Tabs Dock -->
   <div class="dock-container">
     <div class="dock">
       <a href="#home" class="dock-tab active">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>
         <span class="dock-label">Home</span>
       </a>
+      <a href="#devices" class="dock-tab">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+        <span class="dock-label">Devices</span>
+      </a>
       <a href="#database" class="dock-tab">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
         <span class="dock-label">Firmwares</span>
+      </a>
+      <a href="#guide" class="dock-tab">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+        <span class="dock-label">Guide</span>
       </a>
       <a href="https://github.com/parbindar7" target="_blank" class="dock-tab">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
         <span class="dock-label">GitHub</span>
       </a>
       <a href="https://t.me/ExyROMs" target="_blank" class="dock-tab">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22" y1="2" points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
         <span class="dock-label">Telegram</span>
       </a>
     </div>
   </div>
 
   <script>
-    /* =========================================
-       1. FEATURES SPOTLIGHT HOVER LOGIC
-       ========================================= */
+    /* 1. FEATURES SPOTLIGHT HOVER LOGIC */
     document.querySelector('.features-grid').onmousemove = e => {
       for(const card of document.getElementsByClassName("feature-card")) {
         const rect = card.getBoundingClientRect(),
@@ -359,9 +925,7 @@
       }
     };
 
-    /* =========================================
-       2. FORMATION 3D GALLERY MOUSE TRACKING
-       ========================================= */
+    /* 2. FORMATION 3D GALLERY MOUSE TRACKING */
     const scene = document.getElementById('galleryScene');
     const wrap = document.getElementById('formationWrap');
     
@@ -380,9 +944,29 @@
       wrap.style.transform = `rotateX(0deg) rotateY(0deg)`;
     });
 
-    /* =========================================
-       3. DOCK ACTIVE STATE LOGIC
-       ========================================= */
+    /* 3. FLASHING GUIDE ACCORDION LOGIC */
+    document.querySelectorAll('.accordion-trigger').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const item = btn.parentElement;
+        item.classList.toggle('open');
+      });
+    });
+
+    /* 4. TERMINAL COPY BUTTON LOGIC */
+    function copyCode(button) {
+      const code = button.closest('.terminal-box').querySelector('.terminal-body').innerText;
+      navigator.clipboard.writeText(code).then(() => {
+        const original = button.innerText;
+        button.innerText = 'Copied!';
+        button.style.color = '#10b981';
+        setTimeout(() => {
+          button.innerText = original;
+          button.style.color = '';
+        }, 1800);
+      });
+    }
+
+    /* 5. DOCK ACTIVE STATE LOGIC */
     const tabs = document.querySelectorAll('.dock-tab');
     tabs.forEach(tab => {
       tab.addEventListener('click', () => {
